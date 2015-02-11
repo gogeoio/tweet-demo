@@ -1,0 +1,16 @@
+{
+  "demoName": "tweets",
+  "protocol": "http://",
+  "timeRange": {
+    "min": "2014-11-14",
+    "max": "2015-02-06"
+  },
+  "url": "demos.gogeo.io:9090",
+  "subdomains": [ "m01", "m02", "m03", "m04" ],
+  "database": "db1",
+  "collection": "tweets",
+  "dashboardGeoAgg": "entities.hashtags.text",
+  "stylename": "gogeo_many_points",
+  "mapkey": "123",
+  "prefix": "maps."
+}

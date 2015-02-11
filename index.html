@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html ng-app="gogeoTweets">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="goGeo Tweets Demo App">
+    <meta name="author" content="gogeo.io">
+
+    <title>goGeo Tweets Demo App</title>
+
+    <!-- Bootstrap and bootstrap-tour css -->
+    <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap/bootstrap-tour-standalone.min.css" rel="stylesheet" />
+
+    <!-- Font-awesome css -->
+    <link href="assets/css/bootstrap/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Leaflet and leaflet-plugins css -->
+    <link href="assets/css/leaflet/leaflet.css" rel="stylesheet" />
+    <link href="assets/css/leaflet/plugins/draw/leaflet.draw.css" rel="stylesheet" />
+    <link href="assets/css/leaflet/plugins/tilecluster/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="assets/css/leaflet/plugins/tilecluster/MarkerCluster.css" rel="stylesheet" />
+
+    <!-- Angular range-slider -->
+    <link href="assets/css/angular/angular-range-slider.css" rel="stylesheet" />
+
+    <!-- PNotify -->
+    <link href="assets/css/pnotify/pnotify.custom.css" rel="stylesheet" />
+
+    <!-- Select-ui css -->
+    <link href="assets/css/ui-select/select.css" rel="stylesheet" />
+
+    <!-- App css -->
+    <link href="assets/css/app.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="map" ng-controller="MapController">
+      <leaflet defaults="defaults" center="center" layers="layers" overlays="overlays" controls="controls" width="100%" style="width: 100%; height: 100%"></leaflet>
+    </div>
+
+    <div class="container" style="width: 95%;">
+      <div class="row-fluid" ng-controller="QueryController">
+        <div class="col-md-2">
+          <div style="position: absolute; top: 10px; z-index: 1000; background-color: rgba(255, 255, 255, 0.0);">
+            <div class="form-group has-feedback">
+              <div class="input-group">
+                <ui-select allow-clear multiple theme="bootstrap" ng-model="selected.name" style="width: 600px;" close-on-select="false" reset-search-input="true" on-select="itemSelected(this)" on-remove="itemRemoved(this)" >
+                  <ui-select-match placeholder="To find user insert @ before the username or # for hashtags">{{ $item.name }}</ui-select-match>
+                  <ui-select-choices repeat="suggestion in suggestions | propsFilter: {text: $select.search}"
+                    refresh="getSuggestion($select.search)" refresh-delay="0">
+                    <div ng-bind-html="suggestion.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid" ng-controller="TimeQueryController">
+        <div class="timeline-slider">
+          <div range-slider min="timelimit.range.min" orientation="vertical" on-handle-up="updateDate()" max="timelimit.range.max" model-min="timelimit.minTimeRange" model-max="timelimit.maxTimeRange" filter="date" filter-options="yyyy-MM-dd" step="1" disabled="sliderDisabled"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="geoagg-result-div" class="well">
+      <div id="geoagg-result">
+        <div class="geoagg-result-subtitle">
+          <h4>
+            Real-time Geo Aggregation
+          </h4>
+        </div>
+
+        <div class="geoagg-result-title">
+          <div class="row">
+            <div class="col-md-3 col-md-offset-3">
+            </div>
+            <div class="col-md-3 col-md-offset-1" style="right: -10px;">
+              <a href="http://gogeo.io" target="_blank">
+                <img src="assets/img/gogeo-brand.png" height="200%" width="200%">
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div ng-controller="DashboardController as dashboardCtrl">
+          <div>
+            <div class="row">
+              <div class="col-lg-5">
+                <b>Total Tweets</b>
+              </div>
+              <div class="col-lg-5">
+                <h5 id="geoagg-result-qtd" class="pull-right">
+                  <b>{{ totalCount || "" | formatPercent:0}}</b>
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="geoagg-result-by">
+            <div class="row">
+              <h5>
+                <b>Tweets by Hashtags</b>
+              </h5>
+            </div>
+          </div>
+          <div class="geoagg-result-body">
+            <div class="row">
+              <div class="col-lg-12" style="margin-left: -8px;">
+                <table id="geoagg-result-list">
+                  <tbody>
+                    <tr dir-paginate="item in geoAggList | itemsPerPage:pageSize" current-page="currentPage">
+                      <td>
+                        <div class="container result">
+                          <div class="row">
+                            <div class="progress">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.percent | number : 2 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ item.percent }}%;">
+                                <div class="col-md-8 label-name">{{ item.key | capitalize:true }}</div>
+                                <div class="col-md-6 label-value">{{ item.value | formatPercent:0 }} ( {{ item.percent | formatPercent:2 }}% )</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="margin-top: {{ margin_pagination }}px; margin-bottom: {{ margin_pagination }}px;">
+                  <div class="text-center">
+                    <dir-pagination-controls boundary-links="true" direction-links="false" max-size="6" template-url="assets/javascript/lib/angular/dirPagination.tpl.html"></dir-pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row row-data-info">
+              <p>
+                <div class="col-md-12 col-md-offset-3">
+                  <b>
+                    <a href="https://dev.twitter.com/streaming/overview" target="_blank">Twitter Stream</a>
+                  </b>
+                </div>
+              </p>
+            </div>
+            <div class="row text-center" style="position: absolute; margin: 0px; color: red; display: none;">
+              <div class="col-md-12">
+                <b>
+                  Want develop an application like this? <br> Try <a href="http://gogeo.io" target="_blank">goGeo</a>
+                  and fork me at <a href="https://github.com/gogeolbs/gogeo-tweets" target="_blank">Github.</a>
+                </b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TourController -->
+    <div class="leaflet-control">
+     <div class="tour-button-section" ng-controller="TourController">
+        <div class="leaflet-draw leaflet-bar">
+          <a id="help-button" title="Click to see the tour." href="#" ng-click="startTour(true)">
+            <i class="fa fa-question-circle fa-lg"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MapSelectorController -->
+    <div class="leaflet-control">
+      <div class="data-type-button-section" ng-controller="MapSelectorController">
+        <div class="leaflet-draw leaflet-bar">
+          <a class="leaflet-{{ clusterDisabled }}" id="cluster-map-button" role="button" title="Click to see cluster map." href="#" ng-click="showCluster()">
+            <i class="fa fa-bullseye fa-lg"></i>
+          </a>
+          <a class="leaflet-{{ markerDisabled }}" id="marker-map-button" role="button" title="Click to see marker map." href="#" ng-click="showMarker()">
+            <i class="fa fa-map-marker fa-lg"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: none;" ng-controller="NotifyController"></div>
+
+    <!-- JQuery and bootstrap javascripts -->
+    <script src="assets/javascript/lib/jquery/jquery.min.js"></script>
+    <script src="assets/javascript/lib/jquery/jquery.number.min.js"></script>
+    <script src="assets/javascript/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="assets/javascript/lib/bootstrap/bootstrap-tour-standalone.min.js"></script>
+
+    <!-- Google maps javascript -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+    <!-- Leaflet and leaflet-plugins javascripts -->
+    <script src="assets/javascript/lib/leaflet/leaflet.min.js"></script>
+    <script src="assets/javascript/lib/leaflet/plugins/draw/leaflet.draw.js"></script>
+    <script src="assets/javascript/lib/leaflet/plugins/tilecluster/leaflet.tilecluster.js"></script>
+    <script src="assets/javascript/lib/leaflet/plugins/layer/tile/Google.js"></script>
+
+    <!-- Angular and angular-leaflet-directive javascripts -->
+    <script src="assets/javascript/lib/angular/angular.min.js"></script>
+    <script src="assets/javascript/lib/angular/angular-leaflet-directive.js"></script>
+    <script src="assets/javascript/lib/angular/dirPagination.js"></script>
+    <script src="assets/javascript/lib/angular/angular-sanitize.min.js"></script>
+
+    <!-- Angular bootstrap slider -->
+    <script src="assets/javascript/lib/angular/angular-range-slider.js"></script>
+
+    <!-- Typeahead -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
+
+    <!-- PNotify -->
+    <script src="assets/javascript/lib/pnotify/pnotify.custom.min.js"></script>
+
+    <!-- Charts javascripts -->
+    <script src="assets/javascript/lib/d3/d3.js"></script>
+    <script src="assets/javascript/lib/d3/d3plus.js"></script>
+
+    <!-- Geodesy mapbox leaflet plugin -->
+    <script src='assets/javascript/lib/leaflet/plugins/geodesy/leaflet-geodesy.js'></script>
+
+    <!-- Angular (controllers, services, directives, etc) javascripts -->
+    <script src="assets/javascript/app.js"></script>
+    <script src="assets/javascript/services.js"></script>
+    <script src="assets/javascript/controllers/notifyController.js"></script>
+    <script src="assets/javascript/controllers/chartsController.js"></script>
+    <script src="assets/javascript/controllers/tweetPopupController.js"></script>
+    <script src="assets/javascript/controllers/mapController.js"></script>
+    <script src="assets/javascript/controllers/dashboardController.js"></script>
+    <script src="assets/javascript/controllers/queryController.js"></script>
+    <script src="assets/javascript/controllers/tourController.js"></script>
+    <script src="assets/javascript/controllers/timeQueryController.js"></script>
+    <script src="assets/javascript/controllers/mapSelectorController.js"></script>
+
+    <!-- Js-linkify (http://benalman.com/code/test/js-linkify) -->
+    <script src="assets/javascript/lib/linkify/ba-linkify.min.js"></script>
+
+    <!-- Select-ui -->
+    <script src="assets/javascript/lib/ui-select/select.js"></script>
+
+    <script>
+      if (window.location.hostname.match('demos.gogeo.io')) {
+        var _gaq = _gaq || [];
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+        _gaq.push(['_setAccount', 'UA-51416381-2', 'gogeo.io']);
+        _gaq.push(['_trackPageview', 'tweets']);
+
+        window._gaq = _gaq;
+      }
+    </script>
+  </body>
+</html>
