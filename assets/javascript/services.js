@@ -8,34 +8,13 @@
 
       var pathname = window.location.pathname;
 
-      if (pathname[-1] != '/') {
+      if (!pathname.endsWith('/')) {
         pathname = pathname + '/';
       }
 
       $http.get(pathname + 'config.json').then(
         function(result) {
           $rootScope.config = result.data;
-
-          $rootScope.config = {
-            demoName: 'tweets',
-            protocol: 'http://',
-            timeRange: {
-              min: '2014-11-14',
-              max: '2015-02-06'
-            },
-            url: '172.16.2.106:9090',
-            // url: 'demos.gogeo.io:9090',
-            subdomains: [],
-            // subdomains: [ 'm01', 'm02', 'm03', 'm04' ],
-            database: 'db1',
-            collection: 'tweets',
-            dashboardGeoAgg: 'entities.hashtags.text',
-            stylename: 'gogeo_many_points',
-            mapkey: '123',
-            // prefix: 'maps.'
-            prefix: ''
-          };
-
           $rootScope.$emit('event:configLoaded');
         }
       );

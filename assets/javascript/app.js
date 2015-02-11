@@ -2,6 +2,19 @@
 
 var app = angular.module('gogeoTweets', ['ngSanitize', 'leaflet-directive', 'gogeoTweets.services', 'angularUtils.directives.dirPagination', 'mgcrea.ngStrap', 'ui-rangeSlider', 'ui.select']);
 
+// From http://stackoverflow.com/questions/280634/endswith-in-javascript
+String.prototype.endsWith = function(suffix) {
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+function escapeRegExp(string) {
+  return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+String.prototype.replaceAll = function(find, replace) {
+  return this.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
 app.filter('capitalize',
   function() {
     return function(input, all) {
