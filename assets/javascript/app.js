@@ -7,10 +7,12 @@ String.prototype.endsWith = function(suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
+// From http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
 function escapeRegExp(string) {
   return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
+// From http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
 String.prototype.replaceAll = function(find, replace) {
   return this.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }

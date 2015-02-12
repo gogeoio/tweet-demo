@@ -40,9 +40,10 @@ body {
 
 .timeline-slider {
   position: absolute;
-  top: 260px;
-  left: 10px;
+  bottom: -30px;
+  left: 320px;
   height: 100px;
+  width: 300px;
 }
 
 .ngrs-value {
