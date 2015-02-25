@@ -52,7 +52,7 @@
   <body>
     
     <!-- header -->
-    <nav class="animate fadeIn header navbar-static-top navbar navbar-default">
+    <nav class="animate fadeIn navbar-static-top navbar navbar-default">
       <div class="container-fluid">
         
         <div class="navbar-header">
@@ -68,33 +68,37 @@
         </div>
 
         <div class="collapse navbar-collapse" id="header-navbar-collapse">
-            <form class="navbar-form navbar-left form-inline" rule="search">
-                <div class="form-group">
-                    <label class="sr-only" for="lookingForSomething">Hashtag and user search</label>
-                    <input type="text" class="form-control" id="lookingForSomething" placeholder="Looking for something?" />
-                </div>
-                <div class="form-group">
-                    <label class="sr-only" for="lookingWhere">Where? Contry only</label>
-                    <input type="text" class="form-control" id="lookingWhere" placeholder="Where? Contry only.">
-                </div>
-            </form>
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <form class="form-inline" rule="search">
+                        <!-- <div class="row"> -->
+                            <div class="form-group">
+                                <label class="sr-only" for="lookingForSomething">Hashtag and user search</label>
+                                <input type="text" class="form-control" id="lookingForSomething" placeholder="Looking for something?" />
+                            </div>
+                            <div class="form-group space-h1">
+                                <label class="sr-only" for="lookingWhere">Where? Contry only</label>
+                                <input type="text" class="form-control" id="lookingWhere" placeholder="Where? Contry only.">
+                            </div>
+                        <!-- </div> -->
+                    </form>
+                </li>
                 <li id="rangedate">
                     <div class="input-daterange input-group" id="datepicker">
-                        <input type="text" class="input-sm form-control" name="start" placeholder="start" />
+                        <input type="text" class="input-sm form-control" name="start" placeholder="12/05/2014" />
                         <span class="input-group-addon"><i class="fa fa-calendar fa-2x"></i></span>
-                        <input type="text" class="input-sm form-control" name="end" placeholder="end" />
+                        <input type="text" class="input-sm form-control" name="end" placeholder="02/25/2015" />
                     </div>
                 </li>
                 <li>
-                    <a href="#" class="btn btn-tour">
+                    <button class="btn btn-tour" rule="button">
                         <i class="fa fa-2x fa-bullhorn"></i>
                         <span>tour</span>
-                    </a>
+                    </button>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li>
+                <li class="pull-right">
                     <button href="#" class="btn btn-warning btn-block btn-lg" role="button">Add more milions of tweets</button>
                 </li>
             </ul>
