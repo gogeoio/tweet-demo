@@ -7,16 +7,18 @@
     <title>goGeo.io | Twitter App</title>
 
     <!-- 3rd Party -->
-    <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.10.1/css/bootstrap-tour.min.css" rel="stylesheet"> -->
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,300,700' rel='stylesheet' type='text/css'>
-    <link href='assets/css/animate.css' rel='stylesheet' type='text/css' media="all" >
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-    <link href='assets/css/datepicker/datepicker3.css' rel='stylesheet' type='text/css' media="all" >
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"  rel="stylesheet" h />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/css/datepicker3.min.css' rel='stylesheet' type='text/css' media="all" >
 
+    <link href='assets/css/animate.css' rel='stylesheet' type='text/css' media="all" >
     
     <!-- App CSS -->
     <link href='assets/css/ui.css' rel='stylesheet' type='text/css' media="all" >
-
+    
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -91,7 +93,7 @@
                     </div>
                 </li>
                 <li>
-                    <button class="btn btn-tour" rule="button">
+                    <button class="btn btn-tour" type="button">
                         <i class="fa fa-2x fa-bullhorn"></i>
                         <span>tour</span>
                     </button>
@@ -99,7 +101,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="pull-right">
-                    <button href="#" class="btn btn-warning btn-block btn-lg" role="button">Add more milions of tweets</button>
+                    <button class="btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#addMoreTweets">Add more milions of tweets</button>
                 </li>
             </ul>
         </div>
@@ -114,20 +116,80 @@
 
     <!-- body twitter map-->
     <div id="map" class="map-dashboard"></div>
+
+
+    <!-- Add More TweetsModal -->
+    <div class="modal fade" id="addMoreTweets" tabindex="-1" role="dialog" aria-labelledby="addMoreTweetsLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">MORE TWEETS? FOLLOW THE STEPS ABOVE!</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="assets/img/modal/step-checked.png" alt="stage complete" />
+                    <h3>30 MILION<br/> <span>of tweets</span></h3>
+                    <a id="btn-step1" class="btn btn-default disabled" href="" rule="button">EARNED</a>
+                </div>
+                <div class="col-md-4 text-center">
+                    <img src="assets/img/modal/step-unchecked.png" alt="stage complete" />
+                    <h3>100 MILION<br/> <span>of tweets</span></h3>
+                    <a id="btn-step2" class="btn btn-success" href="" rule="button">SHARE TO GET</a>
+                </div>
+                <div class="col-md-4 text-center">
+                    <img src="assets/img/modal/step-unchecked.png" alt="stage complete" />
+                    <h3>MAKE YOUR<br/> <span>on app </span></h3>
+                    <a id="btn-step3" class="btn btn-success" href="" rule="button">SIGN UP</a>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div id="step1">
+                <p class="lead">Thank you for time, we hope you enjoy and have with fun this awesome app.</p>
+            </div>
+            <div id="step2">
+                <p class="lead">Share with our friend on your timeline and get access to 100 milions of tweents, 2014 and 2015 today</p>
+            </div>
+            <div id="step3">
+                <p class="lead">Create your on app with milions of tweets or any geolocated data you have. <a href="#">START NOW SIGN UP IS FREE</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $("#btn-step2").hover(function(){
+          $("#step2").show(function(){
+              $( this ).addClass( "animated fadeIn" );
+          });
+        },function(){
+         $("#step2").hide();
+        });
+
+
+    </script>
+
     <script>
     L.mapbox.accessToken = 'pk.eyJ1IjoibG9raWRnIiwiYSI6IkRfNkpoMHcifQ.m4reSWIhrD5xIJVkrhRAxA';
     var map = L.mapbox.map('map', 'lokidg.i7gg619k')
         .setView([-11.372, -57.634], 5);
     </script>
     
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
-    <script src="javascript/lib/jquery/jquery.min.js"></script>
-    <!-- // <script src="javascript/lib/datedropper/datedropper.min.js"></script> -->
+
+    <!-- // <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="javascript/lib/bootstrap/bootstrap.min.js"></script>
-    <script src="javascript/lib/datepicker/bootstrap-datepicker.js"></script>
-    <script src="javascript/interface.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/js/bootstrap-datepicker.min.js"></script>
+    <!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.10.1/js/bootstrap-tour.min.js"></script> -->
+
+    // <script src="javascript/interface.js"></script>
 
     
   </body>

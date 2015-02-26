@@ -247,3 +247,51 @@ body{
 
 	z-index: 2;
 }
+
+/*MODAL ZONE*/
+#addMoreTweets{
+	.modal-header{
+		background: #1CB4DB;
+		color: @gogeo-white;
+		border-radius: 4px 4px 0 0;
+	}
+
+	h3{
+		font-size: 24px;
+		color: #0A7B98;
+		line-height: 36px;
+		font-weight: 600;
+		span{
+			font-size: 24px;
+			color: #1CB4DB;
+			line-height: 36px;
+			font-weight: 400;
+		}
+	}
+
+	.btn-success{
+		background: #65B658;
+		border: 2px solid #65B658;
+		border-radius: 4px;
+		color: @gogeo-white;
+
+		&:hover{
+			background: transparent;
+			color: #65B658;
+
+			.transition(background-color .5s ease);			
+		}
+	}
+
+	.modal-footer{
+		height: 85px;
+	}
+
+	#step1, 
+	#step2, 
+	#step3 {
+		width: 100%;
+		text-align: center;
+		display: none;
+	}
+}
