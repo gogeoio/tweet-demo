@@ -234,12 +234,15 @@ body {
   transition: background-color 0.5s ease;
 }
 #addMoreTweets .modal-footer {
-  height: 85px;
+  height: 90px;
+  padding: 15px 20px;
 }
 #addMoreTweets #step1,
 #addMoreTweets #step2,
 #addMoreTweets #step3 {
+  display: none;
   width: 100%;
   text-align: center;
-  display: none;
+  height: auto;
+  position: relative;
 }

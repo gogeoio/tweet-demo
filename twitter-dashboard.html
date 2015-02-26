@@ -120,7 +120,7 @@
 
     <!-- Add More TweetsModal -->
     <div class="modal fade" id="addMoreTweets" tabindex="-1" role="dialog" aria-labelledby="addMoreTweetsLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -150,9 +150,11 @@
                 <p class="lead">Thank you for time, we hope you enjoy and have with fun this awesome app.</p>
             </div>
             <div id="step2">
+                <div class="arrow"></div>
                 <p class="lead">Share with our friend on your timeline and get access to 100 milions of tweents, 2014 and 2015 today</p>
             </div>
             <div id="step3">
+                <div class="arrow"></div>
                 <p class="lead">Create your on app with milions of tweets or any geolocated data you have. <a href="#">START NOW SIGN UP IS FREE</a></p>
             </div>
           </div>
@@ -170,6 +172,13 @@
          $("#step2").hide();
         });
 
+        $("#btn-step3").hover(function(){
+          $("#step3").show(function(){
+              $( this ).addClass( "animated fadeIn" );
+          });
+        },function(){
+         $("#step3").hide();
+        });
 
     </script>
 
