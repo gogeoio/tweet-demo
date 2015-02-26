@@ -271,6 +271,41 @@ body {
 #sidebar-dashboard .bootstrap-switch .bootstrap-switch-container .bootstrap-switch-handle-off {
   text-transform: uppercase;
 }
+#sidebar-dashboard .nav-tabs {
+  border-top: 1px solid #D8D8D8;
+  border-bottom: 1px solid #D8D8D8;
+}
+#sidebar-dashboard .nav-tabs li {
+  float: right;
+}
+#sidebar-dashboard .nav-tabs li.active a {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1CB4DB;
+  line-height: 20px;
+  border-top: none;
+  margin-top: 0px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  margin-right: 0px;
+}
+#sidebar-dashboard .nav-tabs li.active a:hover {
+  padding-top: 10px;
+  padding-bottom: 16px;
+}
+#sidebar-dashboard .nav-tabs li a {
+  font-weight: 400;
+  font-size: 14px;
+  color: #D7D7D7;
+  line-height: 20px;
+  border-radius: 0px;
+}
+#sidebar-dashboard .nav-tabs li a:hover {
+  padding-top: 10px;
+  padding-bottom: 14px;
+  margin-top: 0px;
+  border-bottom: none;
+}
 /*MODAL ZONE*/
 #addMoreTweets .modal-header {
   background: #1CB4DB;

@@ -119,9 +119,9 @@
                 </div>
                 <div class="col-md-5 tweets-label">
                     <label>Tweets Datebase/Live</label>
-                    <input type="checkbox" name="tweet_flow" data-size="mini" data-off-text="Real Time" data-on-text="Data base"  data-handle-width="70" data-label-width="10" checked>
+                    <input type="checkbox" name="tweet_flow" data-size="mini" data-off-text="Real Time" data-on-text="Data base"  data-handle-width="70" data-label-width="10" data-off-color="success" checked>
                     
-                    <a class="btn btn-xs btn-info" data-container="body" data-toggle="popover" data-placement="left" data-content="The Live tweets give you access to the last 12hours and the datebase tweet give you access to the the date base from yesterday to early 2014"><i class="fa fa-info-circle"></i></a>
+                    <a tabindex="0"  class="btn btn-xs btn-info" data-container="body" data-toggle="popover" data-placement="left" data-content="The Live tweets give you access to the last 12hours and the datebase tweet give you access to the the date base from yesterday to early 2014"><i class="fa fa-info-circle" rule="button"></i></a>
                 </div>
             </div>
             <div class="row tweets-amounts">
@@ -139,14 +139,42 @@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                <li role="presentation"><a href="#tweetsList" aria-controls="tweetsList" role="tab" data-toggle="tab">Tweets</a></li>
+                <li role="presentation" class="active"><a href="#hashtags" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">...</div>
-                <div role="tabpanel" class="tab-pane" id="profile">...</div>
+                <div role="tabpanel" class="tab-pane active" id="hashtags">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Top 10 most used hashtags</th>
+                                <th>#tag</th>
+                                <th>Tweets</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mtvstars</td>
+                                <td>38.006</td>
+                                <td><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Atr</td>
+                                <td>16.008</td>
+                                <td><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Followmecam</td>
+                                <td>7.458</td>
+                                <td><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="tweetsList">...</div>
             </div>
 
         </div>
