@@ -113,20 +113,23 @@
     <div id="sidebar-dashboard" class="animate fadeInRight">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6 tweets-amounts-plus">
+                <div class="col-md-7 tweets-amounts-plus">
                     <label>Total of tweets</label>
                     <span>30.300.148</span>
                 </div>
-                <div class="col-md-6 text-right">
+                <div class="col-md-5 tweets-label">
+                    <label>Tweets Datebase/Live</label>
                     <input type="checkbox" name="tweet_flow" data-size="mini" data-off-text="Real Time" data-on-text="Data base"  data-handle-width="70" data-label-width="10" checked>
+                    
+                    <a class="btn btn-xs btn-info" data-container="body" data-toggle="popover" data-placement="left" data-content="The Live tweets give you access to the last 12hours and the datebase tweet give you access to the the date base from yesterday to early 2014"><i class="fa fa-info-circle"></i></a>
                 </div>
             </div>
             <div class="row tweets-amounts">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <label>Tweets on viewport</label>
                     <span>300.148</span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <label>User</label>
                     <span>50.148</span>
                 </div>
@@ -223,6 +226,7 @@
             });
 
             $("[name='tweet_flow']").bootstrapSwitch();
+            $('[data-toggle="popover"]').popover()
         });
     </script>
 

@@ -244,8 +244,26 @@ body {
   margin: 0px;
   padding: 0px;
 }
+#sidebar-dashboard .tweets-label {
+  margin-top: 15px;
+}
+#sidebar-dashboard .tweets-label label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #868686;
+  line-height: 20px;
+  display: block;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar-dashboard .tweets-label .btn-xs {
+  margin-top: 7px;
+  border-radius: 20px;
+}
 #sidebar-dashboard .bootstrap-switch {
-  margin-top: 40px;
+  margin-top: 8px;
+  border-radius: 150px;
 }
 #sidebar-dashboard .bootstrap-switch .bootstrap-switch-container .bootstrap-switch-handle-on {
   text-transform: uppercase;
