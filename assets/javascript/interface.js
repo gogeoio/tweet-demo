@@ -1,9 +1,3 @@
-$('#rangedate .input-daterange').datepicker({
-    clearBtn: true,
-    multidate: true,
-    todayHighlight: true
-});
-
 // Instance the tour
 var tour = new Tour({
   steps: [

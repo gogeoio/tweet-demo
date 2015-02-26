@@ -12,7 +12,7 @@
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,300,700' rel='stylesheet' type='text/css'>
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"  rel="stylesheet" h />
     <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/css/datepicker3.min.css' rel='stylesheet' type='text/css' media="all" >
-
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css">
     <link href='assets/css/animate.css' rel='stylesheet' type='text/css' media="all" >
     
     <!-- App CSS -->
@@ -111,7 +111,42 @@
 
 
     <div id="sidebar-dashboard" class="animate fadeInRight">
-        <h1>sflkasf;askfjd;lsakfj</h1>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 tweets-amounts-plus">
+                    <label>Total of tweets</label>
+                    <span>30.300.148</span>
+                </div>
+                <div class="col-md-6 text-right">
+                    <input type="checkbox" name="tweet_flow" data-size="mini" data-off-text="Real Time" data-on-text="Data base"  data-handle-width="70" data-label-width="10" checked>
+                </div>
+            </div>
+            <div class="row tweets-amounts">
+                <div class="col-md-8">
+                    <label>Tweets on viewport</label>
+                    <span>300.148</span>
+                </div>
+                <div class="col-md-4">
+                    <label>User</label>
+                    <span>50.148</span>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">...</div>
+                <div role="tabpanel" class="tab-pane" id="profile">...</div>
+            </div>
+
+        </div>
     </div>
 
     <!-- body twitter map-->
@@ -180,6 +215,15 @@
          $("#step3").hide();
         });
 
+        $(document).ready(function(){
+            $('#rangedate .input-daterange').datepicker({
+                clearBtn: true,
+                multidate: true,
+                todayHighlight: true
+            });
+
+            $("[name='tweet_flow']").bootstrapSwitch();
+        });
     </script>
 
     <script>
@@ -196,9 +240,10 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>
     <!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.10.1/js/bootstrap-tour.min.js"></script> -->
 
-    // <script src="javascript/interface.js"></script>
+    <!-- // <script src="javascript/interface.js"></script> -->
 
     
   </body>

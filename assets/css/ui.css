@@ -201,6 +201,58 @@ body {
   padding: 0px;
   z-index: 2;
 }
+#sidebar-dashboard .tweets-amounts {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+#sidebar-dashboard .tweets-amounts label {
+  color: #868686;
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 600;
+  display: block;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar-dashboard .tweets-amounts span {
+  color: #868686;
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar-dashboard .tweets-amounts-plus {
+  padding-top: 15px;
+}
+#sidebar-dashboard .tweets-amounts-plus label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #868686;
+  line-height: 20px;
+  display: block;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar-dashboard .tweets-amounts-plus span {
+  font-weight: 600;
+  font-size: 36px;
+  color: #1CB4DB;
+  line-height: 1.1em;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar-dashboard .bootstrap-switch {
+  margin-top: 40px;
+}
+#sidebar-dashboard .bootstrap-switch .bootstrap-switch-container .bootstrap-switch-handle-on {
+  text-transform: uppercase;
+}
+#sidebar-dashboard .bootstrap-switch .bootstrap-switch-container .bootstrap-switch-handle-off {
+  text-transform: uppercase;
+}
 /*MODAL ZONE*/
 #addMoreTweets .modal-header {
   background: #1CB4DB;
