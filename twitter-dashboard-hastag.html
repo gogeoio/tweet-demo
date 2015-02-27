@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>goGeo.io | Twitter App</title>
+
+    <!-- 3rd Party -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.10.1/css/bootstrap-tour.min.css" rel="stylesheet"> -->
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,300,700' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"  rel="stylesheet" h />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/css/datepicker3.min.css' rel='stylesheet' type='text/css' media="all" >
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css">
+    <link href='assets/css/animate.css' rel='stylesheet' type='text/css' media="all" >
+    
+    <!-- App CSS -->
+    <link href='assets/css/ui.css' rel='stylesheet' type='text/css' media="all" >
+    
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/img/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/img/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/img/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/img/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/img/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="assets/img/favicon-194x194.png" sizes="194x194">
+    <link rel="icon" type="image/png" href="assets/img/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="assets/img/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="assets/img/manifest.json">
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-TileImage" content="assets/img/mstile-144x144.png">
+    <meta name="msapplication-config" content="assets/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+
+  </head>
+  <body>
+    
+    <!-- header -->
+    <nav class="animate fadeIn navbar-static-top navbar navbar-default">
+      <div class="container-fluid">
+        
+        <div class="navbar-header">
+            
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="assets/img/gogeo-logo.png" alt="Brand" /></a>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <form class="form-inline" rule="search">
+                        <!-- <div class="row"> -->
+                            <div class="form-group">
+                                <label class="sr-only" for="lookingForSomething">Hashtag and user search</label>
+                                <input type="text" class="form-control" id="lookingForSomething" placeholder="Looking for something?" />
+                            </div>
+                            <div class="form-group space-h1">
+                                <label class="sr-only" for="lookingWhere">Where? Contry only</label>
+                                <input type="text" class="form-control" id="lookingWhere" placeholder="Where? Contry only.">
+                            </div>
+                        <!-- </div> -->
+                    </form>
+                </li>
+                <li id="rangedate">
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input-sm form-control" name="start" placeholder="12/05/2014" />
+                        <span class="input-group-addon"><i class="fa fa-calendar fa-2x"></i></span>
+                        <input type="text" class="input-sm form-control" name="end" placeholder="02/25/2015" />
+                    </div>
+                </li>
+                <li>
+                    <button class="btn btn-tour" type="button">
+                        <i class="fa fa-2x fa-bullhorn"></i>
+                        <span>tour</span>
+                    </button>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="pull-right">
+                    <button class="btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#addMoreTweets">Add more milions of tweets</button>
+                </li>
+            </ul>
+        </div>
+
+      </div>
+    </nav>
+
+    <div id="sidebar-dashboard" class="animate fadeInRight">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7 tweets-amounts-plus">
+                    <label>Total of tweets</label>
+                    <span>30.300.148</span>
+                </div>
+                <div class="col-md-5 tweets-label">
+                    <label>Tweets Datebase/Live</label>
+                    <input type="checkbox" name="tweet_flow" data-size="mini" data-off-text="Real Time" data-on-text="Data base"  data-handle-width="70" data-label-width="10" data-off-color="success" checked>
+                    
+                    <a tabindex="0"  class="btn btn-xs btn-info" data-container="body" data-toggle="popover" data-placement="left" data-content="The Live tweets give you access to the last 12hours and the datebase tweet give you access to the the date base from yesterday to early 2014"><i class="fa fa-info-circle" rule="button"></i></a>
+                </div>
+            </div>
+            <div class="row tweets-amounts">
+                <div class="col-md-7">
+                    <label>Tweets on viewport</label>
+                    <span>1.148</span>
+                </div>
+                <div class="col-md-5">
+                    <label>User</label>
+                    <span>3.148</span>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs search-filter" role="tablist">
+                <!-- search filter active location user or hashtag -->
+                <li class="filter">
+                    <a href="#">
+                        <span>#MTVStarts</span>
+                        <button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+                    </a>
+                </li>
+
+                <li role="presentation"><a href="#tweetsList" aria-controls="tweetsList" role="tab" data-toggle="tab">Tweets</a></li>
+                <li role="presentation" class="active"><a href="#hashtags" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="hashtags">
+                    <table class="table table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th>Top5 Where is most used? <a tabindex="0"  class="btn btn-xs btn-link" data-toggle="tooltip" dat-placement="left" title="Not Available for All Countries"><i class="fa fa-info-circle" rule="button"></i></a></th>
+                                <th>Amount</th>
+                                <th>Tweets</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>São Paulo</td>
+                                <td>386</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Curitida</td>
+                                <td>168</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Belo Horizonte</td>
+                                <td>74</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Recife</td>
+                                <td>34</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Brasília</td>
+                                <td>24</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <h3>When the hastag is used?</h3>
+
+                    <canvas id="buyers" width="360" height="230"></canvas>
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="tweetsList">
+                    <table class="table table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th>Most Liked tweets</th>
+                                <th>Favs</th>
+                                <th>Retweets</th>
+                                <th>Tweets</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="cellID_01">
+                                <td><a class="bnt btn-link" href="#">@Harry_styles</a></td>
+                                <td>22,872 K</td>
+                                <td>8,701 K</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr id="cellID_01show">
+                                <td colspan="4">
+                                    <div class="panel panel-default">
+                                      <div class="panel-heading">
+
+                                        <table class="table table-responsive">
+                                            <tr>
+                                                <td>
+                                                    <a class="bnt btn-link" href="#">@Harry_styles</a>
+                                                    <strong>Harry Styles.</strong>
+                                                </td>
+                                                <td>22,872 K</td>
+                                                <td>8,701 K</td>
+                                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                                            </tr>
+                                        </table>
+                                    
+                                      </div>
+                                      <div class="panel-body">
+                                          <p>“<a>@MTVChat</a>: <a>@Harry_Styles</a> is scheduled to takeover tomorrow night! Get excited! 🎉 🎊” this is a bad idea, turn around before it's too late</p>
+                                          <div class="footer-block">
+                                            <div class="pull-left"><i class="fa fa-paperclip"></i>&nbsp;<a href="#">FILE NAME OR VIDEO LINK</a></div>
+                                            <div class="pull-right">14 hours ago</div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a class="bnt btn-link" href="#">@Drrake</a></td>
+                                <td>4,678 K</td>
+                                <td>6,556</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><a class="bnt btn-link" href="#">@TheEllenShow</a></td>
+                                <td>2,031 K</td>
+                                <td>3,429 K</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><a class="bnt btn-link" href="#">@EdDzeko</a></td>
+                                <td>893 K</td>
+                                <td>927</td>
+                                <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- body twitter map-->
+    <div id="map" class="map-dashboard"></div>
+
+    <script type="text/javascript">
+    
+        $(document).ready(function(){
+            $('#rangedate .input-daterange').datepicker({
+                clearBtn: true,
+                multidate: true,
+                todayHighlight: true
+            });
+
+            $('[data-toggle="tooltip"]').tooltip()
+            $("[name='tweet_flow']").bootstrapSwitch();
+            $('[data-toggle="popover"]').popover()
+        });
+    </script>
+
+    <script>
+        // line chart data
+            var buyerData = {
+                labels : ["3PM","6PM","9PM","12PM"],
+                datasets : [
+                {
+                    fillColor : "rgba(109,191,227,0.3)",
+                    strokeColor : "#1CB4DB",
+                    pointColor : "#1CB4DB",
+                    pointStrokeColor : "#1CB4DB",
+                    data : [99,256,203,251]
+                }
+                ]
+            }
+            // get line chart canvas
+            var buyers = document.getElementById('buyers').getContext('2d');
+            // draw line chart
+            new Chart(buyers).Line(buyerData);
+
+    </script>
+
+    <script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoibG9raWRnIiwiYSI6IkRfNkpoMHcifQ.m4reSWIhrD5xIJVkrhRAxA';
+    var map = L.mapbox.map('map', 'lokidg.i7gg619k')
+        .setView([-11.372, -57.634], 5);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>
+
+  </body>
+</html>

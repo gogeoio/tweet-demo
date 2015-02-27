@@ -180,11 +180,13 @@ body {
 }
 .map-dashboard {
   display: block;
-  position: relative!important;
+  position: absolute !important;
   float: left !important;
-  height: 100% !important;
+  min-height: 100% !important;
   z-index: -1;
   width: 69.31403647898493%!important;
+  top: 64px !important;
+  left: 0px;
   /*margin-right:450px;*/
   /*width: auto!important;*/
 }
@@ -306,6 +308,33 @@ body {
   margin-top: 0px;
   border-bottom: none;
 }
+#sidebar-dashboard .nav-tabs.search-filter {
+  background-color: #1cb4db;
+}
+#sidebar-dashboard .nav-tabs.search-filter .filter {
+  float: left;
+  width: 57.8069%;
+  /*margin: 0px;*/
+  margin-right: 0px;
+}
+#sidebar-dashboard .nav-tabs.search-filter .filter a {
+  width: 100%;
+  color: #fcfcfc;
+  font-weight: 600;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  /*span{*/
+  /*line-height: 1.2em;*/
+  /*}*/
+}
+#sidebar-dashboard .nav-tabs.search-filter .filter a button {
+  margin-top: -2px;
+}
+#sidebar-dashboard .nav-tabs.search-filter .filter a:hover {
+  background-color: #106a81;
+  border-color: #106a81;
+  /*border:none;*/
+}
 #sidebar-dashboard .tab-content .tab-pane {
   padding: 15px;
   background-color: white;
@@ -316,6 +345,14 @@ body {
   color: #979797;
   line-height: 24px;
   border: none;
+}
+#sidebar-dashboard .tab-content .tab-pane table thead tr th a {
+  font-size: 1.04em;
+  margin-top: -5px;
+  color: #979797;
+}
+#sidebar-dashboard .tab-content .tab-pane table thead tr th a:hover {
+  color: #1cb4db;
 }
 #sidebar-dashboard .tab-content .tab-pane table tr td .panel {
   margin-bottom: 0px;
@@ -338,6 +375,14 @@ body {
 }
 #sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-body {
   padding: 10px;
+}
+#sidebar-dashboard .tab-content .tab-pane h3 {
+  font-weight: 600;
+  font-size: 16px;
+  color: #868686;
+  line-height: 24px;
+  margin: 0px;
+  padding: 0px;
 }
 .table > tbody > tr > td,
 .table > tbody > tr > th,

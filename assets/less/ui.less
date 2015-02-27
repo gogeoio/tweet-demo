@@ -222,11 +222,14 @@ body{
 
 .map-dashboard{
 	display: block;
-	position: relative!important;
+	position: absolute !important;
 	float: left !important;
-	height: 100% !important;
+	min-height: 100% !important;
 	z-index: -1;
 	width: 69.31403647898493%!important;
+	top: 64px !important;
+	left:0px;
+
 	/*margin-right:450px;*/
 	/*width: auto!important;*/
 }
@@ -366,6 +369,35 @@ body{
 				}
 			}
 		}
+
+		&.search-filter{
+			background-color: @gogeo-blue;
+			.filter{
+				float: left;
+				width: 57.8069%;
+				/*margin: 0px;*/
+				margin-right: 0px;
+				a{
+					width: 100%;
+					color: @gogeo-white;
+					font-weight: 600;
+					padding-top: 12px;
+					padding-bottom:12px; 
+					button{
+						margin-top: -2px;
+					}
+
+					&:hover{
+						background-color: darken(@gogeo-blue,20%);
+						border-color: darken(@gogeo-blue,20%);
+						/*border:none;*/
+					}
+					/*span{*/
+						/*line-height: 1.2em;*/
+					/*}*/
+				}
+			}
+		}
 	}
 
 	.tab-content{
@@ -381,6 +413,14 @@ body{
 							color: #979797;
 							line-height: 24px;
 							border: none;
+							a{
+								font-size:1.04em;
+								margin-top: -5px;
+								color: @gogeo-gray;
+								&:hover{
+									color:@gogeo-blue;
+								}
+							}
 						}
 					}
 				}
@@ -413,6 +453,15 @@ body{
 					}
 
 				}
+			}
+
+			h3{
+				font-weight: 600;
+				font-size: 16px;
+				color: #868686;
+				line-height: 24px;
+				margin: 0px;
+				padding: 0px;
 			}
 		}
 	}
