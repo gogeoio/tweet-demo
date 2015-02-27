@@ -132,7 +132,7 @@ body {
   padding: 0px;
   background-color: #19a1c4;
   border: none;
-  color: #fcfcfc;
+  color: #979797;
   text-transform: uppercase;
 }
 .btn-tour {
@@ -305,6 +305,47 @@ body {
   padding-bottom: 14px;
   margin-top: 0px;
   border-bottom: none;
+}
+#sidebar-dashboard .tab-content .tab-pane {
+  padding: 15px;
+}
+#sidebar-dashboard .tab-content .tab-pane table thead tr th {
+  font-weight: 600;
+  font-size: 16px;
+  color: #979797;
+  line-height: 24px;
+  border: none;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel {
+  margin-bottom: 0px;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading {
+  padding: 5px;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading span {
+  display: block;
+  width: 100%;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading table {
+  background-color: transparent;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading table td {
+  border-bottom: none;
+  font-size: .9em;
+}
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-body {
+  padding: 10px;
+}
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  border-top: none;
+  border-bottom: 1px dashed #D8D8D8;
+  vertical-align: middle;
+  padding: 5px;
 }
 /*MODAL ZONE*/
 #addMoreTweets .modal-header {

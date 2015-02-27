@@ -170,7 +170,7 @@ body{
 		padding:0px;
 		background-color: darken(@gogeo-blue,5%);
 		border:none;
-		color: @gogeo-white;
+		color: @gogeo-gray;
 		text-transform: uppercase;
 	}
 
@@ -367,6 +367,60 @@ body{
 			}
 		}
 	}
+
+	.tab-content{
+		.tab-pane{
+			padding: 15px;
+			table{
+				thead{
+					tr{
+						th{
+							font-weight: 600;
+							font-size: 16px;
+							color: #979797;
+							line-height: 24px;
+							border: none;
+						}
+					}
+				}
+				tr{
+					td{
+						.panel{
+							margin-bottom: 0px;
+
+							.panel-heading{
+								padding: 5px;
+								span{
+									display: block;
+									width: 100%;
+								}
+
+								table{
+									background-color: transparent;
+									td{
+										border-bottom: none;
+										font-size: .9em;
+									}
+								}
+							}
+							.panel-body{
+								padding: 10px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, 
+.table > tfoot > tr > td, .table > tfoot > tr > th, 
+.table > thead > tr > td, .table > thead > tr > th{
+	border-top: none;
+	border-bottom: 1px dashed #D8D8D8;
+	vertical-align: middle;
+	padding: 5px;
 }
 
 /*MODAL ZONE*/
