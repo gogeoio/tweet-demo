@@ -185,13 +185,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="display:none;">
+                            <tr id="cellID_01">
                                 <td><a class="bnt btn-link" href="#">@Harry_styles</a></td>
                                 <td>22,872 K</td>
                                 <td>8,701 K</td>
                                 <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
                             </tr>
-                            <tr>
+                            <tr id="cellID_01show">
                                 <td colspan="4">
                                     <div class="panel panel-default">
                                       <div class="panel-heading">
@@ -207,7 +207,6 @@
                                                 <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
                                             </tr>
                                         </table>
-
                                     
                                       </div>
                                       <div class="panel-body">
@@ -238,7 +237,6 @@
                                 <td>927</td>
                                 <td class="text-center"><button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button></td>
                             </tr>
-                            
 
                         </tbody>
                     </table>
@@ -314,6 +312,7 @@
          $("#step3").hide();
         });
 
+    
         $(document).ready(function(){
             $('#rangedate .input-daterange').datepicker({
                 clearBtn: true,
