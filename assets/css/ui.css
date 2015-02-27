@@ -322,12 +322,14 @@ body {
 #sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading {
   padding: 5px;
 }
-#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading span {
+#sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading strong {
   display: block;
   width: 100%;
 }
 #sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading table {
   background-color: transparent;
+  margin: 0px;
+  padding: 0px;
 }
 #sidebar-dashboard .tab-content .tab-pane table tr td .panel .panel-heading table td {
   border-bottom: none;
