@@ -1,8 +1,0 @@
-{
-  "maxAge": 2678400000,
-  "server": {
-    "port": 3000,
-    "cookieSecret": "cookie secret string",
-    "sessionSecret": "session secret string"
-  }
-}
