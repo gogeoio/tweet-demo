@@ -4,8 +4,18 @@ module.exports = function (grunt) {
 
         watch: {
             javascripts: {
-                files: ['public/javascripts/**.js', '!public/javascripts/**.min.js'],
-                tasks: []
+                files: ['components/*.js', 'components/**/*.js', 'public/javascripts/**.js', '!public/javascripts/**.min.js'],
+                tasks: ['browserify']
+            }
+        },
+
+        browserify: {
+            client: {
+                src: ['components/*.js', 'components/**/*.js'],
+                dest: 'public/lib/app.js',
+                options: {
+                    require: ['jquery'],
+                }
             }
         },
 
@@ -37,9 +47,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-browserify');
 
-    grunt.registerTask('server', ['nodemon:web']);
-    grunt.registerTask('server:watch', ['concurrent']);
+    grunt.registerTask('server', ['browserify', 'nodemon:web']);
+    grunt.registerTask('server:watch', ['browserify', 'concurrent']);
     grunt.registerTask('default', ['server']);
 
 };

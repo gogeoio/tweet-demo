@@ -1,10 +1,10 @@
-var app
-  , path = require("path")
-  , http = require("http")
-  , connect = require("connect")
-  , express = require("express")
-  , routes = require("./config/routes")
-  , settings = require("nconf");
+var app,
+    path = require("path"),
+    http = require("http"),
+    connect = require("connect"),
+    express = require("express"),
+    routes = require("./config/routes"),
+    settings = require("nconf");
 
 app = express();
 settings
