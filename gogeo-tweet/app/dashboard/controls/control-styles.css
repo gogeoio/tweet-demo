@@ -1,0 +1,34 @@
+.dashboard-panel {
+  background-color: #1cb4db;
+}
+.dashboard-panel .dashboard-map-panel {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  float: left;
+}
+.dashboard-panel .dashboard-right-panel {
+  width: 30%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+.dashboard-header .navbar {
+  padding-top: 5px;
+}
+.dashboard-header .navbar-dashboard {
+  background-color: transparent;
+  border: none;
+}
+.dashboard-header .navbar-header .navbar-brand {
+  width: auto;
+  height: auto;
+  margin: 0px;
+  padding: 0px 10px 0 0;
+}
+.dashboard-header .navbar-header .navbar-brand img {
+  margin: 0px 0px 0px 0px;
+}
+.dashboard-details {
+  position: relative;
+}

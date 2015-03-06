@@ -14,22 +14,47 @@ var gulp = require("gulp"),
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
  */
-function atBower(path) {
+function fromBower(path) {
     return "./bower_components/" + path;
 }
 
 
 gulp.task("copyResources", function() {
-    return gulp.src(["app/**/*.html"]).pipe(gulp.dest("./dist"));
+    return gulp
+        .src([
+            fromBower("bootstrap/dist/**/*.ttf"),
+            fromBower("bootstrap/dist/**/*.woff"),
+            fromBower("bootstrap/dist/**/*.woff2"),
+            fromBower("bootstrap/dist/**/*.eot"),
+            fromBower("bootstrap/dist/**/*.svg"),
+            fromBower("leaflet/dist/**/*.jpg"),
+            fromBower("leaflet/dist/**/*.png"),
+            fromBower("leaflet/dist/**/*.svg"),
+            fromBower("mapbox.js/**/*.jpg"),
+            fromBower("mapbox.js/**/*.png"),
+            fromBower("mapbox.js/**/*.svg"),
+            fromBower("font-awesome/**/*.otf"),
+            fromBower("font-awesome/**/*.eot"),
+            fromBower("font-awesome/**/*.svg"),
+            fromBower("font-awesome/**/*.ttf"),
+            fromBower("font-awesome/**/*.woff"),
+            fromBower("font-awesome/**/*.woff2"),
+            "app/**/*.html",
+            "app/**/*.jpg",
+            "app/**/*.png",
+        ])
+        .pipe(gulp.dest("./dist"));
 });
 
 
 gulp.task("bundleCSS", function() {
     var filesToBundle = [
-        atBower("bootstrap/dist/css/bootstrap.css"),
-        atBower("bootstrap/dist/css/bootstrap-theme.css"),
-        atBower("mapbox.js/mapbox.css"),
-        "app/shared/gogeo-workspace.css"
+        fromBower("bootstrap/dist/css/bootstrap.css"),
+        fromBower("bootstrap/dist/css/bootstrap-theme.css"),
+        fromBower("bootstrap-datepicker/css/datepicker3.css"),
+        fromBower("font-awesome/css/font-awesome.css"),
+        fromBower("mapbox.js/mapbox.css"),
+        "app/**/*.css"
     ];
 
     return gulp.src(filesToBundle)
@@ -41,11 +66,12 @@ gulp.task("bundleCSS", function() {
 
 gulp.task("bundleCoreJS", function() {
     var filesToBundle = [
-        atBower("jquery/dist/jquery.js"),
-        atBower("bootstrap/dist/js/bootstrap.js"),
-        atBower("angular/angular.js"),
-        atBower("angular-route/angular-route.js"),
-        atBower("mapbox.js/mapbox.js")
+        fromBower("jquery/dist/jquery.js"),
+        fromBower("bootstrap/dist/js/bootstrap.js"),
+        fromBower("bootstrap-datepicker/js/bootstrap-datepicker.js"),
+        fromBower("angular/angular.js"),
+        fromBower("angular-route/angular-route.js"),
+        fromBower("mapbox.js/mapbox.js")
     ];
 
     return gulp.src(filesToBundle)

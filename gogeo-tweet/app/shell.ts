@@ -36,4 +36,8 @@ module gogeo {
         mod.controller(controllerType.$named, <Function> controllerType);
     }
 
+    export function registerDirective(directiveName: string, config: any) {
+        mod.directive(directiveName, config);
+    }
+
 }
