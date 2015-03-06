@@ -2,202 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="79e62f59-e890-43d1-95be-afaed7edda17" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/angular/angular-range-slider.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/animate.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/app.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap-tour/bootstrap-tour-standalone.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap-tour/bootstrap-tour-standalone.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap-tour/bootstrap-tour.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap-tour/bootstrap-tour.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap/bootstrap-tour-standalone.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap/bootstrap.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/bootstrap/font-awesome.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/d3/nv.d3.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/datepicker/datepicker.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/datepicker/datepicker3.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/fonts/glyphicons-halflings-regular.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/images/layers-2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/images/layers.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/images/marker-icon-2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/images/marker-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/images/marker-shadow.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/leaflet.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/plugins/draw/images/spritesheet-2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/plugins/draw/images/spritesheet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/plugins/draw/leaflet.draw.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/plugins/tilecluster/MarkerCluster.Default.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/leaflet/plugins/tilecluster/MarkerCluster.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/pnotify/pnotify.custom.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/pnotify/pnotify.custom.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/ui-select/select.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/ui-select/select.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/ui.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-144x144.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-192x192.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-36x36.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-48x48.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-72x72.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/android-chrome-96x96.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-114x114.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-120x120.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-144x144.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-152x152.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-180x180.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-57x57.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-60x60.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-72x72.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-76x76.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon-precomposed.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/apple-touch-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/browserconfig.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/favicon-16x16.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/favicon-194x194.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/favicon-32x32.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/favicon-96x96.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/favicon.ico" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/gogeo-brand.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/gogeo-logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/manifest.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mapcontrol/delete-map.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mapcontrol/edit-map.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mapcontrol/minus-map.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mapcontrol/plus-map.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mapcontrol/select-map.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/marker/morning-morning.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/marker/night-marker.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/marker/noon-maker.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/marker/popup/active-tweet-marker.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/marker/popup/thumb-tweet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/modal/step-checked.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/modal/step-unchecked.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mstile-144x144.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mstile-150x150.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mstile-310x150.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mstile-310x310.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/img/mstile-70x70.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/app.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/chartsController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/dashboardController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/mapController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/mapSelectorController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/notifyController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/queryController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/timeQueryController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/tourController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/controllers/tweetPopupController.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/interface.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular-leaflet-directive.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular-leaflet-directive.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular-range-slider.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular-sanitize.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular-sanitize.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/angular.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/dirPagination.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/angular/dirPagination.tpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap-tour/bootstrap-tour-standalone.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap-tour/bootstrap-tour-standalone.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap-tour/bootstrap-tour.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap-tour/bootstrap-tour.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/bootstrap-custom/ui-bootstrap-custom-0.10.0.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/bootstrap-custom/ui-bootstrap-custom-tpls-0.10.0.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/bootstrap-tour-standalone.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/bootstrap.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/ui-bootstrap-custom-0.10.0.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/bootstrap/ui-bootstrap-custom-tpls-0.10.0.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/d3/d3.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/d3/d3plus.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/bootstrap-datepicker.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ar.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.az.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.bg.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.bs.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ca.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.cs.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.cy.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.da.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.de.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.el.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.en-GB.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.es.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.et.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.eu.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.fa.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.fi.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.fo.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.fr-CH.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.fr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.gl.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.he.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.hr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.hu.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.hy.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.id.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.is.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.it-CH.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.it.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ja.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ka.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.kh.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.kk.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.kr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.lt.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.lv.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.mk.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ms.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.nb.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.nl-BE.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.nl.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.no.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.pl.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.pt-BR.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.pt.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ro.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.rs-latin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.rs.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.ru.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sk.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sl.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sq.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sr-latin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sv.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.sw.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.th.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.tr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.uk.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.vi.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.zh-CN.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/datepicker/locales/bootstrap-datepicker.zh-TW.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/google/maps.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/jquery/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/jquery/jquery.number.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/images/marker-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/images/marker-shadow.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/leaflet.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/plugins/draw/leaflet.draw.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/plugins/geodesy/leaflet-geodesy.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/plugins/layer/tile/Google.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/leaflet/plugins/tilecluster/leaflet.tilecluster.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/linkify/ba-linkify.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/pnotify/pnotify.custom.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/ui-select/select.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/lib/ui-select/select.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/services.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/views/bubble-chart.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/javascript/views/tweet-template.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/less/ui.less" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/config-sample.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/twitter-dashboard-hastag.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/twitter-dashboard-hastag_location.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/twitter-dashboard-user.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/twitter-dashboard.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/twitter-home.html" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/gogeo-twitter.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gogeo-twitter/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tweet-demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -218,7 +30,28 @@
     <favorites_list name="tweet-demo" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="Gulpfile.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/gogeo-twitter/Gulpfile.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.38247013">
+              <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gogeo-twitter/app/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.25">
+              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -226,6 +59,14 @@
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
       <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/gogeo-twitter/app/scripts/main.js" />
+        <option value="$PROJECT_DIR$/gogeo-twitter/Gulpfile.js" />
+      </list>
     </option>
   </component>
   <component name="JsGulpfileManager">
@@ -271,8 +112,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -291,9 +130,209 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="styles" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="services" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="directives" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tweet-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gogeo-twitter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,6 +362,47 @@
       <option name="PROGRAM_PARAMETERS" />
       <method />
     </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module />
       <option name="WIDTH" value="400" />
@@ -343,6 +423,100 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -366,12 +540,26 @@
       <patterns />
       <method />
     </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -402,6 +590,9 @@
       <listeners />
       <method />
     </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnConfiguration">
@@ -416,15 +607,17 @@
       <workItem from="1425580905514" duration="1338000" />
       <workItem from="1425585286730" duration="903000" />
       <workItem from="1425588484267" duration="77000" />
+      <workItem from="1425590032495" duration="305000" />
+      <workItem from="1425598416913" duration="630000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2318000" />
+    <option name="totallyTimeSpent" value="3253000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="873" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="23" width="1440" height="873" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -433,6 +626,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -444,13 +638,12 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -470,10 +663,42 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/twitter-home.html">
+    <entry file="file://$PROJECT_DIR$/gogeo-twitter/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50617284">
-          <caret line="65" column="12" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gogeo-twitter/app/scripts/controllers/WelcomeCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gogeo-twitter/app/scripts/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.07968128">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gogeo-twitter/app/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.25">
+          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gogeo-twitter/Gulpfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38247013">
+          <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
           <folding />
         </state>
       </provider>
