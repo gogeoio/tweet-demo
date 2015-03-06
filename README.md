@@ -2,6 +2,8 @@
 
 goGeo Tweets Demo App
 
+[http://demos.gogeo.io/tweets](http://demos.gogeo.io/tweets)
+
 ## Setup
 
 Please create an environment configuration file inside the `config/` folder. There's a sample on
@@ -22,5 +24,3 @@ $ NODE_ENV=<environment> grunt server
 ```sh
 $ NODE_ENV=<environment> grunt server:watch
 ```
-
-[http://demos.gogeo.io/tweets](http://demos.gogeo.io/tweets)
