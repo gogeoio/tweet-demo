@@ -7,7 +7,6 @@
  */
 
 
-
 module gogeo {
 
 
@@ -18,37 +17,75 @@ module gogeo {
             DashboardService.$named
         ];
 
-        map: L.Map;
+        map:L.Map;
 
-        constructor(
-            private $scope: ng.IScope,
-            private $rootScope: ng.IScope,
-            private service: DashboardService) {
+        constructor(private $scope:ng.IScope,
+                    private $rootScope:ng.IScope,
+                    private service:DashboardService) {
 
         }
 
-        initialize(map: L.Map) {
+        initialize(map:L.Map) {
             this.map = map;
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
+
+            this.initializeLayer();
+        }
+
+        initializeLayer() {
+            var host = '{s}.gogeo.io/1.0';
+            var database = 'db1';
+            var collection = 'tweets';
+            var buffer = 32;
+            var stylename = 'gogeo_many_points';
+
+            var url = 'http://' + host + '/map/' + database + '/' +
+                collection + '/{z}/{x}/{y}/tile.png?buffer=' + buffer +
+                '&stylename=' + stylename + '&mapkey=123';
+
+            var layer = L.tileLayer(url, {
+                subdomains: ["m1", "m2", "m3", "m4"]
+            });
+
+            var layerGroup = L.layerGroup([]);
+
+            this.map.setView(new L.LatLng(34.717232, -92.353034), 5);
+            this.map.addLayer(layerGroup);
+
+            layerGroup.addLayer(layer);
+
+            this.service.queryObservable
+                .where(q => q != null)
+                .throttle(400)
+                .subscribeAndApply(this.$scope, (query) => {
+                    var newUrl = `${url}&q=${angular.toJson(query)}`;
+
+                    layerGroup.removeLayer(layer);
+
+                    layer = L.tileLayer(newUrl, {
+                        subdomains: ["m1", "m2", "m3", "m4"]
+                    });
+
+                    layerGroup.addLayer(layer);
+                });
         }
 
         onMapLoaded() {
-            console.log("onMapLoaded");
             this.service.updateGeomSpaceByBounds(this.map.getBounds());
         }
     }
 
     registerDirective("dashboardMap", [
         "$timeout",
-        ($timeout: ng.ITimeoutService) => {
+        ($timeout:ng.ITimeoutService) => {
             return {
                 restrict: "C",
                 template: "<div class='dashboard-map-container'></div>",
                 controller: DashboardMapController,
                 bindToController: true,
 
-                link(scope, element, attrs, controller: DashboardMapController) {
+                link(scope, element, attrs, controller:DashboardMapController) {
                     var options = {
                         attributionControl: false,
                         minZoom: 2,

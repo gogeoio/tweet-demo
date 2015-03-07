@@ -18,14 +18,14 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form class="navbar-form form-inline" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Looking for something?">
+                    <input type="text" class="form-control" placeholder="Looking for something?" ng-model="header.term">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" ng-show="false">
                     <input type="text" class="form-control" placeholder="Where? Country only">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" ng-show="false">
                     <daterange></daterange>
                 </div>
             </form>
