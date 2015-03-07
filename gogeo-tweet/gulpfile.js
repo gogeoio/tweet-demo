@@ -39,6 +39,7 @@ gulp.task("copyResources", function() {
             fromBower("font-awesome/**/*.ttf"),
             fromBower("font-awesome/**/*.woff"),
             fromBower("font-awesome/**/*.woff2"),
+            fromBower("leaflet.draw/dist/**/*.png"),
             "app/**/*.html",
             "app/**/*.jpg",
             "app/**/*.png",
@@ -54,6 +55,7 @@ gulp.task("bundleCSS", function() {
         fromBower("bootstrap-datepicker/css/datepicker3.css"),
         fromBower("font-awesome/css/font-awesome.css"),
         fromBower("mapbox.js/mapbox.css"),
+        fromBower("leaflet.draw/dist/leaflet.draw.css"),
         "app/**/*.css"
     ];
 
@@ -71,7 +73,12 @@ gulp.task("bundleCoreJS", function() {
         fromBower("bootstrap-datepicker/js/bootstrap-datepicker.js"),
         fromBower("angular/angular.js"),
         fromBower("angular-route/angular-route.js"),
-        fromBower("mapbox.js/mapbox.js")
+        fromBower("mapbox.js/mapbox.js"),
+        fromBower("leaflet.draw/dist/leaflet.draw.js"),
+        fromBower("leaflet-plugins/layer/tile/Google.js"),
+        fromBower("rxjs/dist/rx.lite.js"),
+        fromBower("rxjs/dist/rx.lite.compat.js"),
+        "app/shared/support/rx-angular.js"
     ];
 
     return gulp.src(filesToBundle)
@@ -85,7 +92,7 @@ gulp.task("bundleCoreJS", function() {
  */
 gulp.task("bundleTS", function() {
     return gulp.src("./app/**/*.ts")
-        .pipe(tsc({ out: "gogeo-tweet.js" }))
+        .pipe(tsc({ out: "gogeo-tweet.js", target: "ES5" }))
         .pipe(rename("gogeo-tweet.js"))
         .pipe(gulp.dest("./dist"));
 });

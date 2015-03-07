@@ -1,0 +1,34 @@
+<table class="table table-responsive table-hover">
+    <thead>
+    <tr>
+        <th>Top {{ hashtags.buckets.length }} most used hashtags</th>
+        <th>#tag</th>
+        <!--<th>Tweets</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="active text-primary" colspan="2" ng-show="hashtags.hasSelected()">
+            <button class="btn btn-link" ng-click="hashtags.unselect()">
+                Clear hashtag
+            </button>
+        </td>
+    </tr>
+    <tr ng-repeat="bucket in hashtags.buckets">
+        <td>
+            <span ng-show="hashtags.hasSelected()">
+                {{ bucket.key }}
+            </span>
+            <a href=""
+               ng-click="hashtags.selectHashtag(bucket)"
+               ng-hide="hashtags.hasSelected()">{{ bucket.key }}</a>
+        </td>
+        <td>
+            {{ bucket.doc_count }}
+        </td>
+        <!--<td class="text-center">-->
+        <!--<button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button>-->
+        <!--</td>-->
+    </tr>
+    </tbody>
+</table>
