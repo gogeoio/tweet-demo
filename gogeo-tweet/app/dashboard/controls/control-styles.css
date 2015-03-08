@@ -60,3 +60,7 @@
   top: 0;
   bottom: 0;
 }
+
+.leaflet-popup-content {
+  width: 550px !important;
+}

@@ -18,6 +18,7 @@ module gogeo {
         ];
 
         map:L.Map;
+        tweetResult:ITweet;
 
         constructor(private $scope:ng.IScope,
                     private $rootScope:ng.IScope,
@@ -25,10 +26,12 @@ module gogeo {
 
         }
 
-        initialize(map:L.Map) {
+        initialize(map: L.Map) {
             this.map = map;
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
+            this.map.on("click", (e) => this.openPopup(e));
+            // this.map.on("click", (e) => this.service.getTweet(e['latlng']));
 
             this.initializeLayer();
         }
@@ -74,6 +77,20 @@ module gogeo {
         onMapLoaded() {
             this.service.updateGeomSpaceByBounds(this.map.getBounds());
         }
+
+        openPopup(event) {
+            var self = this;
+            this.service.getTweet(event.latlng).success(
+                function(result: ITweet) {
+                    self.tweetResult = result[0];
+
+                    var popup = L.popup();
+                    popup.setContent($("#tweet-popup")[0]);
+                    popup.setLatLng(event.latlng);
+                    self.map.openPopup(popup);
+                }
+            );
+        }
     }
 
     registerDirective("dashboardMap", [
@@ -81,8 +98,9 @@ module gogeo {
         ($timeout:ng.ITimeoutService) => {
             return {
                 restrict: "C",
-                template: "<div class='dashboard-map-container'></div>",
+                templateUrl: "dashboard/controls/dashboard-map-template.html",
                 controller: DashboardMapController,
+                controllerAs: "map",
                 bindToController: true,
 
                 link(scope, element, attrs, controller:DashboardMapController) {

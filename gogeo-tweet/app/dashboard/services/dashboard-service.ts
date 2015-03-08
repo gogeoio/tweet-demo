@@ -52,6 +52,55 @@ module gogeo {
         buckets: Array<IBucket>;
     }
 
+    export interface IUser {
+        id: number;
+        name: string;
+        screen_name: string;
+        location: string;
+        url: string;
+        description: string;
+        followers_count: number;
+        friends_count: number;
+        listed_count: number;
+        favourites_count: number;
+        statuses_count: number;
+        created_at: string;
+        time_zone: string;
+        geo_enabled: boolean;
+        lang: string;
+        profile_background_image_url: string;
+        profile_image_url: string;
+        profile_banner_url: string;
+    }
+
+    export interface IPlace {
+        id: string;
+        url: string;
+        place_type: string;
+        full_name: string;
+        country_code: string;
+        country: string;
+    }
+
+    export interface ITweet {
+        created_at: string;
+        id: string;
+        text: string;
+        source: string;
+        truncated: boolean;
+        in_reply_to_status_id: number;
+        in_reply_to_user_id: number;
+        in_reply_to_screen_name: string;
+        retweet_count: number;
+        favorite_count: number;
+        favorited: boolean;
+        retweeted: boolean;
+        possibly_sensitive: boolean;
+        lang: string;
+        timestamp_ms: number;
+        user: IUser;
+        place: IPlace;
+    }
 
     export class DashboardService {
         static $named = "dashboardService";
@@ -132,7 +181,7 @@ module gogeo {
             }
         }
 
-        updateHashtagBucket(bucket:IBucket) {
+        updateHashtagBucket(bucket: IBucket) {
             this._lastHashtagFilter = bucket;
             this._hashtagFilterObservable.onNext(bucket);
         }
@@ -140,6 +189,77 @@ module gogeo {
         updateSomethingTerm(term: string) {
             this._lastSomethingTerm = term;
             this._somethingTermObservable.onNext(term);
+        }
+
+        getTweet(latlng: L.LatLng) {
+            return this.getTweetData(latlng);
+        }
+
+        private getTweetData(latlng: L.LatLng) {
+            var url = "https://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+
+            var zoom = 5;
+            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2,(zoom + 8));
+
+            var data: any = {
+              geom: {
+                type: "Point",
+                coordinates: [
+                  latlng.lng, latlng.lat
+                ]
+              },
+              limit: 1,
+              buffer: pixelDist * 16,
+              buffer_measure: "kilometer",
+              fields: [
+                // user
+                "user.id",
+                "user.name",
+                "user.screen_name",
+                "user.location",
+                "user.url",
+                "user.description",
+                "user.followers_count",
+                "user.friends_count",
+                "user.listed_count",
+                "user.favourites_count",
+                "user.statuses_count",
+                "user.created_at",
+                "user.time_zone",
+                "user.geo_enabled",
+                "user.lang",
+                "user.profile_background_image_url",
+                "user.profile_image_url",
+                "user.profile_banner_url",
+                // place
+                "place.id",
+                "place.url",
+                "place.place_type",
+                "place.full_name",
+                "place.country_code",
+                "place.country",
+                // tweet
+                "created_at",
+                "id",
+                "text",
+                "source",
+                "truncated",
+                "in_reply_to_status_id",
+                "in_reply_to_user_id",
+                "in_reply_to_screen_name",
+                "retweet_count",
+                "favorite_count",
+                "favorited",
+                "retweeted",
+                "possibly_sensitive",
+                "lang",
+                "timestamp_ms"
+              ]
+              // ,
+              // q: angular.toJson(query) // Essa query e passada como string mesmo
+            };
+
+            return this.$http.post<ITweet>(url, data);
         }
 
         private searchHashtags() {
