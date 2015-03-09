@@ -112,7 +112,7 @@ module gogeo {
                         var options = {
                             closeButton: false,
                             className: "marker-popup",
-                            offset: new L.Point(-195, -260)
+                            offset: new L.Point(-195, -265)
                         };
                         self.popup = L.popup(options);
                         self.popup.setContent($("#tweet-popup")[0]);
