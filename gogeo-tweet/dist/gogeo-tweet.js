@@ -196,6 +196,68 @@ var gogeo;
             this._lastSomethingTerm = term;
             this._somethingTermObservable.onNext(term);
         };
+        DashboardService.prototype.getTweet = function (latlng) {
+            return this.getTweetData(latlng);
+        };
+        DashboardService.prototype.getTweetData = function (latlng) {
+            var url = "https://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+            var zoom = 5;
+            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+            var data = {
+                geom: {
+                    type: "Point",
+                    coordinates: [
+                        latlng.lng,
+                        latlng.lat
+                    ]
+                },
+                limit: 1,
+                buffer: pixelDist * 16,
+                buffer_measure: "kilometer",
+                fields: [
+                    "user.id",
+                    "user.name",
+                    "user.screen_name",
+                    "user.location",
+                    "user.url",
+                    "user.description",
+                    "user.followers_count",
+                    "user.friends_count",
+                    "user.listed_count",
+                    "user.favourites_count",
+                    "user.statuses_count",
+                    "user.created_at",
+                    "user.time_zone",
+                    "user.geo_enabled",
+                    "user.lang",
+                    "user.profile_background_image_url",
+                    "user.profile_image_url",
+                    "user.profile_banner_url",
+                    "place.id",
+                    "place.url",
+                    "place.place_type",
+                    "place.full_name",
+                    "place.country_code",
+                    "place.country",
+                    "created_at",
+                    "id",
+                    "text",
+                    "source",
+                    "truncated",
+                    "in_reply_to_status_id",
+                    "in_reply_to_user_id",
+                    "in_reply_to_screen_name",
+                    "retweet_count",
+                    "favorite_count",
+                    "favorited",
+                    "retweeted",
+                    "possibly_sensitive",
+                    "lang",
+                    "timestamp_ms"
+                ]
+            };
+            return this.$http.post(url, data);
+        };
         DashboardService.prototype.searchHashtags = function () {
             var geomSpace = this._lastGeomSpace;
             var hashtag = this._lastHashtagFilter;
@@ -263,7 +325,6 @@ var gogeo;
         function DashboardDetailsController($scope, service) {
             this.$scope = $scope;
             this.service = service;
-            console.log("hashtags created");
         }
         DashboardDetailsController.prototype.initialize = function () {
             var _this = this;
@@ -391,6 +452,7 @@ var gogeo;
             this.map = map;
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", function (e) { return _this.onMapLoaded(); });
+            this.map.on("click", function (e) { return _this.openPopup(e); });
             this.initializeLayer();
         };
         DashboardMapController.prototype.initializeLayer = function () {
@@ -419,6 +481,38 @@ var gogeo;
         DashboardMapController.prototype.onMapLoaded = function () {
             this.service.updateGeomSpaceByBounds(this.map.getBounds());
         };
+        DashboardMapController.prototype.hidePopup = function () {
+            this.map.closePopup(this.popup);
+            this.tweetResult = null;
+        };
+        DashboardMapController.prototype.formatPictureUrl = function (url) {
+            if (!url) {
+                return url;
+            }
+            var url = url.replace("_normal", "");
+            return url;
+        };
+        DashboardMapController.prototype.openPopup = function (event) {
+            var self = this;
+            this.service.getTweet(event.latlng).success(function (result) {
+                self.tweetResult = result[0];
+                if (self.popup == null) {
+                    var options = {
+                        closeButton: false,
+                        className: "marker-popup",
+                        offset: new L.Point(-195, -260)
+                    };
+                    self.popup = L.popup(options);
+                    self.popup.setContent($("#tweet-popup")[0]);
+                }
+                else {
+                    self.popup.setContent($("#tweet-popup")[0]);
+                    self.popup.update();
+                }
+                self.popup.setLatLng(event.latlng);
+                self.map.openPopup(self.popup);
+            });
+        };
         DashboardMapController.$inject = [
             "$scope",
             "$rootScope",
@@ -431,8 +525,9 @@ var gogeo;
         function ($timeout) {
             return {
                 restrict: "C",
-                template: "<div class='dashboard-map-container'></div>",
+                templateUrl: "dashboard/controls/dashboard-map-template.html",
                 controller: DashboardMapController,
+                controllerAs: "map",
                 bindToController: true,
                 link: function (scope, element, attrs, controller) {
                     var options = {

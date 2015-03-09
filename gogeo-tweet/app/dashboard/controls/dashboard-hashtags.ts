@@ -20,7 +20,6 @@ module gogeo {
         constructor(
             private $scope: ng.IScope,
             private service: DashboardService) {
-
         }
 
         hasSelected() {

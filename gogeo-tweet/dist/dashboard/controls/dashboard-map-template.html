@@ -1,0 +1,38 @@
+<div class='dashboard-map-container'></div>
+
+<div id="tweet-popup" ng-show="map.tweetResult">
+  <div class="marker-popup">
+    <div class="marker-content">
+      <img src="dashboard/images/active-tweet-marker.png" class="marker-view">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="map.hidePopup()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <img class="mc-weet-thumb" ng-src="{{ map.formatPictureUrl(map.tweetResult['user.profile_image_url']) }}" alt="" width="94" height="94" />
+
+      <div class="mc-tweet-user">
+        <div class="row">
+          <div class="col-md-12">
+            <p>{{ map.tweetResult['user.name'] }}</p>
+            <a target="_blank" href="http://www.twitter.com/{{ map.tweetResult['user.screen_name'] }}">@{{ map.tweetResult["user.screen_name"] }}</a>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col-md-6">
+            <label>Retweets</label>
+            <span><strong>4</strong></span>
+          </div>
+          <div class="col-md-6">
+            <label>Favs</label>
+            <span><strong>6</strong></span>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="mc-tweet-msg">
+        <label>Message</label>
+        <p>{{ map.tweetResult["text"] }}</p>
+      </div>
+    </div>
+  </div>
+</div>
