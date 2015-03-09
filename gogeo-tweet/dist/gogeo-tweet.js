@@ -122,7 +122,7 @@ var gogeo;
             this.$http = $http;
             this._lastGeomSpace = null;
             this._lastHashtagFilter = null;
-            this._lastSomethingTerm = null;
+            this._lastSearchTerm = null;
             this._geomSpaceObservable = new Rx.BehaviorSubject(null);
             this._hashtagFilterObservable = new Rx.BehaviorSubject(null);
             this._somethingTermObservable = new Rx.BehaviorSubject(null);
@@ -192,8 +192,8 @@ var gogeo;
             this._lastHashtagFilter = bucket;
             this._hashtagFilterObservable.onNext(bucket);
         };
-        DashboardService.prototype.updateSomethingTerm = function (term) {
-            this._lastSomethingTerm = term;
+        DashboardService.prototype.updateSearchTerm = function (term) {
+            this._lastSearchTerm = term;
             this._somethingTermObservable.onNext(term);
         };
         DashboardService.prototype.getTweet = function (latlng) {
@@ -258,12 +258,29 @@ var gogeo;
             };
             return this.$http.post(url, data);
         };
-        DashboardService.prototype.searchHashtags = function () {
-            var geomSpace = this._lastGeomSpace;
-            var hashtag = this._lastHashtagFilter;
-            var somethingTerm = this._lastSomethingTerm;
-            var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
-            var data = {
+        DashboardService.prototype.search = function () {
+            var _this = this;
+            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
+            if (this._lastHashtagFilter)
+                query.filterByHashtag(this._lastHashtagFilter);
+            if (this._lastSearchTerm)
+                query.filterBySearchTerm(this._lastSearchTerm);
+            query.execute(function (result) { return _this._hashtagResultObservable.onNext(result); });
+            this._lastQueryObservable.onNext(query.requestData);
+        };
+        DashboardService.$named = "dashboardService";
+        DashboardService.$inject = [
+            "$q",
+            "$http"
+        ];
+        return DashboardService;
+    })();
+    gogeo.DashboardService = DashboardService;
+    var DashboardQuery = (function () {
+        function DashboardQuery($http, geomSpace) {
+            this.$http = $http;
+            this.requestData = {};
+            this.requestData = {
                 agg_size: 10,
                 field: "entities.hashtags.text",
                 geom: geomSpace,
@@ -275,22 +292,32 @@ var gogeo;
                     }
                 }
             };
-            var filter = data.q.query.filtered.filter;
+        }
+        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
+            var filter = this.requestData.q.query.filtered.filter;
             if (hashtag) {
-                data["field"] = "place.full_name.raw";
-                var and = this.getAndRestriction(filter);
+                this.requestData["field"] = "place.full_name.raw";
+                var and = this.getOrCreateAndRestriction(filter);
                 var queryString = new QueryString(QueryString.HashtagText, hashtag.key);
                 and.filters.push(queryString.build());
             }
-            if (somethingTerm) {
-                var and = this.getAndRestriction(filter);
-                var queryString = new QueryString(QueryString.UserScreenName, somethingTerm);
-                and.filters.push(queryString.build());
-            }
-            this._lastQueryObservable.onNext(data.q);
-            return this.$http.post(url, data);
         };
-        DashboardService.prototype.getAndRestriction = function (filter) {
+        DashboardQuery.prototype.filterBySearchTerm = function (term) {
+            var _this = this;
+            var usernamePattern = /^@[a-zA-Z_]\w*\*?$/;
+            Enumerable.from(term.split(' ')).select(function (entry) { return entry.trim(); }).where(function (entry) { return entry != null && entry.length > 0; }).forEach(function (entry) {
+                if (usernamePattern.test(entry)) {
+                    _this.filterByUsername(entry.substring(1)); // skipping the @
+                }
+            });
+        };
+        DashboardQuery.prototype.filterByUsername = function (username) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new QueryString(QueryString.UserScreenName, username);
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
             var and = filter["and"];
             if (!and) {
                 and = filter.and = {
@@ -299,18 +326,12 @@ var gogeo;
             }
             return and;
         };
-        DashboardService.prototype.search = function () {
-            var _this = this;
-            this.searchHashtags().success(function (result) { return _this._hashtagResultObservable.onNext(result); });
+        DashboardQuery.prototype.execute = function (resultHandler) {
+            var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
+            return this.$http.post(url, this.requestData).success(resultHandler);
         };
-        DashboardService.$named = "dashboardService";
-        DashboardService.$inject = [
-            "$q",
-            "$http"
-        ];
-        return DashboardService;
+        return DashboardQuery;
     })();
-    gogeo.DashboardService = DashboardService;
     gogeo.registerService(DashboardService);
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
@@ -413,7 +434,7 @@ var gogeo;
         DashboardController.prototype.initialize = function () {
             var _this = this;
             this.$scope.$watch("header.term", function (term) {
-                _this.service.updateSomethingTerm(term);
+                _this.service.updateSearchTerm(term);
             });
         };
         DashboardController.$inject = [

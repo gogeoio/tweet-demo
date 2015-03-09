@@ -16,7 +16,7 @@ module gogeo {
         static HashtagText = "entities.hashtags.text";
         static UserScreenName = "user.screen_name";
 
-        constructor(public field: string, public term: string) {
+        constructor(public field:string, public term:string) {
 
         }
 
@@ -76,9 +76,9 @@ module gogeo {
             "$http"
         ];
 
-        private _lastGeomSpace: IGeomSpace = null;
-        private _lastHashtagFilter: IBucket = null;
-        private _lastSomethingTerm: string = null;
+        private _lastGeomSpace:IGeomSpace = null;
+        private _lastHashtagFilter:IBucket = null;
+        private _lastSearchTerm:string = null;
 
         _geomSpaceObservable = new Rx.BehaviorSubject<IGeomSpace>(null);
         _hashtagFilterObservable = new Rx.BehaviorSubject<IBucket>(null);
@@ -99,7 +99,7 @@ module gogeo {
             return this._hashtagResultObservable;
         }
 
-        get queryObservable(): Rx.Observable<any> {
+        get queryObservable():Rx.Observable<any> {
             return this._lastQueryObservable;
         }
 
@@ -148,132 +148,155 @@ module gogeo {
             }
         }
 
-        updateHashtagBucket(bucket: IBucket) {
+        updateHashtagBucket(bucket:IBucket) {
             this._lastHashtagFilter = bucket;
             this._hashtagFilterObservable.onNext(bucket);
         }
 
-        updateSomethingTerm(term: string) {
-            this._lastSomethingTerm = term;
+        updateSearchTerm(term:string) {
+            this._lastSearchTerm = term;
             this._somethingTermObservable.onNext(term);
         }
 
-        getTweet(latlng: L.LatLng) {
+        getTweet(latlng:L.LatLng) {
             return this.getTweetData(latlng);
         }
 
-        private getTweetData(latlng: L.LatLng) {
+        private getTweetData(latlng:L.LatLng) {
             var url = "https://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
 
             var zoom = 5;
-            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2,(zoom + 8));
+            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
 
-            var data: any = {
-              geom: {
-                type: "Point",
-                coordinates: [
-                  latlng.lng, latlng.lat
+            var data:any = {
+                geom: {
+                    type: "Point",
+                    coordinates: [
+                        latlng.lng, latlng.lat
+                    ]
+                },
+                limit: 1,
+                buffer: pixelDist * 16,
+                buffer_measure: "kilometer",
+                fields: [
+                    // user
+                    "user.id",
+                    "user.name",
+                    "user.screen_name",
+                    "user.location",
+                    "user.url",
+                    "user.description",
+                    "user.followers_count",
+                    "user.friends_count",
+                    "user.listed_count",
+                    "user.favourites_count",
+                    "user.statuses_count",
+                    "user.created_at",
+                    "user.time_zone",
+                    "user.geo_enabled",
+                    "user.lang",
+                    "user.profile_background_image_url",
+                    "user.profile_image_url",
+                    "user.profile_banner_url",
+                    // place
+                    "place.id",
+                    "place.url",
+                    "place.place_type",
+                    "place.full_name",
+                    "place.country_code",
+                    "place.country",
+                    // tweet
+                    "created_at",
+                    "id",
+                    "text",
+                    "source",
+                    "truncated",
+                    "in_reply_to_status_id",
+                    "in_reply_to_user_id",
+                    "in_reply_to_screen_name",
+                    "retweet_count",
+                    "favorite_count",
+                    "favorited",
+                    "retweeted",
+                    "possibly_sensitive",
+                    "lang",
+                    "timestamp_ms"
                 ]
-              },
-              limit: 1,
-              buffer: pixelDist * 16,
-              buffer_measure: "kilometer",
-              fields: [
-                // user
-                "user.id",
-                "user.name",
-                "user.screen_name",
-                "user.location",
-                "user.url",
-                "user.description",
-                "user.followers_count",
-                "user.friends_count",
-                "user.listed_count",
-                "user.favourites_count",
-                "user.statuses_count",
-                "user.created_at",
-                "user.time_zone",
-                "user.geo_enabled",
-                "user.lang",
-                "user.profile_background_image_url",
-                "user.profile_image_url",
-                "user.profile_banner_url",
-                // place
-                "place.id",
-                "place.url",
-                "place.place_type",
-                "place.full_name",
-                "place.country_code",
-                "place.country",
-                // tweet
-                "created_at",
-                "id",
-                "text",
-                "source",
-                "truncated",
-                "in_reply_to_status_id",
-                "in_reply_to_user_id",
-                "in_reply_to_screen_name",
-                "retweet_count",
-                "favorite_count",
-                "favorited",
-                "retweeted",
-                "possibly_sensitive",
-                "lang",
-                "timestamp_ms"
-              ]
-              // ,
-              // q: angular.toJson(query) // Essa query e passada como string mesmo
+                // ,
+                // q: angular.toJson(query) // Essa query e passada como string mesmo
             };
 
             return this.$http.post<ITweet>(url, data);
         }
 
-        private searchHashtags() {
-            var geomSpace = this._lastGeomSpace;
-            var hashtag = this._lastHashtagFilter;
-            var somethingTerm = this._lastSomethingTerm;
-            var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
+        search() {
+            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
 
-            var data: any = {
+            if (this._lastHashtagFilter)
+                query.filterByHashtag(this._lastHashtagFilter);
+
+            if (this._lastSearchTerm)
+                query.filterBySearchTerm(this._lastSearchTerm);
+
+            query.execute(result => this._hashtagResultObservable.onNext(result));
+            this._lastQueryObservable.onNext(query.requestData);
+        }
+    }
+
+
+    class DashboardQuery {
+        requestData: any = {};
+
+        constructor(private $http: ng.IHttpService, geomSpace: IGeomSpace) {
+            this.requestData = {
                 agg_size: 10,
                 field: "entities.hashtags.text",
                 geom: geomSpace,
                 q: {
                     query: {
                         filtered: {
-                            filter: {
-
-                            }
+                            filter: {}
                         }
                     }
                 }
             };
+        }
 
-            var filter: any = data.q.query.filtered.filter;
+        filterByHashtag(hashtag: IBucket) {
+            var filter:any = this.requestData.q.query.filtered.filter;
 
             if (hashtag) {
-                data["field"] = "place.full_name.raw";
+                this.requestData["field"] = "place.full_name.raw";
 
-                var and = this.getAndRestriction(filter);
+                var and = this.getOrCreateAndRestriction(filter);
                 var queryString = new QueryString(QueryString.HashtagText, hashtag.key);
 
                 and.filters.push(queryString.build());
             }
-
-            if (somethingTerm) {
-                var and = this.getAndRestriction(filter);
-                var queryString = new QueryString(QueryString.UserScreenName, somethingTerm);
-
-                and.filters.push(queryString.build());
-            }
-
-            this._lastQueryObservable.onNext(data.q);
-
-            return this.$http.post<IHashtagResult>(url, data);
         }
 
-        getAndRestriction(filter: any) {
+        filterBySearchTerm(term: string) {
+            var usernamePattern = /^@[a-zA-Z_]\w*\*?$/;
+
+            Enumerable.from(term.split(' '))
+                .select(entry => entry.trim())
+                .where(entry => entry != null && entry.length > 0)
+                .forEach(entry => {
+                    if (usernamePattern.test(entry)) {
+                        this.filterByUsername(entry.substring(1)); // skipping the @
+                    }
+                });
+        }
+
+        filterByUsername(username: string) {
+            var filter:any = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new QueryString(QueryString.UserScreenName, username);
+
+            and.filters.push(queryString.build());
+        }
+
+        getOrCreateAndRestriction(filter:any) {
             var and = filter["and"];
 
             if (!and) {
@@ -285,9 +308,12 @@ module gogeo {
             return and;
         }
 
-        search() {
-            this.searchHashtags()
-                .success(result => this._hashtagResultObservable.onNext(result));
+        execute(resultHandler:(IHashtagResult) => void) {
+            var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
+
+            return this.$http
+                .post(url, this.requestData)
+                .success(resultHandler);
         }
     }
 

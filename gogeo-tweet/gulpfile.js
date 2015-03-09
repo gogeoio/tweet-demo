@@ -78,6 +78,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("leaflet-plugins/layer/tile/Google.js"),
         fromBower("rxjs/dist/rx.lite.js"),
         fromBower("rxjs/dist/rx.lite.compat.js"),
+        fromBower("linqjs/linq.js"),
         "app/shared/support/rx-angular.js"
     ];
 

@@ -19,7 +19,7 @@ module gogeo {
 
         initialize() {
             this.$scope.$watch("header.term", (term: string) => {
-                this.service.updateSomethingTerm(term);
+                this.service.updateSearchTerm(term);
             });
         }
     }
