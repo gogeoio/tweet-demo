@@ -19,6 +19,7 @@ module gogeo {
         map: L.Map;
         tweetResult: ITweet;
         popup: L.Popup;
+        query: any = { query: { filtered: { filter: { } } } };
 
         constructor(private $scope:ng.IScope,
                     private $rootScope:ng.IScope,
@@ -56,6 +57,7 @@ module gogeo {
             this.map.addLayer(layerGroup);
 
             layerGroup.addLayer(layer);
+            var self = this;
 
             this.service.queryObservable
                 .where(q => q != null)
@@ -63,13 +65,21 @@ module gogeo {
                 .subscribeAndApply(this.$scope, (query) => {
                     var newUrl = `${url}&q=${angular.toJson(query)}`;
 
-                    layerGroup.removeLayer(layer);
+                    var filter = JSON.stringify(query["query"]["filtered"]["filter"]);
+                    if (JSON.stringify(query) !== JSON.stringify(self.query)) {
+                        self.query = query;
 
-                    layer = L.tileLayer(newUrl, {
-                        subdomains: ["m1", "m2", "m3", "m4"]
-                    });
+                        layerGroup.removeLayer(layer);
 
-                    layerGroup.addLayer(layer);
+                        layer = L.tileLayer(newUrl, {
+                            subdomains: ["m1", "m2", "m3", "m4"]
+                        });
+
+                        layerGroup.addLayer(layer);
+                    } else {
+                        // same query, don't update the map
+                    }
+
                 });
         }
 
@@ -102,7 +112,7 @@ module gogeo {
                         var options = {
                             closeButton: false,
                             className: "marker-popup",
-                            offset: new L.Point(-195, -260)
+                            offset: new L.Point(-195, -265)
                         };
                         self.popup = L.popup(options);
                         self.popup.setContent($("#tweet-popup")[0]);

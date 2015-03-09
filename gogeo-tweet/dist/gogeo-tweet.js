@@ -161,7 +161,7 @@ var gogeo;
         });
         DashboardService.prototype.initialize = function () {
             var _this = this;
-            Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._somethingTermObservable).throttle(400).subscribe(function () { return _this.search(); });
+            Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._somethingTermObservable).throttle(800).subscribe(function () { return _this.search(); });
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
             this._lastGeomSpace = geom;
@@ -238,9 +238,7 @@ var gogeo;
                     "user.time_zone",
                     "user.geo_enabled",
                     "user.lang",
-                    "user.profile_background_image_url",
                     "user.profile_image_url",
-                    "user.profile_banner_url",
                     "place.id",
                     "place.url",
                     "place.place_type",
@@ -305,6 +303,7 @@ var gogeo;
             var filter = this.requestData.q.query.filtered.filter;
             if (hashtag) {
                 this.requestData["field"] = "place.full_name.raw";
+                this.requestData["agg_size"] = 5;
                 var and = this.getOrCreateAndRestriction(filter);
                 var queryString = new QueryString(QueryString.HashtagText, hashtag.key);
                 and.filters.push(queryString.build());
@@ -394,15 +393,19 @@ var gogeo;
             this.service = service;
             this.buckets = [];
             this.selectedHashtag = null;
+            this.message = null;
+            this.message = "Top 10 most used hashtags";
         }
         DashboardHashtagsController.prototype.hasSelected = function () {
             return this.selectedHashtag != null;
         };
         DashboardHashtagsController.prototype.selectHashtag = function (bucket) {
+            this.message = "Top 5 where is most used";
             this.selectedHashtag = bucket;
             this.service.updateHashtagBucket(bucket);
         };
         DashboardHashtagsController.prototype.unselect = function () {
+            this.message = "Top 10 most used hashtags";
             this.selectedHashtag = null;
             this.service.updateHashtagBucket(null);
         };
@@ -476,6 +479,7 @@ var gogeo;
             this.$scope = $scope;
             this.$rootScope = $rootScope;
             this.service = service;
+            this.query = { query: { filtered: { filter: {} } } };
         }
         DashboardMapController.prototype.initialize = function (map) {
             var _this = this;
@@ -499,13 +503,20 @@ var gogeo;
             this.map.setView(new L.LatLng(34.717232, -92.353034), 5);
             this.map.addLayer(layerGroup);
             layerGroup.addLayer(layer);
+            var self = this;
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) {
                 var newUrl = "" + url + "&q=" + angular.toJson(query);
-                layerGroup.removeLayer(layer);
-                layer = L.tileLayer(newUrl, {
-                    subdomains: ["m1", "m2", "m3", "m4"]
-                });
-                layerGroup.addLayer(layer);
+                var filter = JSON.stringify(query["query"]["filtered"]["filter"]);
+                if (JSON.stringify(query) !== JSON.stringify(self.query)) {
+                    self.query = query;
+                    layerGroup.removeLayer(layer);
+                    layer = L.tileLayer(newUrl, {
+                        subdomains: ["m1", "m2", "m3", "m4"]
+                    });
+                    layerGroup.addLayer(layer);
+                }
+                else {
+                }
             });
         };
         DashboardMapController.prototype.onMapLoaded = function () {
@@ -530,7 +541,7 @@ var gogeo;
                     var options = {
                         closeButton: false,
                         className: "marker-popup",
-                        offset: new L.Point(-195, -260)
+                        offset: new L.Point(-195, -265)
                     };
                     self.popup = L.popup(options);
                     self.popup.setContent($("#tweet-popup")[0]);

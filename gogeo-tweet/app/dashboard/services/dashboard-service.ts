@@ -106,7 +106,7 @@ module gogeo {
         initialize() {
             Rx.Observable
                 .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._somethingTermObservable)
-                .throttle(400)
+                .throttle(800)
                 .subscribe(() => this.search());
         }
 
@@ -195,9 +195,7 @@ module gogeo {
                     "user.time_zone",
                     "user.geo_enabled",
                     "user.lang",
-                    "user.profile_background_image_url",
                     "user.profile_image_url",
-                    "user.profile_banner_url",
                     // place
                     "place.id",
                     "place.url",
@@ -267,6 +265,7 @@ module gogeo {
 
             if (hashtag) {
                 this.requestData["field"] = "place.full_name.raw";
+                this.requestData["agg_size"] = 5;
 
                 var and = this.getOrCreateAndRestriction(filter);
                 var queryString = new QueryString(QueryString.HashtagText, hashtag.key);
@@ -310,8 +309,6 @@ module gogeo {
 
         execute(resultHandler:(IHashtagResult) => void) {
             var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
-
-            console.log("executando: ", this.requestData);
 
             return this.$http
                 .post(url, this.requestData)

@@ -16,10 +16,13 @@ module gogeo {
 
         buckets: Array<IBucket> = [];
         selectedHashtag: IBucket = null;
+        message: string = null;
 
         constructor(
             private $scope: ng.IScope,
             private service: DashboardService) {
+
+            this.message = "Top 10 most used hashtags";
         }
 
         hasSelected() {
@@ -27,16 +30,17 @@ module gogeo {
         }
 
         selectHashtag(bucket: IBucket) {
+            this.message = "Top 5 where is most used";
             this.selectedHashtag = bucket;
             this.service.updateHashtagBucket(bucket);
         }
 
         unselect() {
+            this.message = "Top 10 most used hashtags";
             this.selectedHashtag = null;
             this.service.updateHashtagBucket(null);
         }
     }
-
 
     registerDirective("dashboardHashtags", () => {
         return {
