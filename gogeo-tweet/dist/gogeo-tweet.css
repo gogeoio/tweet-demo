@@ -323,9 +323,9 @@ select{background:#fff!important}
 .glyphicon-menu-down:before{content:"\e259"}
 .glyphicon-menu-up:before{content:"\e260"}
 *,:after,:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
-body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333}
+body{font-size:14px;line-height:1.42857143;color:#333}
 button,input,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}
-a{color:#337ab7;text-decoration:none}
+a{text-decoration:none}
 a:focus,a:hover{color:#23527c;text-decoration:underline}
 .carousel-inner>.item>a>img,.carousel-inner>.item>img,.img-responsive,.thumbnail a>img,.thumbnail>img{display:block;max-width:100%;height:auto}
 .img-rounded{border-radius:6px}
@@ -2311,8 +2311,14 @@ body,html{height:100%;min-height:100%}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
 .jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
+@font-face{font-family:Ubuntu;font-style:normal;font-weight:400;src:local('Ubuntu'),url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2)format('woff2'),url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff)format('woff')}
+body,h1,h2,h3,h4,h5,h6{font-family:Ubuntu!important}
+a{color:#168fae}
+.numberpad{font-family:Ubuntu;font-size:18pt;color:#1cb4db}
+.numberpad-big{font-size:28pt}
+.dashboard-panel .dashboard-top-panel .navbar .navbar-brand{margin-right:16px}
 .dashboard-panel .dashboard-map-panel{width:70%;height:100%;position:relative;float:left}
-.dashboard-panel .dashboard-right-panel{width:30%;height:100%;position:relative;float:right}
+.dashboard-panel .dashboard-right-panel{width:30%;height:100%;position:relative;float:right;border-left:solid 2px #1cb4db}
 .dashboard-header .navbar{padding-top:5px}
 .dashboard-header .navbar-dashboard{background-color:transparent;border:none}
 .dashboard-header .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0 10px 0 0}
@@ -2320,6 +2326,11 @@ body,html{height:100%;min-height:100%}
 .dashboard-header .navbar-header .navbar-brand img{margin:0}
 .dashboard-details{position:relative}
 .tab-container{margin-top:20px}
+.dashboard-right-panel{padding-top:20px}
+.dashboard-right-panel .nav{margin-bottom:8px}
+.dashboard-right-panel .hashtag-active{border:none;background-color:#43c5e7;margin-left:-16px;margin-right:-16px;padding:10px 16px;font-size:18pt;color:#f5f5f5;text-shadow:1px 2px #1cb4db}
+.dashboard-right-panel .hashtag-active .badge{background-color:#f5f5f5;color:#1cb4db;text-shadow:none}
+.dashboard-right-panel .table th{color:#666}
 .dashboard-map{position:relative}
 .dashboard-map .dashboard-map-container .leaflet-map-pane{position:absolute;z-index:1!important;left:0;right:0;top:0;bottom:0}
 .dashboard-map .dashboard-map-container .leaflet-control-container{position:absolute;z-index:2!important;left:0;right:0;top:0;bottom:0}

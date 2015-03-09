@@ -239,7 +239,7 @@ module gogeo {
                 query.filterBySearchTerm(this._lastSearchTerm);
 
             query.execute(result => this._hashtagResultObservable.onNext(result));
-            this._lastQueryObservable.onNext(query.requestData);
+            this._lastQueryObservable.onNext(query.requestData.q);
         }
     }
 
@@ -310,6 +310,8 @@ module gogeo {
 
         execute(resultHandler:(IHashtagResult) => void) {
             var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
+
+            console.log("executando: ", this.requestData);
 
             return this.$http
                 .post(url, this.requestData)

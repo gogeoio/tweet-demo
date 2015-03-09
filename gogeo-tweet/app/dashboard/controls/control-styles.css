@@ -1,5 +1,34 @@
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Ubuntu !important;
+}
+a {
+  color: #168fae;
+}
+.numberpad {
+  font-family: Ubuntu;
+  font-size: 18pt;
+  color: #1cb4db;
+}
+.numberpad-big {
+  font-size: 28pt;
+}
 .dashboard-panel {
   background-color: #1cb4db;
+}
+.dashboard-panel .dashboard-top-panel .navbar .navbar-brand {
+  margin-right: 16px;
 }
 .dashboard-panel .dashboard-map-panel {
   width: 70%;
@@ -12,6 +41,7 @@
   height: 100%;
   position: relative;
   float: right;
+  border-left: solid 2px #1cb4db;
 }
 .dashboard-header .navbar {
   padding-top: 5px;
@@ -34,6 +64,30 @@
 }
 .tab-container {
   margin-top: 20px;
+}
+.dashboard-right-panel {
+  padding-top: 20px;
+}
+.dashboard-right-panel .nav {
+  margin-bottom: 8px;
+}
+.dashboard-right-panel .hashtag-active {
+  border: none;
+  background-color: #43c5e7;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding: 10px 16px;
+  font-size: 18pt;
+  color: whitesmoke;
+  text-shadow: 1px 2px #1cb4db;
+}
+.dashboard-right-panel .hashtag-active .badge {
+  background-color: whitesmoke;
+  color: #1cb4db;
+  text-shadow: none;
+}
+.dashboard-right-panel .table th {
+  color: #666;
 }
 .dashboard-map {
   width: 100%;

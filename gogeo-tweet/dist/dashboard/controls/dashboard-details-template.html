@@ -1,20 +1,20 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-7">
-            <h6>Total of tweets</h6>
-            <span class="fa fa-3x">30.300.148</span>
+            <h6 class="text-muted">Total of tweets</h6>
+            <span class="text-primary numberpad numberpad-big">{{ 30300148 | number:0 }}</span>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-7">
-            <h6>Tweets on viewport</h6>
-            <span class="fa fa-2x">{{ details.hashtagResult.doc_total }}</span>
+            <h6 class="text-muted">Tweets on viewport</h6>
+            <span class="numberpad">{{ details.hashtagResult.doc_total | number:0 }}</span>
         </div>
 
         <div class="col-md-5">
-            <h6>Users</h6>
-            <span class="fa fa-2x">50.148</span>
+            <h6 class="text-muted">Users</h6>
+            <span class="numberpad">50.148</span>
         </div>
     </div>
 
@@ -22,18 +22,12 @@
         <div class="col-sm-12">
             <div class="tab-container" role="tabpanel">
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="filter">
-                        <a href="" class="btn" aria-controls="hashtags" role="tab" data-toggle="tab">
-                            <span ng-show="details.selectedHashtag != null" class="fa fa-2x text-info">#{{ details.selectedHashtag.key }}</span>
-                        </a>
-                    </li>
-
-                    <li role="presentation" class="active pull-right">
+                <ul class="nav nav-pills" role="tablist">
+                    <li role="presentation" class="active">
                         <a href="" class="btn" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
                     </li>
 
-                    <li role="presentation" class="disabled pull-right">
+                    <li role="presentation" class="disabled">
                         <a href="" class="btn" aria-controls="tweetsList" role="tab" data-toggle="tab" ng-disabled="true">Tweets</a>
                     </li>
                 </ul>

@@ -46,4 +46,9 @@ module gogeo {
         mod.directive(directiveName, config);
     }
 
+    export function registerFilter(filterName: string, filter: (any) => string) {
+        console.log("registrando filtro: ", filterName);
+        mod.filter(filterName, () => filter);
+    }
+
 }

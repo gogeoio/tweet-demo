@@ -79,6 +79,8 @@ gulp.task("bundleCoreJS", function() {
         fromBower("rxjs/dist/rx.lite.js"),
         fromBower("rxjs/dist/rx.lite.compat.js"),
         fromBower("linqjs/linq.js"),
+        fromBower("numeral/min/numeral.min.js"),
+        fromBower("numeral/min/languages.min.js"),
         "app/shared/support/rx-angular.js"
     ];
 

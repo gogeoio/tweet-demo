@@ -1,3 +1,6 @@
+/**
+ * Created by danfma on 09/03/15.
+ */
 ///<reference path="./_references.d.ts"/>
 var gogeo;
 (function (gogeo) {
@@ -32,6 +35,11 @@ var gogeo;
         mod.directive(directiveName, config);
     }
     gogeo.registerDirective = registerDirective;
+    function registerFilter(filterName, filter) {
+        console.log("registrando filtro: ", filterName);
+        mod.filter(filterName, function () { return filter; });
+    }
+    gogeo.registerFilter = registerFilter;
 })(gogeo || (gogeo = {}));
 /// <reference path="../shell.ts"/>
 /**
@@ -266,7 +274,7 @@ var gogeo;
             if (this._lastSearchTerm)
                 query.filterBySearchTerm(this._lastSearchTerm);
             query.execute(function (result) { return _this._hashtagResultObservable.onNext(result); });
-            this._lastQueryObservable.onNext(query.requestData);
+            this._lastQueryObservable.onNext(query.requestData.q);
         };
         DashboardService.$named = "dashboardService";
         DashboardService.$inject = [
@@ -328,6 +336,7 @@ var gogeo;
         };
         DashboardQuery.prototype.execute = function (resultHandler) {
             var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
+            console.log("executando: ", this.requestData);
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
         return DashboardQuery;

@@ -6,4 +6,6 @@
 ///<reference path="typings/rx/rx-lite.d.ts"/>
 ///<reference path="typings/rx/rx.time-lite.d.ts"/>
 ///<reference path="typings/linq/linq.3.0.3-Beta4.d.ts"/>
+///<reference path="typings/numeraljs/numeraljs.d.ts"/>
 ///<reference path="shared/support/rx-angular.d.ts"/>
+///<reference path="shared/custom-filters.ts"/>
