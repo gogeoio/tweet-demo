@@ -9,7 +9,6 @@
 
 module gogeo {
 
-
     class DashboardMapController {
         static $inject = [
             "$scope",
@@ -17,8 +16,9 @@ module gogeo {
             DashboardService.$named
         ];
 
-        map:L.Map;
-        tweetResult:ITweet;
+        map: L.Map;
+        tweetResult: ITweet;
+        popup: L.Popup;
 
         constructor(private $scope:ng.IScope,
                     private $rootScope:ng.IScope,
@@ -31,7 +31,6 @@ module gogeo {
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
             this.map.on("click", (e) => this.openPopup(e));
-            // this.map.on("click", (e) => this.service.getTweet(e['latlng']));
 
             this.initializeLayer();
         }
@@ -78,16 +77,42 @@ module gogeo {
             this.service.updateGeomSpaceByBounds(this.map.getBounds());
         }
 
+        hidePopup() {
+            this.map.closePopup(this.popup);
+            this.tweetResult = null;
+        }
+
+        formatPictureUrl(url: string) {
+            if (!url) {
+                return url;
+            }
+
+            var url = url.replace("_normal", "");
+            return url;
+        }
+
         openPopup(event) {
             var self = this;
+
             this.service.getTweet(event.latlng).success(
                 function(result: ITweet) {
                     self.tweetResult = result[0];
 
-                    var popup = L.popup();
-                    popup.setContent($("#tweet-popup")[0]);
-                    popup.setLatLng(event.latlng);
-                    self.map.openPopup(popup);
+                    if (self.popup == null) {
+                        var options = {
+                            closeButton: false,
+                            className: "marker-popup",
+                            offset: new L.Point(-195, -260)
+                        };
+                        self.popup = L.popup(options);
+                        self.popup.setContent($("#tweet-popup")[0]);
+                    } else {
+                        self.popup.setContent($("#tweet-popup")[0]);
+                        self.popup.update();
+                    }
+
+                    self.popup.setLatLng(event.latlng);
+                    self.map.openPopup(self.popup);
                 }
             );
         }

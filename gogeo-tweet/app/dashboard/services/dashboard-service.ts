@@ -34,52 +34,19 @@ module gogeo {
         }
     }
 
-
     export interface IGeomSpace {
         type: string;
         coordinates: Array<Array<Array<number>>>;
     }
-
 
     export interface IBucket {
         key: string;
         doc_count: number;
     }
 
-
     export interface IHashtagResult {
         doc_total: number;
         buckets: Array<IBucket>;
-    }
-
-    export interface IUser {
-        id: number;
-        name: string;
-        screen_name: string;
-        location: string;
-        url: string;
-        description: string;
-        followers_count: number;
-        friends_count: number;
-        listed_count: number;
-        favourites_count: number;
-        statuses_count: number;
-        created_at: string;
-        time_zone: string;
-        geo_enabled: boolean;
-        lang: string;
-        profile_background_image_url: string;
-        profile_image_url: string;
-        profile_banner_url: string;
-    }
-
-    export interface IPlace {
-        id: string;
-        url: string;
-        place_type: string;
-        full_name: string;
-        country_code: string;
-        country: string;
     }
 
     export interface ITweet {
@@ -95,11 +62,11 @@ module gogeo {
         favorite_count: number;
         favorited: boolean;
         retweeted: boolean;
-        possibly_sensitive: boolean;
         lang: string;
         timestamp_ms: number;
-        user: IUser;
-        place: IPlace;
+        "user.name": string;
+        "user.screen_name": string;
+        "user.profile_image_url": string;
     }
 
     export class DashboardService {
