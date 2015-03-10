@@ -335,7 +335,6 @@ var gogeo;
         };
         DashboardQuery.prototype.execute = function (resultHandler) {
             var url = "https://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
-            console.log("executando: ", this.requestData);
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
         return DashboardQuery;
