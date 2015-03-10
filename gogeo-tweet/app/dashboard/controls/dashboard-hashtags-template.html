@@ -3,7 +3,9 @@
         <div class="row">
             <div class="col-xs-8">
                 #{{ hashtags.selectedHashtag.key }}
-                <span class="badge">{{ hashtags.selectedHashtag.doc_count | number:0 }}</span>
+                <span class="badge">
+                    {{ hashtags.selectedHashtag.doc_count | number:0 }}
+                </span>
             </div>
             
             <div class="col-xs-4 text-right">

@@ -144,7 +144,6 @@ a {
 }
 .dashboard-map .dashboard-map-container .leaflet-control-container {
   position: absolute;
-  z-index: 2 !important;
   left: 0;
   right: 0;
   top: 0;

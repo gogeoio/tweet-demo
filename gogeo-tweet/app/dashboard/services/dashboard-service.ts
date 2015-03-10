@@ -175,11 +175,14 @@ module gogeo {
             return this.getTweetData(latlng);
         }
 
-        private getTweetData(latlng:L.LatLng) {
+        private getTweetData(latlng: L.LatLng) {
             var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
 
             var zoom = 5;
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+
+            var query = this.composeQuery().requestData;
+            console.log("angular.toJson", angular.toJson(query.q));
 
             var data:any = {
                 geom: {
@@ -232,9 +235,8 @@ module gogeo {
                     "possibly_sensitive",
                     "lang",
                     "timestamp_ms"
-                ]
-                // ,
-                // q: angular.toJson(query) // Essa query e passada como string mesmo
+                ],
+                q: angular.toJson(query.q) // Essa query e passada como string mesmo
             };
 
             return this.$http.post<ITweet>(url, data);
@@ -242,13 +244,8 @@ module gogeo {
 
         search() {
             this._loading = true;
-            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
 
-            if (this._lastHashtagFilter)
-                query.filterByHashtag(this._lastHashtagFilter);
-
-            if (this._lastSearchTerm)
-                query.filterBySearchTerm(this._lastSearchTerm);
+            var query = this.composeQuery();
 
             var self = this;
             query.execute(
@@ -258,6 +255,18 @@ module gogeo {
                 }
             );
             this._lastQueryObservable.onNext(query.requestData.q);
+        }
+
+        composeQuery(): DashboardQuery {
+            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
+
+            if (this._lastHashtagFilter)
+                query.filterByHashtag(this._lastHashtagFilter);
+
+            if (this._lastSearchTerm)
+                query.filterBySearchTerm(this._lastSearchTerm);
+
+            return query;
         }
     }
 

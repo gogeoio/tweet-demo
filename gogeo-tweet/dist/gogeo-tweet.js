@@ -221,6 +221,8 @@ var gogeo;
             var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
             var zoom = 5;
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+            var query = this.composeQuery().requestData;
+            console.log("angular.toJson", angular.toJson(query.q));
             var data = {
                 geom: {
                     type: "Point",
@@ -270,23 +272,28 @@ var gogeo;
                     "possibly_sensitive",
                     "lang",
                     "timestamp_ms"
-                ]
+                ],
+                q: angular.toJson(query.q) // Essa query e passada como string mesmo
             };
             return this.$http.post(url, data);
         };
         DashboardService.prototype.search = function () {
             this._loading = true;
-            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
-            if (this._lastHashtagFilter)
-                query.filterByHashtag(this._lastHashtagFilter);
-            if (this._lastSearchTerm)
-                query.filterBySearchTerm(this._lastSearchTerm);
+            var query = this.composeQuery();
             var self = this;
             query.execute(function (result) {
                 self._loading = false;
                 self._hashtagResultObservable.onNext(result);
             });
             this._lastQueryObservable.onNext(query.requestData.q);
+        };
+        DashboardService.prototype.composeQuery = function () {
+            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
+            if (this._lastHashtagFilter)
+                query.filterByHashtag(this._lastHashtagFilter);
+            if (this._lastSearchTerm)
+                query.filterBySearchTerm(this._lastSearchTerm);
+            return query;
         };
         DashboardService.$named = "dashboardService";
         DashboardService.$inject = [
@@ -369,7 +376,13 @@ var gogeo;
         }
         DashboardDetailsController.prototype.initialize = function () {
             var _this = this;
-            this.service.hashtagResultObservable.subscribeAndApply(this.$scope, function (result) { return _this.hashtagResult = result; });
+            this.service.hashtagResultObservable.subscribeAndApply(this.$scope, function (result) { return _this.handleResult(result); });
+        };
+        DashboardDetailsController.prototype.handleResult = function (result) {
+            this.hashtagResult = result;
+            if (this.selectedHashtag) {
+                this.selectedHashtag.doc_count = result.doc_total;
+            }
         };
         DashboardDetailsController.$inject = [
             "$scope",
