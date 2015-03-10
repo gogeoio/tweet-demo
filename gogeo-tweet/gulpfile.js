@@ -10,14 +10,12 @@ var gulp = require("gulp"),
     minifyCSS = require("gulp-minify-css"),
     uglify = require("gulp-uglify");
 
-
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
  */
 function fromBower(path) {
     return "./bower_components/" + path;
 }
-
 
 gulp.task("copyResources", function() {
     return gulp
@@ -40,13 +38,22 @@ gulp.task("copyResources", function() {
             fromBower("font-awesome/**/*.woff"),
             fromBower("font-awesome/**/*.woff2"),
             fromBower("leaflet.draw/dist/**/*.png"),
-            "app/**/*.html",
-            "app/**/*.jpg",
             "app/**/*.png",
+            "app/**/*.html",
+            "app/**/*.jpg"
         ])
         .pipe(gulp.dest("./dist"));
 });
 
+gulp.task("copySharedResources", function() {
+    return gulp
+        .src([
+            "./app/shared/**/*.png",
+            "./app/shared/**/*.html",
+            "./app/shared/**/*.jpg"
+        ])
+        .pipe(gulp.dest("./dist/dashboard"));
+});
 
 gulp.task("bundleCSS", function() {
     var filesToBundle = [
@@ -64,7 +71,6 @@ gulp.task("bundleCSS", function() {
         .pipe(minifyCSS({keepBreaks:true}))
         .pipe(gulp.dest("./dist"));
 });
-
 
 gulp.task("bundleCoreJS", function() {
     var filesToBundle = [
@@ -100,18 +106,17 @@ gulp.task("bundleTS", function() {
         .pipe(gulp.dest("./dist"));
 });
 
-
 gulp.task("default", [
     "copyResources",
+    // "copySharedResources",
     "bundleCSS",
     "bundleCoreJS",
     "bundleTS"
 ]);
 
-
 gulp.task("watch", ["default"], function() {
     gulp.watch(["./app/**/*.ts"], ["bundleTS"]);
     gulp.watch(["./app/**/*.css"], ["bundleCSS"]);
     gulp.watch(["./app/**/*.html"], ["copyResources"]);
+    gulp.watch(["./app/shared/**/*.png"], ["copySharedResources"]);
 });
-

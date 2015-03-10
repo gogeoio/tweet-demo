@@ -32,22 +32,18 @@ module gogeo {
     }
 
     export function registerController<T extends INamedType>(controllerType: T) {
-        console.info("registrando controlador: ", controllerType.$named);
         mod.controller(controllerType.$named, <Function> controllerType);
     }
 
     export function registerService<T extends INamedType>(serviceType: T) {
-        console.info("registrando serviço: ", serviceType.$named);
         mod.service(serviceType.$named, serviceType);
     }
 
     export function registerDirective(directiveName: string, config: any) {
-        console.info("registrando diretiva: ", directiveName);
         mod.directive(directiveName, config);
     }
 
     export function registerFilter(filterName: string, filter: (any) => string) {
-        console.log("registrando filtro: ", filterName);
         mod.filter(filterName, () => filter);
     }
 

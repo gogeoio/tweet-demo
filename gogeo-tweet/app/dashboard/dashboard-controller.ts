@@ -9,7 +9,6 @@ module gogeo {
 
     export class DashboardController {
         static $named = "DashboardController";
-        hello = "thu";
     }
 
     registerController(DashboardController);

@@ -2,12 +2,7 @@
 /// <reference path="../services/dashboard-events.ts" />
 /// <reference path="../services/dashboard-service.ts" />
 
-/**
- * Created by danfma on 06/03/15.
- */
-
 module gogeo {
-
 
     class DashboardDetailsController {
         static $inject = [
@@ -15,12 +10,11 @@ module gogeo {
             DashboardService.$named
         ];
 
+        hashtagResult: IHashtagResult = null;
+        selectedHashtag: IBucket = null;
 
-        hashtagResult:IHashtagResult;
-        selectedHashtag: IBucket;
-
-        constructor(private $scope:ng.IScope,
-                    private service:DashboardService) {
+        constructor(private $scope: ng.IScope,
+                    private service: DashboardService) {
         }
 
         initialize() {
@@ -28,7 +22,6 @@ module gogeo {
                 .subscribeAndApply(this.$scope, result => this.hashtagResult = result);
         }
     }
-
 
     registerDirective("dashboardDetails", () => {
         return {
@@ -44,5 +37,4 @@ module gogeo {
             }
         };
     });
-
 }
