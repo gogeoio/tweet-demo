@@ -1,0 +1,64 @@
+/// <reference path="../../shell.ts" />
+/// <reference path="../services/dashboard-events.ts" />
+/// <reference path="../services/dashboard-service.ts" />
+
+/**
+ * Created by danfma on 06/03/15.
+ */
+
+module gogeo {
+
+    export class DashboardHashtagsController {
+        static $inject = [
+            "$scope",
+            DashboardService.$named
+        ];
+
+        buckets: Array<IBucket> = [];
+        selectedHashtag: IBucket = null;
+        message: string = null;
+
+        constructor(
+            private $scope: ng.IScope,
+            private service: DashboardService) {
+
+            this.message = "Top 10 most used hashtags";
+        }
+
+        hasSelected() {
+            return this.selectedHashtag != null;
+        }
+
+        selectHashtag(bucket: IBucket) {
+            this.message = "Top 5 where is most used";
+            this.selectedHashtag = bucket;
+            this.service.updateHashtagBucket(bucket);
+        }
+
+        unselect() {
+            this.message = "Top 10 most used hashtags";
+            this.selectedHashtag = null;
+            this.service.updateHashtagBucket(null);
+        }
+    }
+
+    registerDirective("dashboardHashtags", () => {
+        return {
+            restrict: "E",
+            templateUrl: "dashboard/controls/dashboard-hashtags-template.html",
+            controller: DashboardHashtagsController,
+            controllerAs: "hashtags",
+            bindToController: true,
+
+            scope: {
+                buckets: "=",
+                selectedHashtag: "="
+            },
+
+            link(scope, element, attrs, controller:DashboardHashtagsController) {
+
+            }
+        };
+    });
+
+}

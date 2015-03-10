@@ -1,0 +1,29 @@
+.jumbotron {
+  width: 100%;
+  background-color: #1cb4db;
+  z-index: 10;
+}
+.jumbotron h1,
+.jumbotron p,
+.jumbotron a {
+  font-family: 'Titillium Web', sans-serif;
+  color: #fcfcfc;
+}
+.jumbotron h1 {
+  font-size: 48px;
+  line-height: 73px;
+  font-weight: 600;
+}
+.jumbotron p {
+  font-size: 36px;
+  line-height: 55px;
+}
+.jumbotron .btn-primary {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 21px 85px;
+  margin-top: 25px;
+  border-radius: 4px;
+}

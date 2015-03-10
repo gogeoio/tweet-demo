@@ -1,0 +1,146 @@
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+  font-family: Ubuntu !important;
+}
+
+@division: 30%;
+@bgColor: #1cb4db;
+@borderColor: #1cb4db;
+
+a {
+  color: darken(@bgColor, 10%);
+}
+
+.numberpad {
+  font-family: Ubuntu;
+  font-size: 18pt;
+  color: @bgColor;
+}
+
+.numberpad-big {
+  font-size: 28pt;
+}
+
+.dashboard-panel {
+
+  background-color: @bgColor;
+
+  .dashboard-top-panel {
+    .navbar {
+      .navbar-brand {
+        margin-right: 16px;
+      }
+    }
+  }
+
+  .dashboard-map-panel {
+    width: (100 - @division);
+    height: 100%;
+    position: relative;
+    float: left;
+  }
+
+  .dashboard-right-panel {
+    width: @division;
+    height: 100%;
+    position: relative;
+    float: right;
+    border-left: solid 2px @borderColor;
+  }
+
+}
+
+.dashboard-header {
+  .navbar {
+    padding-top: 5px;
+  }
+
+  .navbar-dashboard {
+    background-color: transparent;
+    border: none;
+  }
+
+  .navbar-header .navbar-brand {
+    width: auto;
+    height: auto;
+    margin: 0px;
+    padding: 0px 10px 0 0;
+  }
+
+  .navbar-header .navbar-brand img {
+    margin: 0px 0px 0px 0px;
+  }
+}
+
+.dashboard-details {
+  position: relative;
+}
+
+.tab-container {
+  margin-top: 20px;
+}
+
+.dashboard-right-panel {
+  padding-top: 20px;
+
+  .nav {
+    margin-bottom: 8px;
+  }
+
+  .hashtag-active {
+    border: none;
+    background-color: lighten(@bgColor, 10%);
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 10px 16px;
+    font-size: 18pt;
+    color: whitesmoke;
+    text-shadow: 1px 2px @bgColor;
+
+    .badge {
+      background-color: whitesmoke;
+      color: @bgColor;
+      text-shadow: none;
+    }
+  }
+
+  .table {
+    th {
+      color: #666;
+    }
+  }
+}
+
+.dashboard-map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .dashboard-map-container {
+    width: 100%;
+    height: 100%;
+
+    .map(@zindex) {
+      position: absolute;
+      z-index: @zindex !important;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .leaflet-map-pane {
+      .map(3);
+    }
+
+    .leaflet-control-container {
+      .map(2);
+    }
+  }
+}

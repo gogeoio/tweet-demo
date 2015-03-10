@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7">
+            <h6 class="text-muted">Total of tweets</h6>
+            <span class="text-primary numberpad numberpad-big">{{ 100000000 | number:0 }}</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <h6 class="text-muted">Tweets on viewport</h6>
+            <span class="numberpad">{{ details.hashtagResult.doc_total | number:0 }}</span>
+        </div>
+
+        <!-- <div class="col-md-5">
+            <h6 class="text-muted">Users</h6>
+            <span class="numberpad">{{ 50148 | number:0 }}</span>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="tab-container" role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="" class="btn" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="" class="btn" aria-controls="tweetsList" role="tab" data-toggle="tab" ng-disabled="true">Tweets</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="hashtags">
+                        <dashboard-hashtags buckets="details.hashtagResult.buckets" selected-hashtag="details.selectedHashtag"></dashboard-hashtags>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="tweetList">
+                        <dashboard-tweet-list></dashboard-tweet-list>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

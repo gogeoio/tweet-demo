@@ -1,0 +1,45 @@
+<div>
+    <div class="hashtag-active" ng-if="hashtags.hasSelected()">
+        <div class="row">
+            <div class="col-xs-8">
+                #{{ hashtags.selectedHashtag.key }}
+                <span class="badge">{{ hashtags.selectedHashtag.doc_count | number:0 }}</span>
+            </div>
+            
+            <div class="col-xs-4 text-right">
+                <button class="btn btn-default" ng-click="hashtags.unselect()">
+                    <i class="fa fa-remove"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <table class="table table-responsive table-hover">
+        <thead>
+        <tr>
+            <th>{{ hashtags.message }}</th>
+            <th>#tag</th>
+            <!--<th>Tweets</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="bucket in hashtags.buckets">
+            <td>
+            <span ng-show="hashtags.hasSelected()">
+                {{ bucket.key }}
+            </span>
+                <a href=""
+                   ng-click="hashtags.selectHashtag(bucket)"
+                   ng-hide="hashtags.hasSelected()">{{ bucket.key }}</a>
+            </td>
+            <td>
+                {{ bucket.doc_count | number:0 }}
+            </td>
+            <!--<td class="text-center">-->
+            <!--<button type="button" class="btn btn-link"><i class="fa fa-map-marker"></i></button>-->
+            <!--</td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
