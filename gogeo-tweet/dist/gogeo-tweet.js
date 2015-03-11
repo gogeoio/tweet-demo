@@ -7,7 +7,7 @@ var gogeo;
     var mod = angular.module("gogeo", ["ngRoute", "angularytics"]).config([
         "$routeProvider",
         "AngularyticsProvider",
-        function ($routeProvider, AngularyticsProvider) {
+        function ($routeProvider, angularyticsProvider) {
             $routeProvider.when("/welcome", {
                 controller: "WelcomeController",
                 controllerAs: "welcome",
@@ -20,10 +20,10 @@ var gogeo;
                 redirectTo: "/welcome"
             });
             if (window.location.hostname.match("gogeo.io")) {
-                AngularyticsProvider.setEventHandlers(["Google"]);
+                angularyticsProvider.setEventHandlers(["Google"]);
             }
             else {
-                AngularyticsProvider.setEventHandlers(["Console"]);
+                angularyticsProvider.setEventHandlers(["Console"]);
             }
         }
     ]).run(function (Angularytics) {
