@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web);
 @font-face {
   font-family: "Titillium Web", sans-serif;
 }
@@ -14,12 +15,31 @@ a {
   color: #168fae;
 }
 .numberpad {
-  font-family: #f;
+  font-family: "Titillium Web";
   font-size: 18pt;
   color: #1cb4db;
 }
-.numberpad-big {
+.tweets-amounts-plus {
   font-size: 28pt;
+  padding-top: 15px;
+}
+.tweets-amounts-plus label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #868686;
+  line-height: 20px;
+  display: block;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.tweets-amounts-plus span {
+  font-weight: 600;
+  font-size: 36px;
+  color: #1CB4DB;
+  line-height: 1.1em;
+  margin: 0px;
+  padding: 0px;
 }
 .dashboard-panel {
   background-color: #1cb4db;
