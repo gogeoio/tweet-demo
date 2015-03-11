@@ -38,7 +38,6 @@ module gogeo {
 
         initializeLayer() {
             var host = '{s}.gogeo.io/1.0';
-            host = '172.16.2.106:9090';
             var database = 'db1';
             var collection = 'tweets';
             var buffer = 32;
@@ -142,14 +141,14 @@ module gogeo {
                 link(scope, element, attrs, controller:DashboardMapController) {
                     var options = {
                         attributionControl: false,
-                        minZoom: 2,
+                        minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(51.51, -0.11),
                         zoom: 12
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
-                    var map = L.map(mapContainerElement, options);
+                    var map = L.map("map-container", options);
 
                     controller.initialize(map);
                     $timeout(() => map.invalidateSize(false), 1);

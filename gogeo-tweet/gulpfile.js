@@ -79,6 +79,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("bootstrap-datepicker/js/bootstrap-datepicker.js"),
         fromBower("angular/angular.js"),
         fromBower("angular-route/angular-route.js"),
+        fromBower("angularytics/dist/angularytics.min.js"),
         fromBower("mapbox.js/mapbox.js"),
         fromBower("leaflet.draw/dist/leaflet.draw.js"),
         fromBower("leaflet-plugins/layer/tile/Google.js"),

@@ -73,7 +73,9 @@ module gogeo {
         static $named = "dashboardService";
         static $inject = [
             "$q",
-            "$http"
+            "$http",
+            "$location",
+            "Angularytics"
         ];
 
         private _lastGeomSpace:IGeomSpace = null;
@@ -88,7 +90,9 @@ module gogeo {
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
 
         constructor(private $q:ng.IQService,
-                    private $http:ng.IHttpService) {
+                    private $http:ng.IHttpService,
+                    private $location: ng.ILocationService,
+                    private angularytics: any) {
             this.initialize();
         }
 
@@ -146,7 +150,6 @@ module gogeo {
         }
 
         updateGeomSpace(geom:IGeomSpace) {
-            this._loading = true;
             this._lastGeomSpace = geom;
             this._geomSpaceObservable.onNext(geom);
         }
@@ -155,20 +158,25 @@ module gogeo {
             this._loading = true;
             var point = this.calculateNeSW(bounds);
             var geomSpace = this.pointToGeoJson(point);
-
             this.updateGeomSpace(geomSpace);
         }
 
-        updateHashtagBucket(bucket:IBucket) {
+        updateHashtagBucket(bucket: IBucket) {
             this._loading = true;
             this._lastHashtagFilter = bucket;
             this._hashtagFilterObservable.onNext(bucket);
         }
 
-        updateSearchTerm(term:string) {
+        updateSearchTerm(term: string) {
             this._loading = true;
             this._lastSearchTerm = term;
             this._somethingTermObservable.onNext(term);
+        }
+
+        publishMetrics(action: string, category: string, label: string) {
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackEvent(action, category, label);
+            }
         }
 
         getTweet(latlng:L.LatLng) {
@@ -176,13 +184,12 @@ module gogeo {
         }
 
         private getTweetData(latlng: L.LatLng) {
-            var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
+            var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
 
             var zoom = 5;
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
 
             var query = this.composeQuery().requestData;
-            console.log("angular.toJson", angular.toJson(query.q));
 
             var data:any = {
                 geom: {
@@ -260,11 +267,15 @@ module gogeo {
         composeQuery(): DashboardQuery {
             var query = new DashboardQuery(this.$http, this._lastGeomSpace);
 
-            if (this._lastHashtagFilter)
+            if (this._lastHashtagFilter) {
+                this.publishMetrics("click", "hashtags", this._lastHashtagFilter.key);
                 query.filterByHashtag(this._lastHashtagFilter);
+            }
 
-            if (this._lastSearchTerm)
+            if (this._lastSearchTerm) {
+                this.publishMetrics("search", "search", this._lastSearchTerm);
                 query.filterBySearchTerm(this._lastSearchTerm);
+            }
 
             return query;
         }
@@ -292,7 +303,7 @@ module gogeo {
             var filter:any = this.requestData.q.query.filtered.filter;
 
             if (hashtag) {
-                this.requestData["field"] = "place.full_name";
+                this.requestData["field"] = "place.full_name.raw";
                 this.requestData["agg_size"] = 5;
 
                 var and = this.getOrCreateAndRestriction(filter);
@@ -336,7 +347,7 @@ module gogeo {
         }
 
         execute(resultHandler:(IHashtagResult) => void) {
-            var url = "http://172.16.2.106:9090/geoagg/db1/tweets?mapkey=123";
+            var url = "http://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
 
             return this.$http
                 .post(url, this.requestData)
