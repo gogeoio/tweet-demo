@@ -92,8 +92,11 @@ module gogeo {
         constructor(private $q:ng.IQService,
                     private $http:ng.IHttpService,
                     private $location: ng.ILocationService,
-                    private angularytics: any) {
+                    private angularytics: angularytics.Angularytics) {
             this.initialize();
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackPageView("/");
+            }
         }
 
         get loading(): boolean {
