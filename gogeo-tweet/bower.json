@@ -27,6 +27,7 @@
     "rxjs": "~2.4.1",
     "leaflet-plugins": "~1.2.1",
     "linqjs": "~3.0.4-beta",
-    "numeral": "~1.5.3"
+    "numeral": "~1.5.3",
+    "angularytics": "~0.3.0"
   }
 }

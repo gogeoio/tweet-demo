@@ -2,10 +2,11 @@
 
 module gogeo {
 
-    var mod = angular.module("gogeo", ["ngRoute"])
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics"])
         .config([
             "$routeProvider",
-            ($routeProvider:ng.route.IRouteProvider) => {
+            "AngularyticsProvider",
+            ($routeProvider: ng.route.IRouteProvider, angularyticsProvider: angularytics.AngularyticsProvider) => {
                 $routeProvider
                     .when("/welcome", {
                         controller: "WelcomeController",
@@ -20,8 +21,15 @@ module gogeo {
                     .otherwise({
                         redirectTo: "/welcome"
                     });
+                if (window.location.hostname.match("gogeo.io")) {
+                    angularyticsProvider.setEventHandlers(["Google"]);
+                } else {
+                    angularyticsProvider.setEventHandlers(["Console"]);
+                }
             }
-        ]);
+        ]).run(function(Angularytics) {
+            Angularytics.init();
+          });
 
     export interface INamed {
         $named: string;
