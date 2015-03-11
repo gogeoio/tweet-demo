@@ -1,12 +1,11 @@
+@fontName: "Titillium Web";
+
 @font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+  font-family: @fontName, sans-serif;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: Ubuntu !important;
+  font-family: @fontName !important;
 }
 
 @division: 30%;
@@ -18,7 +17,7 @@ a {
 }
 
 .numberpad {
-  font-family: Ubuntu;
+  font-family: #f;
   font-size: 18pt;
   color: @bgColor;
 }
