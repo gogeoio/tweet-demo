@@ -144,6 +144,9 @@ var gogeo;
             this._hashtagResultObservable = new Rx.BehaviorSubject(null);
             this._lastQueryObservable = new Rx.BehaviorSubject(null);
             this.initialize();
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackPageView("/");
+            }
         }
         Object.defineProperty(DashboardService.prototype, "loading", {
             get: function () {
