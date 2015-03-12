@@ -232,13 +232,13 @@ var gogeo;
                 this.angularytics.trackEvent(action, category, label);
             }
         };
-        DashboardService.prototype.getTweet = function (latlng) {
-            return this.getTweetData(latlng);
+        DashboardService.prototype.getTweet = function (latlng, zoom) {
+            return this.getTweetData(latlng, zoom);
         };
-        DashboardService.prototype.getTweetData = function (latlng) {
+        DashboardService.prototype.getTweetData = function (latlng, zoom) {
             var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
-            var zoom = 5;
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+            console.log('zoom', zoom, 'pixelDist', pixelDist);
             var query = this.composeQuery().requestData;
             var data = {
                 geom: {
@@ -581,9 +581,19 @@ var gogeo;
             var url = url.replace("_normal", "");
             return url;
         };
-        DashboardMapController.prototype.openPopup = function (event) {
+        DashboardMapController.prototype.formatTweetUrl = function () {
+            if (this.tweetResult) {
+                var url = "https://twitter.com/";
+                url = url + this.tweetResult["user.screen_name"] + "/";
+                url = url + "status/";
+                url = url + this.tweetResult["id"];
+                return url;
+            }
+        };
+        DashboardMapController.prototype.openPopup = function (levent) {
             var self = this;
-            this.service.getTweet(event.latlng).success(function (result) {
+            var zoom = this.map.getZoom();
+            this.service.getTweet(levent.latlng, zoom).success(function (result) {
                 self.tweetResult = result[0];
                 if (self.popup == null) {
                     var options = {
@@ -598,7 +608,7 @@ var gogeo;
                     self.popup.setContent($("#tweet-popup")[0]);
                     self.popup.update();
                 }
-                self.popup.setLatLng(event.latlng);
+                self.popup.setLatLng(levent.latlng);
                 self.map.openPopup(self.popup);
             });
         };
@@ -637,6 +647,17 @@ var gogeo;
             };
         }
     ]);
+    gogeo.registerDirective("errSrc", function () {
+        return {
+            link: function (scope, element, attrs) {
+                element.bind('error', function () {
+                    if (attrs.src != attrs.errSrc) {
+                        attrs.$set('src', attrs.errSrc);
+                    }
+                });
+            }
+        };
+    });
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 var gogeo;

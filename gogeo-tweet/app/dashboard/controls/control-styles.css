@@ -199,14 +199,14 @@ a {
   margin: 0px;
 }
 .marker-popup .marker-content .mc-tweet-user label {
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   font-weight: 400;
   margin-top: 10px;
   width: 100%;
 }
 .marker-popup .marker-content .mc-tweet-msg {
   background: #FFFFFF;
-  padding: 15px;
+  padding: 12px;
   font-weight: 400;
   font-size: 14px;
   color: #868686;

@@ -101,10 +101,22 @@ module gogeo {
             return url;
         }
 
-        openPopup(event) {
-            var self = this;
+        formatTweetUrl() {
+            if (this.tweetResult) {
+                var url = "https://twitter.com/";
+                url = url + this.tweetResult["user.screen_name"] + "/";
+                url = url + "status/";
+                url = url + this.tweetResult["id"];
 
-            this.service.getTweet(event.latlng).success(
+                return url;
+            }
+        }
+
+        openPopup(levent: any) {
+            var self = this;
+            var zoom = this.map.getZoom();
+
+            this.service.getTweet(levent.latlng, zoom).success(
                 function(result: ITweet) {
                     self.tweetResult = result[0];
 
@@ -121,7 +133,7 @@ module gogeo {
                         self.popup.update();
                     }
 
-                    self.popup.setLatLng(event.latlng);
+                    self.popup.setLatLng(levent.latlng);
                     self.map.openPopup(self.popup);
                 }
             );
@@ -161,4 +173,15 @@ module gogeo {
         }
     ]);
 
+    registerDirective("errSrc", function() {
+        return {
+            link: function(scope, element, attrs) {
+                element.bind('error', function() {
+                    if (attrs.src != attrs.errSrc) {
+                        attrs.$set('src', attrs.errSrc);
+                    }
+                });
+            }
+        }
+    });
 }
