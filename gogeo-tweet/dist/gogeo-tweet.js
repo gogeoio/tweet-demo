@@ -581,6 +581,16 @@ var gogeo;
             var url = url.replace("_normal", "");
             return url;
         };
+        DashboardMapController.prototype.formatTweetUrl = function () {
+            if (this.tweetResult) {
+                console.log(this.tweetResult["user.screen_name"], "-->", this.tweetResult["id"], this.tweetResult["retweeted"]);
+                var url = "https://twitter.com/";
+                url = url + this.tweetResult["user.screen_name"] + "/";
+                url = url + "status/";
+                url = url + this.tweetResult["id"];
+                return url;
+            }
+        };
         DashboardMapController.prototype.openPopup = function (event) {
             var self = this;
             this.service.getTweet(event.latlng).success(function (result) {
@@ -637,6 +647,17 @@ var gogeo;
             };
         }
     ]);
+    gogeo.registerDirective("errSrc", function () {
+        return {
+            link: function (scope, element, attrs) {
+                element.bind('error', function () {
+                    if (attrs.src != attrs.errSrc) {
+                        attrs.$set('src', attrs.errSrc);
+                    }
+                });
+            }
+        };
+    });
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 var gogeo;
