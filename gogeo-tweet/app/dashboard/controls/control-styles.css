@@ -133,6 +133,7 @@ a {
 .dashboard-map .dashboard-map-container {
   width: 100%;
   height: 100%;
+  cursor: crosshair;
 }
 .dashboard-map .dashboard-map-container .leaflet-map-pane {
   position: absolute;
@@ -239,4 +240,89 @@ a {
 
 .loading {
   color: #1CB4DB;
+}
+
+.map-control {
+  display: block;
+  top: 11px;
+  left: 25px;
+  position: absolute;
+  z-index: 10;
+}
+
+.map-control .item {
+  padding-left: 0;
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 30px;
+  list-style: none;
+}
+
+.map-control li {
+  background: #FFFFFF;
+  border-top: 1px solid #979797;
+  border-bottom: 1px solid #979797;
+  line-height: 15px;
+  padding: 6px 15px 7px 15px;
+  font-weight: 600;
+  font-size: 10px;
+  color: #979797;
+  line-height: 15px;
+  display: inline;
+}
+
+.map-control li:first-child {
+  border-radius: 2px 0 0 2px;
+  border-left: 1px solid #979797;
+}
+
+.map-control li:last-child {
+  border-radius: 0 2px 2px 0;
+  border-right: 1px solid #979797;
+}
+
+.map-control li.active {
+  background: #979797;
+  border-color: #979797;
+  color: #FFFFFF;
+}
+
+.map-control li:hover {
+  background:#C6F1FC;
+  border-color: #C6F1FC;
+  font-weight: 600;
+  font-size: 10px;
+  color: #1B8199;
+  line-height: 15px;
+  cursor: pointer;
+}
+
+.map-control .draw-item {
+  padding-left: 0;
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 5px;
+  list-style: none;
+}
+
+.map-control .draw-item .draw {
+  background: #FCFCFC;
+  border: 1px solid #979797;
+  border-radius: 2px;
+  background-image: url("images/select-map.png");
+  background-size: 20px 18px;
+  background-repeat: no-repeat;
+  background-position: 6px 2px;
+}
+
+.map-control .draw-item .draw.active {
+  background-color:#EBEBEB;
+  border: 1px solid #EBEBEB;
+  border-radius: 2px 0px 0px 2px;
+}
+
+.map-control .draw-item .draw:hover {
+  background-color: #C6F1FC
 }

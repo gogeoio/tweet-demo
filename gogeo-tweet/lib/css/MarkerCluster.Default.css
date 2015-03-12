@@ -1,0 +1,123 @@
+.marker-cluster-small {
+  background-color: rgba(131, 168, 218, 0.3);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(131, 168, 218, 0.6);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(150, 199, 0, 0.3);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(150, 199, 0, 0.6);
+}
+
+.marker-cluster-large {
+  background-color: rgba(255, 184, 43, 0.4);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(255, 184, 43, 0.8);
+}
+
+.marker-cluster-extra-large {
+  background-color: rgba(249, 0, 0, 0.3);
+}
+
+.marker-cluster-extra-large div {
+  background-color: rgba(249, 0, 0, 0.6);
+}
+
+/*IE 6-8 fallback colors */
+.leaflet-oldie .marker-cluster-small {
+  background-color: rgb(69, 117, 180);
+}
+
+.leaflet-oldie .marker-cluster-small div {
+  background-color: rgb(49, 54, 149);
+}
+
+.leaflet-oldie .marker-cluster-medium {
+  background-color: rgb(116, 173, 209);
+}
+
+.leaflet-oldie .marker-cluster-medium div {
+  background-color: rgb(69, 117, 180);
+}
+
+.leaflet-oldie .marker-cluster-large {
+  background-color: rgb(253, 174, 97);
+}
+
+.leaflet-oldie .marker-cluster-large div {
+  background-color: rgb(253, 174, 97);
+}
+
+.leaflet-oldie .marker-cluster-extra-large {
+  background-color: rgb(215, 25, 28);
+}
+
+.leaflet-oldie .marker-cluster-extra-large div {
+  background-color: rgb(215, 25, 28);
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 40px;
+}
+
+.marker-cluster div {
+  text-align: center;
+  border-radius: 20px;
+  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.marker-cluster div.small {
+  width: 40px;
+  height: 40px;
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.marker-cluster div.medium {
+  width: 45px;
+  height: 45px;
+  margin-left: 5px;
+  margin-top: 5px;
+  border-radius: 30px !important;
+}
+
+.marker-cluster div.large {
+  width: 55px;
+  height: 55px;
+  margin-left: 5px;
+  margin-top: 5px;
+  border-radius: 35px !important;
+}
+
+.marker-cluster div.extra-large {
+  width: 60px;
+  height: 60px;
+  margin-left: 5px;
+  margin-top: 5px;
+  border-radius: 40px !important;
+}
+
+.marker-cluster div.small span {
+  line-height: 40px;
+}
+
+.marker-cluster div.medium span {
+  line-height: 45px;
+}
+
+.marker-cluster div.large span {
+  line-height: 55px;
+}
+
+.marker-cluster div.extra-large span {
+  line-height: 55px;
+  color: white;
+}
