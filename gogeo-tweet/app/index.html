@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="gogeo,gogeo.io,maps">
+    <meta name="description" content="goGeo - Tweet App">
+    <meta property="og:title" content="TwitterMap">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://s3.amazonaws.com/deploy.gogeo/cdn/twitter-map.jpg">
+    <meta property="og:description" content="goGeo - Tweet App">
+    <meta property="og:url" content="http://twittermap.gogeo.io">
+    <meta property="og:site_name" content="TwitterMap">
 
     <title>goGeo - Tweet App</title>
     <link href="gogeo-tweet.css" type="text/css" rel="stylesheet"/>
@@ -36,6 +44,25 @@
     <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
     <script type="text/javascript" src="gogeo-core.js"></script>
     <script type="text/javascript" src="gogeo-tweet.js"></script>
+
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '873202776080901',
+              xfbml      : true,
+              version    : 'v2.2'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <script type="text/javascript">
 
