@@ -103,8 +103,6 @@ module gogeo {
 
         formatTweetUrl() {
             if (this.tweetResult) {
-                console.log(this.tweetResult["user.screen_name"], "-->", this.tweetResult["id"], this.tweetResult["retweeted"]);
-
                 var url = "https://twitter.com/";
                 url = url + this.tweetResult["user.screen_name"] + "/";
                 url = url + "status/";
@@ -114,10 +112,11 @@ module gogeo {
             }
         }
 
-        openPopup(event) {
+        openPopup(levent: any) {
             var self = this;
+            var zoom = this.map.getZoom();
 
-            this.service.getTweet(event.latlng).success(
+            this.service.getTweet(levent.latlng, zoom).success(
                 function(result: ITweet) {
                     self.tweetResult = result[0];
 
@@ -134,7 +133,7 @@ module gogeo {
                         self.popup.update();
                     }
 
-                    self.popup.setLatLng(event.latlng);
+                    self.popup.setLatLng(levent.latlng);
                     self.map.openPopup(self.popup);
                 }
             );

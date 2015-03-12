@@ -182,15 +182,16 @@ module gogeo {
             }
         }
 
-        getTweet(latlng:L.LatLng) {
-            return this.getTweetData(latlng);
+        getTweet(latlng: L.LatLng, zoom: number) {
+            return this.getTweetData(latlng, zoom);
         }
 
-        private getTweetData(latlng: L.LatLng) {
+        private getTweetData(latlng: L.LatLng, zoom: number) {
             var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
 
-            var zoom = 5;
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+
+            console.log('zoom', zoom, 'pixelDist', pixelDist);
 
             var query = this.composeQuery().requestData;
 
