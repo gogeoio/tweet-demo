@@ -3,6 +3,7 @@
 ///<reference path="typings/angularjs/angular-route.d.ts"/>
 ///<reference path="typings/leaflet/leaflet.d.ts"/>
 ///<reference path="typings/leaflet.google/leaflet.google.d.ts"/>
+///<reference path="typings/leaflet.tilecluster/leaflet.tilecluster.d.ts"/>
 ///<reference path="typings/rx/rx-lite.d.ts"/>
 ///<reference path="typings/rx/rx.time-lite.d.ts"/>
 ///<reference path="typings/linq/linq.3.0.3-Beta4.d.ts"/>
