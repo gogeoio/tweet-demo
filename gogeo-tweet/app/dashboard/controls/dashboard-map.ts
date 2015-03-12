@@ -77,7 +77,7 @@ module gogeo {
 
         private configureUrl(query?: string): string {
             var host = "{s}.gogeo.io/1.0";
-            host = "172.16.2.106:9090";
+            // host = "172.16.2.106:9090";
             var database = "db1";
             var collection = "tweets";
             var buffer = 8;
