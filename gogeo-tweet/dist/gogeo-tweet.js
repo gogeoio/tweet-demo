@@ -30,18 +30,22 @@ var gogeo;
         Angularytics.init();
     });
     function registerController(controllerType) {
+        console.debug("registrando controlador: ", controllerType.$named);
         mod.controller(controllerType.$named, controllerType);
     }
     gogeo.registerController = registerController;
     function registerService(serviceType) {
+        console.debug("registrando serviço: ", serviceType.$named);
         mod.service(serviceType.$named, serviceType);
     }
     gogeo.registerService = registerService;
     function registerDirective(directiveName, config) {
+        console.debug("registrando diretiva: ", directiveName);
         mod.directive(directiveName, config);
     }
     gogeo.registerDirective = registerDirective;
     function registerFilter(filterName, filter) {
+        console.debug("registrando filtro: ", filterName);
         mod.filter(filterName, function () { return filter; });
     }
     gogeo.registerFilter = registerFilter;
@@ -736,6 +740,30 @@ var gogeo;
             }
         };
     });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../_references.d.ts" />
+/**
+ * Created by danfma on 11/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    gogeo.registerDirective("dashboardTagsinput", [
+        function () {
+            return {
+                restrict: "C",
+                scope: {
+                    selectedTags: "="
+                },
+                link: function (scope, element, attrs) {
+                    element.tagsinput({
+                        tagClass: function () {
+                            console.log("args:", arguments);
+                        }
+                    });
+                }
+            };
+        }
+    ]);
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 /**

@@ -129,7 +129,7 @@ gulp.task("default", [
 
 gulp.task("watch", ["default"], function() {
     gulp.watch(["./app/**/*.ts"], ["bundleTS"]);
-    gulp.watch(["./app/**/*.css"], ["bundleCSS"]);
+    gulp.watch(["./app/**/*.less"], ["bundleCSS"]);
     gulp.watch(["./app/**/*.html"], ["copyResources"]);
     gulp.watch(["./app/shared/**/*.png"], ["copySharedResources"]);
 });
