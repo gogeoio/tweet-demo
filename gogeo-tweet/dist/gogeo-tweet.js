@@ -236,8 +236,8 @@ var gogeo;
             return this.getTweetData(latlng, zoom);
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom) {
-            // var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
-            var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+            var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
+            // var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData;
             var data = {
@@ -629,7 +629,7 @@ var gogeo;
         };
         DashboardMapController.prototype.createLayer = function () {
             var url = this.configureUrl();
-            if (['point', 'thematic', 'intensity'].indexOf(this.mapSelected) != (-1)) {
+            if (["point", "thematic", "intensity"].indexOf(this.mapSelected) != (-1)) {
                 return L.tileLayer(url, {
                     subdomains: ["m1", "m2", "m3", "m4"]
                 });
@@ -651,6 +651,9 @@ var gogeo;
             }
             if (this.mapSelected === "thematic") {
                 stylename = "gogeo_heatmap";
+            }
+            if (this.mapSelected === "intensity") {
+                stylename = "gogeo_intensity";
             }
             var url = "http://" + host + "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&stylename=" + stylename + "&mapkey=123";
             if (this.query) {
@@ -707,7 +710,6 @@ var gogeo;
                 var bounds = layer.getBounds();
                 var point = levent.latlng;
                 intersects = bounds.contains(point);
-                console.log("intersects", intersects);
             }
             if (this.mapSelected === "point" && intersects) {
                 this.service.getTweet(levent.latlng, zoom).success(function (result) { return _this.handlePopupResult(result, levent); });

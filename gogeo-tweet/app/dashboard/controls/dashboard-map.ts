@@ -145,7 +145,7 @@ module gogeo {
         private createLayer(): L.ILayer {
             var url = this.configureUrl();
 
-            if (['point', 'thematic', 'intensity'].indexOf(this.mapSelected) != (-1)) {
+            if (["point", "thematic", "intensity"].indexOf(this.mapSelected) != (-1)) {
                 return L.tileLayer(url, {
                     subdomains: ["m1", "m2", "m3", "m4"]
                 });
@@ -169,6 +169,10 @@ module gogeo {
 
             if (this.mapSelected === "thematic") {
                 stylename = "gogeo_heatmap";
+            }
+
+            if (this.mapSelected === "intensity") {
+                stylename = "gogeo_intensity";
             }
 
             var url = "http://" + host + "/map/"
@@ -242,9 +246,6 @@ module gogeo {
                 var bounds = layer.getBounds();
                 var point = levent.latlng;
                 intersects = bounds.contains(point);
-
-                console.log("intersects", intersects);
-                // var geom = new IGeomSpace(geojson);
             }
 
             if (this.mapSelected === "point" && intersects) {

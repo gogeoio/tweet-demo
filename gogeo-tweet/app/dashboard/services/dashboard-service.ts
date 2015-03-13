@@ -187,8 +187,8 @@ module gogeo {
         }
 
         private getTweetData(latlng: L.LatLng, zoom: number) {
-            // var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
-            var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+            var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
+            // var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData;
 
