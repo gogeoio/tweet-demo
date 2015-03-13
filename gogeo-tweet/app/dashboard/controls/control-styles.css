@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Titillium+Web);
 @font-face {
   font-family: "Titillium Web", sans-serif;
 }
@@ -130,4 +129,13 @@ a {
   right: 0;
   top: 0;
   bottom: 0;
+}
+.tag-default {
+  background-color: #337ab7;
+}
+.tag-orange {
+  background-color: #de5900;
+}
+.tag-green {
+  background-color: #1ede00;
 }

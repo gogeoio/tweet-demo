@@ -6,10 +6,10 @@
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 body,figure{margin:0}
 a:focus,input[type=file]:focus,input[type=checkbox]:focus,input[type=radio]:focus{outline:dotted thin;outline:-webkit-focus-ring-color auto 5px;outline-offset:-2px}
-.popover>.arrow,.popover>.arrow:after,.tooltip-arrow{width:0;height:0;border-color:transparent;border-style:solid}
-.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
-.btn,.datepicker table{-webkit-user-select:none}
 .btn,.datepicker table,.leaflet-overlay-pane svg{-moz-user-select:none}
+.popover>.arrow,.popover>.arrow:after,.tooltip-arrow{width:0;height:0;border-color:transparent;border-style:solid}
+.btn,.datepicker table{-webkit-user-select:none}
+.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
 html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:transparent}
 article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
 audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
@@ -1292,7 +1292,7 @@ button.close{-webkit-appearance:none;padding:0;cursor:pointer;background:0 0;bor
 .popover-title{padding:8px 14px;margin:0;font-size:14px;background-color:#f7f7f7;border-bottom:1px solid #ebebeb;border-radius:5px 5px 0 0}
 .popover-content{padding:9px 14px}
 .popover>.arrow,.popover>.arrow:after{position:absolute;display:block}
-.carousel,.carousel-inner{position:relative}
+.carousel,.carousel-inner,.fa-ul>li{position:relative}
 .popover>.arrow{border-width:11px}
 .popover>.arrow:after{content:"";border-width:10px}
 .popover.bottom>.arrow:after,.popover.left>.arrow:after,.popover.right>.arrow:after,.popover.top>.arrow:after{content:" "}
@@ -1535,8 +1535,16 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .input-daterange input:last-child{border-radius:0 3px 3px 0}
 .input-daterange .input-group-addon{width:auto;min-width:16px;padding:4px 5px;font-weight:400;line-height:1.42857143;text-align:center;text-shadow:0 1px 0 #fff;vertical-align:middle;background-color:#eee;border:solid #ccc;border-width:1px 0;margin-left:-5px;margin-right:-5px}
 .datepicker.dropdown-menu{position:absolute;top:100%;left:0;z-index:1000;float:left;display:none;min-width:160px;list-style:none;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,.2);border-radius:5px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,.2);box-shadow:0 5px 10px rgba(0,0,0,.2);-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box;color:#333;font-size:13px;line-height:1.42857143}
-.fa,.fa-stack{display:inline-block}
+.bootstrap-tagsinput,.fa,.fa-stack{display:inline-block}
 .datepicker.datepicker-inline td,.datepicker.datepicker-inline th,.datepicker.dropdown-menu td,.datepicker.dropdown-menu th{padding:0 5px}
+.bootstrap-tagsinput{background-color:#fff;border:1px solid #ccc;box-shadow:inset 0 1px 1px rgba(0,0,0,.075);padding:4px 6px;margin-bottom:10px;color:#555;vertical-align:middle;border-radius:4px;max-width:100%;line-height:22px;cursor:text}
+.bootstrap-tagsinput input,.bootstrap-tagsinput input:focus{border:none;box-shadow:none}
+.bootstrap-tagsinput input{outline:0;background-color:transparent;padding:0;margin:0;width:auto!important;max-width:inherit}
+.bootstrap-tagsinput .tag{margin-right:2px;color:#fff}
+.bootstrap-tagsinput .tag [data-role=remove]{margin-left:8px;cursor:pointer}
+.bootstrap-tagsinput .tag [data-role=remove]:after{content:"x";padding:0 2px}
+.bootstrap-tagsinput .tag [data-role=remove]:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05)}
+.bootstrap-tagsinput .tag [data-role=remove]:hover:active{box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
 /*!
  *  Font Awesome 4.3.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -1550,7 +1558,6 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .fa-5x{font-size:5em}
 .fa-fw{width:1.28571429em;text-align:center}
 .fa-ul{padding-left:0;margin-left:2.14285714em;list-style-type:none}
-.fa-ul>li{position:relative}
 .fa-li{position:absolute;left:-2.14285714em;width:2.14285714em;top:.14285714em;text-align:center}
 .fa-li.fa-lg{left:-1.85714286em}
 .fa-border{padding:.2em .25em .15em;border:.08em solid #eee;border-radius:.1em}
@@ -2311,7 +2318,6 @@ body,html{height:100%;min-height:100%}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
 .jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
-@font-face{font-family:'Titillium Web';font-style:normal;font-weight:400;src:local('Titillium Web'),local('TitilliumWeb-Regular'),url(http://fonts.gstatic.com/s/titilliumweb/v4/7XUFZ5tgS-tD6QamInJTcU3KvHLhcNjEHFQzwNtdMQY.ttf)format('truetype')}
 @font-face{font-family:"Titillium Web",sans-serif}
 body,h1,h2,h3,h4,h5,h6{font-family:"Titillium Web"!important}
 a{color:#168fae}
@@ -2337,4 +2343,7 @@ a{color:#168fae}
 .dashboard-map{position:relative}
 .dashboard-map .dashboard-map-container .leaflet-map-pane{position:absolute;z-index:3!important;left:0;right:0;top:0;bottom:0}
 .dashboard-map .dashboard-map-container .leaflet-control-container{position:absolute;z-index:2!important;left:0;right:0;top:0;bottom:0}
+.tag-default{background-color:#337ab7}
+.tag-orange{background-color:#de5900}
+.tag-green{background-color:#1ede00}
 .daterange input.form-control{width:100px;max-width:100px}
