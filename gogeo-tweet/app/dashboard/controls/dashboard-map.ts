@@ -24,6 +24,10 @@ module gogeo {
         mapSelected: string = "point";
         drawing: boolean = false;
         layerGroup: L.LayerGroup<L.ILayer> = null;
+        drawnItems: L.FeatureGroup<L.ILayer> = null;
+        drawnGeom: IGeomSpace = null;
+        restricted: boolean = false;
+        canOpenPopup: boolean = true;
 
         constructor(private $scope:ng.IScope,
                     private $rootScope:ng.IScope,
@@ -33,15 +37,28 @@ module gogeo {
 
         initialize(map: L.Map) {
             this.map = map;
+
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
             this.map.on("click", (e) => this.openPopup(e));
+            this.map.on("draw:created", (e) => this.drawnHandler(e));
+            this.map.on("draw:deleted", (e) => this.drawnHandler(e));
+            this.map.on("draw:edited", (e) => this.drawnHandler(e));
+            this.map.on("draw:editstart", (e) => this.blockPopup());
+            this.map.on("draw:editstop", (e) => this.allowPopup());
+            this.map.on("draw:deletestart", (e) => this.blockPopup());
+            this.map.on("draw:deletestop", (e) => this.allowPopup());
 
             this.initializeLayer();
+            this.drawnItems = new L.FeatureGroup();
+            this.map.addLayer(this.drawnItems);
+            this.initializeDrawControl();
+
+            this.service.geomSpaceObservable
+                .subscribeAndApply(this.$scope, geom => this.handleGeom(geom));
         }
 
         initializeLayer() {
-
             this.map.setView(new L.LatLng(34.717232, -92.353034), 5);
             this.map.addLayer(this.layerGroup);
 
@@ -54,6 +71,42 @@ module gogeo {
                 .subscribeAndApply(this.$scope, (query) => this.queryHandler(query));
         }
 
+        private blockPopup() {
+            this.canOpenPopup = false;
+        }
+
+        private allowPopup() {
+            this.canOpenPopup = true;
+        }
+
+        private handleGeom(geom: IGeomSpace) {
+
+        }
+
+        private initializeDrawControl() {
+            var drawOptions = {
+                draw: {
+                    polyline: false,
+                    polygon: false,
+                    circle: false, // Turns off this drawing tool
+                    marker: false,
+                    rectangle: {
+                      showArea: true,
+                      shapeOptions: {
+                        color: "yellow"
+                      }
+                    }
+                },
+                edit: {
+                    featureGroup: this.drawnItems
+                },
+                trash: true
+            };
+
+            var drawControl = new L.Control.Draw(drawOptions);
+            this.map.addControl(drawControl);
+        }
+
         private queryHandler(query: any) {
             if (JSON.stringify(query) !== JSON.stringify(this.query)) {
                 this.query = query;
@@ -63,8 +116,34 @@ module gogeo {
             }
         }
 
-        private createLayer(query?: string): L.ILayer {
-            var url = this.configureUrl(query);
+        private drawnHandler(event: any) {
+            var layerType = event["layerType"];
+            var eventType = event["type"];
+            var layer = event["layer"];
+
+            if (!layer) {
+                layer = this.drawnItems.getLayers()[0];
+            }
+
+            this.drawnItems.clearLayers();
+
+            if (layer) {
+                this.restricted = false;
+                var geojson = layer.toGeoJSON();
+                this.drawnItems.addLayer(layer);
+                this.onMapLoaded(geojson["geometry"]);
+
+                layer.on("click", (e) => this.openPopup(e))
+            } else {
+                this.restricted = false;
+                this.drawnGeom = null;
+                this.updateLayer();
+                this.onMapLoaded();
+            }
+        }
+
+        private createLayer(): L.ILayer {
+            var url = this.configureUrl();
 
             if (['point', 'thematic', 'intensity'].indexOf(this.mapSelected) != (-1)) {
                 return L.tileLayer(url, {
@@ -75,7 +154,7 @@ module gogeo {
             }
         }
 
-        private configureUrl(query?: string): string {
+        private configureUrl(): string {
             var host = "{s}.gogeo.io/1.0";
             // host = "172.16.2.106:9090";
             var database = "db1";
@@ -98,21 +177,30 @@ module gogeo {
                 + serviceName + "?buffer=" + buffer +
                 "&stylename=" + stylename + "&mapkey=123";
 
-            if (query) {
-                url = `${url}&q=${angular.toJson(query)}`
+            if (this.query) {
+                url = `${url}&q=${angular.toJson(this.query)}`;
             }
 
-            console.log('url', url);
+            if (this.drawnGeom) {
+                url = `${url}&geom=${angular.toJson(this.drawnGeom)}`;
+            }
 
             return url;
         }
 
-        drawArea() {
-            this.drawing = true;
-        }
+        onMapLoaded(geom?: IGeomSpace) {
+            if (this.restricted) {
+                return;
+            }
 
-        onMapLoaded() {
-            this.service.updateGeomSpaceByBounds(this.map.getBounds());
+            if (geom) {
+                this.service.updateGeomSpace(geom);
+                this.restricted = true;
+                this.drawnGeom = geom;
+                this.updateLayer();
+            } else {
+                this.service.updateGeomSpaceByBounds(this.map.getBounds());
+            }
         }
 
         hidePopup() {
@@ -141,46 +229,63 @@ module gogeo {
         }
 
         openPopup(levent: any) {
-            var self = this;
             var zoom = this.map.getZoom();
 
-            if (this.mapSelected === "point") {
-                this.service.getTweet(levent.latlng, zoom).success(
-                    function(result: ITweet) {
-                        self.tweetResult = result[0];
+            var intersects = true;
 
-                        if (!self.tweetResult) {
-                            return;
-                        }
+            if (!this.canOpenPopup) {
+                return;
+            }
 
-                        if (self.popup == null) {
-                            var options = {
-                                closeButton: false,
-                                className: "marker-popup",
-                                offset: new L.Point(-195, -265)
-                            };
-                            self.popup = L.popup(options);
-                            self.popup.setContent($("#tweet-popup")[0]);
-                        } else {
-                            self.popup.setContent($("#tweet-popup")[0]);
-                            self.popup.update();
-                        }
+            if (this.drawnItems.getLayers().length > 0) {
+                var layer = <L.Polygon>this.drawnItems.getLayers()[0];
+                var bounds = layer.getBounds();
+                var point = levent.latlng;
+                intersects = bounds.contains(point);
 
-                        self.popup.setLatLng(levent.latlng);
-                        self.map.openPopup(self.popup);
-                    }
-                );
+                console.log("intersects", intersects);
+                // var geom = new IGeomSpace(geojson);
+            }
+
+            if (this.mapSelected === "point" && intersects) {
+                this.service.getTweet(levent.latlng, zoom)
+                    .success(result => this.handlePopupResult(result, levent));
             }
         }
 
-        changeMapView(element: any) {
+        private handlePopupResult(result: ITweet, levent: any) {
+            this.tweetResult = result[0];
+
+            if (!this.tweetResult) {
+                return;
+            }
+
+            if (this.popup == null) {
+                var options = {
+                    closeButton: false,
+                    className: "marker-popup",
+                    offset: new L.Point(-195, -265)
+                };
+                this.popup = L.popup(options);
+                this.popup.setContent($("#tweet-popup")[0]);
+            } else {
+                this.popup.setContent($("#tweet-popup")[0]);
+                this.popup.update();
+            }
+
+            this.popup.setLatLng(levent.latlng);
+            this.map.openPopup(this.popup);
+                    
+        }
+
+        changeMapType(element: any) {
             this.mapSelected = element.target.id;
             this.updateLayer();
         }
 
         private updateLayer() {
             this.layerGroup.clearLayers();
-            var layer = this.createLayer(this.query);
+            var layer = this.createLayer();
             this.layerGroup.addLayer(layer);
         }
 

@@ -126,14 +126,14 @@ module gogeo {
                 .subscribe(() => this.search());
         }
 
-        private calculateNeSW(bounds:L.LatLngBounds) {
+        private calculateNeSW(bounds: L.LatLngBounds) {
             var ne = new L.LatLng(bounds.getNorthEast().lng, bounds.getNorthEast().lat);
             var sw = new L.LatLng(bounds.getSouthWest().lng, bounds.getSouthWest().lat);
 
             return new NeSwPoint(ne, sw);
         }
 
-        private pointToGeoJson(point:NeSwPoint):IGeomSpace {
+        private pointToGeoJson(point: NeSwPoint):IGeomSpace {
             var ne = [point.ne.lat, point.ne.lng];
             var sw = [point.sw.lat, point.sw.lng];
 
@@ -152,13 +152,13 @@ module gogeo {
             }
         }
 
-        updateGeomSpace(geom:IGeomSpace) {
+        updateGeomSpace(geom: IGeomSpace) {
+            this._loading = true;
             this._lastGeomSpace = geom;
             this._geomSpaceObservable.onNext(geom);
         }
 
-        updateGeomSpaceByBounds(bounds:L.LatLngBounds) {
-            this._loading = true;
+        updateGeomSpaceByBounds(bounds: L.LatLngBounds) {
             var point = this.calculateNeSW(bounds);
             var geomSpace = this.pointToGeoJson(point);
             this.updateGeomSpace(geomSpace);

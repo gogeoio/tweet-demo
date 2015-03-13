@@ -208,11 +208,11 @@ var gogeo;
             };
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
+            this._loading = true;
             this._lastGeomSpace = geom;
             this._geomSpaceObservable.onNext(geom);
         };
         DashboardService.prototype.updateGeomSpaceByBounds = function (bounds) {
-            this._loading = true;
             var point = this.calculateNeSW(bounds);
             var geomSpace = this.pointToGeoJson(point);
             this.updateGeomSpace(geomSpace);
@@ -533,6 +533,10 @@ var gogeo;
             this.mapSelected = "point";
             this.drawing = false;
             this.layerGroup = null;
+            this.drawnItems = null;
+            this.drawnGeom = null;
+            this.restricted = false;
+            this.canOpenPopup = true;
             this.layerGroup = L.layerGroup([]);
         }
         DashboardMapController.prototype.initialize = function (map) {
@@ -541,7 +545,18 @@ var gogeo;
             this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", function (e) { return _this.onMapLoaded(); });
             this.map.on("click", function (e) { return _this.openPopup(e); });
+            this.map.on("draw:created", function (e) { return _this.drawnHandler(e); });
+            this.map.on("draw:deleted", function (e) { return _this.drawnHandler(e); });
+            this.map.on("draw:edited", function (e) { return _this.drawnHandler(e); });
+            this.map.on("draw:editstart", function (e) { return _this.blockPopup(); });
+            this.map.on("draw:editstop", function (e) { return _this.allowPopup(); });
+            this.map.on("draw:deletestart", function (e) { return _this.blockPopup(); });
+            this.map.on("draw:deletestop", function (e) { return _this.allowPopup(); });
             this.initializeLayer();
+            this.drawnItems = new L.FeatureGroup();
+            this.map.addLayer(this.drawnItems);
+            this.initializeDrawControl();
+            this.service.geomSpaceObservable.subscribeAndApply(this.$scope, function (geom) { return _this.handleGeom(geom); });
         };
         DashboardMapController.prototype.initializeLayer = function () {
             var _this = this;
@@ -551,6 +566,36 @@ var gogeo;
             this.layerGroup.addLayer(layer);
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
         };
+        DashboardMapController.prototype.blockPopup = function () {
+            this.canOpenPopup = false;
+        };
+        DashboardMapController.prototype.allowPopup = function () {
+            this.canOpenPopup = true;
+        };
+        DashboardMapController.prototype.handleGeom = function (geom) {
+        };
+        DashboardMapController.prototype.initializeDrawControl = function () {
+            var drawOptions = {
+                draw: {
+                    polyline: false,
+                    polygon: false,
+                    circle: false,
+                    marker: false,
+                    rectangle: {
+                        showArea: true,
+                        shapeOptions: {
+                            color: "yellow"
+                        }
+                    }
+                },
+                edit: {
+                    featureGroup: this.drawnItems
+                },
+                trash: true
+            };
+            var drawControl = new L.Control.Draw(drawOptions);
+            this.map.addControl(drawControl);
+        };
         DashboardMapController.prototype.queryHandler = function (query) {
             if (JSON.stringify(query) !== JSON.stringify(this.query)) {
                 this.query = query;
@@ -559,8 +604,31 @@ var gogeo;
             else {
             }
         };
-        DashboardMapController.prototype.createLayer = function (query) {
-            var url = this.configureUrl(query);
+        DashboardMapController.prototype.drawnHandler = function (event) {
+            var _this = this;
+            var layerType = event["layerType"];
+            var eventType = event["type"];
+            var layer = event["layer"];
+            if (!layer) {
+                layer = this.drawnItems.getLayers()[0];
+            }
+            this.drawnItems.clearLayers();
+            if (layer) {
+                this.restricted = false;
+                var geojson = layer.toGeoJSON();
+                this.drawnItems.addLayer(layer);
+                this.onMapLoaded(geojson["geometry"]);
+                layer.on("click", function (e) { return _this.openPopup(e); });
+            }
+            else {
+                this.restricted = false;
+                this.drawnGeom = null;
+                this.updateLayer();
+                this.onMapLoaded();
+            }
+        };
+        DashboardMapController.prototype.createLayer = function () {
+            var url = this.configureUrl();
             if (['point', 'thematic', 'intensity'].indexOf(this.mapSelected) != (-1)) {
                 return L.tileLayer(url, {
                     subdomains: ["m1", "m2", "m3", "m4"]
@@ -570,7 +638,7 @@ var gogeo;
                 return this.createClusterLayer(url);
             }
         };
-        DashboardMapController.prototype.configureUrl = function (query) {
+        DashboardMapController.prototype.configureUrl = function () {
             var host = "{s}.gogeo.io/1.0";
             // host = "172.16.2.106:9090";
             var database = "db1";
@@ -585,17 +653,27 @@ var gogeo;
                 stylename = "gogeo_heatmap";
             }
             var url = "http://" + host + "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&stylename=" + stylename + "&mapkey=123";
-            if (query) {
-                url = "" + url + "&q=" + angular.toJson(query);
+            if (this.query) {
+                url = "" + url + "&q=" + angular.toJson(this.query);
             }
-            console.log('url', url);
+            if (this.drawnGeom) {
+                url = "" + url + "&geom=" + angular.toJson(this.drawnGeom);
+            }
             return url;
         };
-        DashboardMapController.prototype.drawArea = function () {
-            this.drawing = true;
-        };
-        DashboardMapController.prototype.onMapLoaded = function () {
-            this.service.updateGeomSpaceByBounds(this.map.getBounds());
+        DashboardMapController.prototype.onMapLoaded = function (geom) {
+            if (this.restricted) {
+                return;
+            }
+            if (geom) {
+                this.service.updateGeomSpace(geom);
+                this.restricted = true;
+                this.drawnGeom = geom;
+                this.updateLayer();
+            }
+            else {
+                this.service.updateGeomSpaceByBounds(this.map.getBounds());
+            }
         };
         DashboardMapController.prototype.hidePopup = function () {
             this.map.closePopup(this.popup);
@@ -618,39 +696,51 @@ var gogeo;
             }
         };
         DashboardMapController.prototype.openPopup = function (levent) {
-            var self = this;
+            var _this = this;
             var zoom = this.map.getZoom();
-            if (this.mapSelected === "point") {
-                this.service.getTweet(levent.latlng, zoom).success(function (result) {
-                    self.tweetResult = result[0];
-                    if (!self.tweetResult) {
-                        return;
-                    }
-                    if (self.popup == null) {
-                        var options = {
-                            closeButton: false,
-                            className: "marker-popup",
-                            offset: new L.Point(-195, -265)
-                        };
-                        self.popup = L.popup(options);
-                        self.popup.setContent($("#tweet-popup")[0]);
-                    }
-                    else {
-                        self.popup.setContent($("#tweet-popup")[0]);
-                        self.popup.update();
-                    }
-                    self.popup.setLatLng(levent.latlng);
-                    self.map.openPopup(self.popup);
-                });
+            var intersects = true;
+            if (!this.canOpenPopup) {
+                return;
+            }
+            if (this.drawnItems.getLayers().length > 0) {
+                var layer = this.drawnItems.getLayers()[0];
+                var bounds = layer.getBounds();
+                var point = levent.latlng;
+                intersects = bounds.contains(point);
+                console.log("intersects", intersects);
+            }
+            if (this.mapSelected === "point" && intersects) {
+                this.service.getTweet(levent.latlng, zoom).success(function (result) { return _this.handlePopupResult(result, levent); });
             }
         };
-        DashboardMapController.prototype.changeMapView = function (element) {
+        DashboardMapController.prototype.handlePopupResult = function (result, levent) {
+            this.tweetResult = result[0];
+            if (!this.tweetResult) {
+                return;
+            }
+            if (this.popup == null) {
+                var options = {
+                    closeButton: false,
+                    className: "marker-popup",
+                    offset: new L.Point(-195, -265)
+                };
+                this.popup = L.popup(options);
+                this.popup.setContent($("#tweet-popup")[0]);
+            }
+            else {
+                this.popup.setContent($("#tweet-popup")[0]);
+                this.popup.update();
+            }
+            this.popup.setLatLng(levent.latlng);
+            this.map.openPopup(this.popup);
+        };
+        DashboardMapController.prototype.changeMapType = function (element) {
             this.mapSelected = element.target.id;
             this.updateLayer();
         };
         DashboardMapController.prototype.updateLayer = function () {
             this.layerGroup.clearLayers();
-            var layer = this.createLayer(this.query);
+            var layer = this.createLayer();
             this.layerGroup.addLayer(layer);
         };
         DashboardMapController.prototype.createClusterLayer = function (url) {
