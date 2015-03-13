@@ -8,7 +8,8 @@ var gulp = require("gulp"),
     rename = require("gulp-rename"),
     ignore = require("gulp-ignore"),
     minifyCSS = require("gulp-minify-css"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    less = require("gulp-less");
 
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
@@ -57,6 +58,11 @@ gulp.task("copySharedResources", function() {
 });
 
 gulp.task("bundleCSS", function() {
+    gulp.src("./app/**/*.less")
+        .pipe(less())
+        .pipe(minifyCSS())
+        .pipe(gulp.dest("./app"));
+
     var filesToBundle = [
         fromBower("bootstrap/dist/css/bootstrap.css"),
         fromBower("bootstrap/dist/css/bootstrap-theme.css"),

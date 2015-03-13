@@ -22,29 +22,8 @@ a {
   color: @bgColor;
 }
 
-.tweets-amounts-plus {
+.numberpad-big {
   font-size: 28pt;
-  padding-top: 15px;
-
-  label {
-    font-weight: 600;
-    font-size: 12px;
-    color: #868686;
-    line-height: 20px;
-    display: block;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-  }
-
-  span {
-    font-weight: 600;
-    font-size: 36px;
-    color: #1CB4DB;
-    line-height: 1.1em;
-    margin: 0px;
-    padding: 0px;
-  }
 }
 
 .dashboard-panel {
@@ -67,10 +46,15 @@ a {
   }
 
   .dashboard-right-panel {
-    width: @division;
-    height: 100%;
+    display: block;
     position: relative;
     float: right;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    width: @division;
+    height: 100%;
     border-left: solid 2px @borderColor;
   }
 
@@ -135,6 +119,31 @@ a {
       color: #666;
     }
   }
+
+  .tweets-amounts-plus {
+    font-size: 28pt;
+    padding-top: 15px;
+
+    label {
+      font-weight: 600;
+      font-size: 12px;
+      color: #868686;
+      line-height: 20px;
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 36px;
+      color: #1CB4DB;
+      line-height: 1.1em;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .dashboard-map {
@@ -180,3 +189,4 @@ a {
 .tag-green {
   background-color: darken(#22ff00, 6.5%);
 }
+
