@@ -4,9 +4,10 @@
 ///<reference path="./_references.d.ts"/>
 var gogeo;
 (function (gogeo) {
-    var mod = angular.module("gogeo", ["ngRoute"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics"]).config([
         "$routeProvider",
-        function ($routeProvider) {
+        "AngularyticsProvider",
+        function ($routeProvider, angularyticsProvider) {
             $routeProvider.when("/welcome", {
                 controller: "WelcomeController",
                 controllerAs: "welcome",
@@ -18,25 +19,29 @@ var gogeo;
             }).otherwise({
                 redirectTo: "/welcome"
             });
+            if (window.location.hostname.match("gogeo.io")) {
+                angularyticsProvider.setEventHandlers(["Google"]);
+            }
+            else {
+                angularyticsProvider.setEventHandlers(["Console"]);
+            }
         }
-    ]);
+    ]).run(function (Angularytics) {
+        Angularytics.init();
+    });
     function registerController(controllerType) {
-        console.debug("registrando controlador: ", controllerType.$named);
         mod.controller(controllerType.$named, controllerType);
     }
     gogeo.registerController = registerController;
     function registerService(serviceType) {
-        console.debug("registrando serviço: ", serviceType.$named);
         mod.service(serviceType.$named, serviceType);
     }
     gogeo.registerService = registerService;
     function registerDirective(directiveName, config) {
-        console.debug("registrando diretiva: ", directiveName);
         mod.directive(directiveName, config);
     }
     gogeo.registerDirective = registerDirective;
     function registerFilter(filterName, filter) {
-        console.debug("registrando filtro: ", filterName);
         mod.filter(filterName, function () { return filter; });
     }
     gogeo.registerFilter = registerFilter;
@@ -124,9 +129,11 @@ var gogeo;
     })();
     gogeo.QueryString = QueryString;
     var DashboardService = (function () {
-        function DashboardService($q, $http) {
+        function DashboardService($q, $http, $location, angularytics) {
             this.$q = $q;
             this.$http = $http;
+            this.$location = $location;
+            this.angularytics = angularytics;
             this._lastGeomSpace = null;
             this._lastHashtagFilter = null;
             this._lastSearchTerm = null;
@@ -137,6 +144,9 @@ var gogeo;
             this._hashtagResultObservable = new Rx.BehaviorSubject(null);
             this._lastQueryObservable = new Rx.BehaviorSubject(null);
             this.initialize();
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackPageView("/");
+            }
         }
         Object.defineProperty(DashboardService.prototype, "loading", {
             get: function () {
@@ -198,7 +208,6 @@ var gogeo;
             };
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
-            this._loading = true;
             this._lastGeomSpace = geom;
             this._geomSpaceObservable.onNext(geom);
         };
@@ -218,15 +227,19 @@ var gogeo;
             this._lastSearchTerm = term;
             this._somethingTermObservable.onNext(term);
         };
-        DashboardService.prototype.getTweet = function (latlng) {
-            return this.getTweetData(latlng);
+        DashboardService.prototype.publishMetrics = function (action, category, label) {
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackEvent(action, category, label);
+            }
         };
-        DashboardService.prototype.getTweetData = function (latlng) {
+        DashboardService.prototype.getTweet = function (latlng, zoom) {
+            return this.getTweetData(latlng, zoom);
+        };
+        DashboardService.prototype.getTweetData = function (latlng, zoom) {
+            // var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
             var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
-            var zoom = 5;
-            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+            var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData;
-            console.log("angular.toJson", angular.toJson(query.q));
             var data = {
                 geom: {
                     type: "Point",
@@ -236,8 +249,8 @@ var gogeo;
                     ]
                 },
                 limit: 1,
-                buffer: pixelDist * 16,
-                buffer_measure: "kilometer",
+                buffer: pixelDist,
+                buffer_measure: "degree",
                 fields: [
                     "user.id",
                     "user.name",
@@ -293,16 +306,22 @@ var gogeo;
         };
         DashboardService.prototype.composeQuery = function () {
             var query = new DashboardQuery(this.$http, this._lastGeomSpace);
-            if (this._lastHashtagFilter)
+            if (this._lastHashtagFilter) {
+                this.publishMetrics("click", "hashtags", this._lastHashtagFilter.key);
                 query.filterByHashtag(this._lastHashtagFilter);
-            if (this._lastSearchTerm)
+            }
+            if (this._lastSearchTerm) {
+                this.publishMetrics("search", "search", this._lastSearchTerm);
                 query.filterBySearchTerm(this._lastSearchTerm);
+            }
             return query;
         };
         DashboardService.$named = "dashboardService";
         DashboardService.$inject = [
             "$q",
-            "$http"
+            "$http",
+            "$location",
+            "Angularytics"
         ];
         return DashboardService;
     })();
@@ -359,6 +378,7 @@ var gogeo;
             return and;
         };
         DashboardQuery.prototype.execute = function (resultHandler) {
+            // var url = "http://172.16.2.106:9090/geoagg/db1/tweets?mapkey=123";
             var url = "http://api.gogeo.io/1.0/geoagg/db1/tweets?mapkey=123";
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
@@ -509,6 +529,11 @@ var gogeo;
             this.$rootScope = $rootScope;
             this.service = service;
             this.query = { query: { filtered: { filter: {} } } };
+            this.selected = "inactive";
+            this.mapSelected = "point";
+            this.drawing = false;
+            this.layerGroup = null;
+            this.layerGroup = L.layerGroup([]);
         }
         DashboardMapController.prototype.initialize = function (map) {
             var _this = this;
@@ -519,34 +544,55 @@ var gogeo;
             this.initializeLayer();
         };
         DashboardMapController.prototype.initializeLayer = function () {
-            var host = '{s}.gogeo.io/1.0';
-            var database = 'db1';
-            var collection = 'tweets';
-            var buffer = 32;
-            var stylename = 'gogeo_many_points';
-            var url = 'http://' + host + '/map/' + database + '/' + collection + '/{z}/{x}/{y}/tile.png?buffer=' + buffer + '&stylename=' + stylename + '&mapkey=123';
-            var layer = L.tileLayer(url, {
-                subdomains: ["m1", "m2", "m3", "m4"]
-            });
-            var layerGroup = L.layerGroup([]);
+            var _this = this;
             this.map.setView(new L.LatLng(34.717232, -92.353034), 5);
-            this.map.addLayer(layerGroup);
-            layerGroup.addLayer(layer);
-            var self = this;
-            this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) {
-                var newUrl = "" + url + "&q=" + angular.toJson(query);
-                var filter = JSON.stringify(query["query"]["filtered"]["filter"]);
-                if (JSON.stringify(query) !== JSON.stringify(self.query)) {
-                    self.query = query;
-                    layerGroup.removeLayer(layer);
-                    layer = L.tileLayer(newUrl, {
-                        subdomains: ["m1", "m2", "m3", "m4"]
-                    });
-                    layerGroup.addLayer(layer);
-                }
-                else {
-                }
-            });
+            this.map.addLayer(this.layerGroup);
+            var layer = this.createLayer();
+            this.layerGroup.addLayer(layer);
+            this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
+        };
+        DashboardMapController.prototype.queryHandler = function (query) {
+            if (JSON.stringify(query) !== JSON.stringify(this.query)) {
+                this.query = query;
+                this.updateLayer();
+            }
+            else {
+            }
+        };
+        DashboardMapController.prototype.createLayer = function (query) {
+            var url = this.configureUrl(query);
+            if (['point', 'thematic', 'intensity'].indexOf(this.mapSelected) != (-1)) {
+                return L.tileLayer(url, {
+                    subdomains: ["m1", "m2", "m3", "m4"]
+                });
+            }
+            else if (this.mapSelected === 'cluster') {
+                return this.createClusterLayer(url);
+            }
+        };
+        DashboardMapController.prototype.configureUrl = function (query) {
+            var host = "{s}.gogeo.io/1.0";
+            // host = "172.16.2.106:9090";
+            var database = "db1";
+            var collection = "tweets";
+            var buffer = 8;
+            var stylename = "gogeo_many_points";
+            var serviceName = "tile.png";
+            if (this.mapSelected === "cluster") {
+                serviceName = "cluster.json";
+            }
+            if (this.mapSelected === "thematic") {
+                stylename = "gogeo_heatmap";
+            }
+            var url = "http://" + host + "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&stylename=" + stylename + "&mapkey=123";
+            if (query) {
+                url = "" + url + "&q=" + angular.toJson(query);
+            }
+            console.log('url', url);
+            return url;
+        };
+        DashboardMapController.prototype.drawArea = function () {
+            this.drawing = true;
         };
         DashboardMapController.prototype.onMapLoaded = function () {
             this.service.updateGeomSpaceByBounds(this.map.getBounds());
@@ -562,26 +608,60 @@ var gogeo;
             var url = url.replace("_normal", "");
             return url;
         };
-        DashboardMapController.prototype.openPopup = function (event) {
+        DashboardMapController.prototype.formatTweetUrl = function () {
+            if (this.tweetResult) {
+                var url = "https://twitter.com/";
+                url = url + this.tweetResult["user.screen_name"] + "/";
+                url = url + "status/";
+                url = url + this.tweetResult["id"];
+                return url;
+            }
+        };
+        DashboardMapController.prototype.openPopup = function (levent) {
             var self = this;
-            this.service.getTweet(event.latlng).success(function (result) {
-                self.tweetResult = result[0];
-                if (self.popup == null) {
-                    var options = {
-                        closeButton: false,
-                        className: "marker-popup",
-                        offset: new L.Point(-195, -265)
-                    };
-                    self.popup = L.popup(options);
-                    self.popup.setContent($("#tweet-popup")[0]);
+            var zoom = this.map.getZoom();
+            if (this.mapSelected === "point") {
+                this.service.getTweet(levent.latlng, zoom).success(function (result) {
+                    self.tweetResult = result[0];
+                    if (!self.tweetResult) {
+                        return;
+                    }
+                    if (self.popup == null) {
+                        var options = {
+                            closeButton: false,
+                            className: "marker-popup",
+                            offset: new L.Point(-195, -265)
+                        };
+                        self.popup = L.popup(options);
+                        self.popup.setContent($("#tweet-popup")[0]);
+                    }
+                    else {
+                        self.popup.setContent($("#tweet-popup")[0]);
+                        self.popup.update();
+                    }
+                    self.popup.setLatLng(levent.latlng);
+                    self.map.openPopup(self.popup);
+                });
+            }
+        };
+        DashboardMapController.prototype.changeMapView = function (element) {
+            this.mapSelected = element.target.id;
+            this.updateLayer();
+        };
+        DashboardMapController.prototype.updateLayer = function () {
+            this.layerGroup.clearLayers();
+            var layer = this.createLayer(this.query);
+            this.layerGroup.addLayer(layer);
+        };
+        DashboardMapController.prototype.createClusterLayer = function (url) {
+            var options = {
+                subdomains: ["m1", "m2", "m3", "m4"],
+                useJsonP: false,
+                formatCount: function (count) {
+                    return count;
                 }
-                else {
-                    self.popup.setContent($("#tweet-popup")[0]);
-                    self.popup.update();
-                }
-                self.popup.setLatLng(event.latlng);
-                self.map.openPopup(self.popup);
-            });
+            };
+            return new L.TileCluster(url, options);
         };
         DashboardMapController.$inject = [
             "$scope",
@@ -602,13 +682,13 @@ var gogeo;
                 link: function (scope, element, attrs, controller) {
                     var options = {
                         attributionControl: false,
-                        minZoom: 2,
+                        minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(51.51, -0.11),
                         zoom: 12
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
-                    var map = L.map(mapContainerElement, options);
+                    var map = L.map("map-container", options);
                     controller.initialize(map);
                     $timeout(function () { return map.invalidateSize(false); }, 1);
                     scope.$on("$destroy", function () {
@@ -618,6 +698,17 @@ var gogeo;
             };
         }
     ]);
+    gogeo.registerDirective("errSrc", function () {
+        return {
+            link: function (scope, element, attrs) {
+                element.bind("error", function () {
+                    if (attrs.src != attrs.errSrc) {
+                        attrs.$set("src", attrs.errSrc);
+                    }
+                });
+            }
+        };
+    });
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 var gogeo;
@@ -645,31 +736,6 @@ var gogeo;
             }
         };
     });
-})(gogeo || (gogeo = {}));
-/// <reference path="../../_references.d.ts" />
-/**
- * Created by danfma on 11/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    gogeo.registerDirective("dashboardTagsinput", [
-        function () {
-            return {
-                restrict: "C",
-                scope: {
-                    selectedTags: "="
-                },
-                link: function (scope, element, attrs) {
-                    element.tagsinput({
-                        tagClass: "form-control",
-                        itemClass: function () {
-                            console.log("args:", arguments);
-                        }
-                    });
-                }
-            };
-        }
-    ]);
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 /**

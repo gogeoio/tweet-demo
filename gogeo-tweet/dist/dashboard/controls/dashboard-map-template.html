@@ -1,4 +1,4 @@
-<div class='dashboard-map-container'></div>
+<div id="map-container" class="dashboard-map-container"></div>
 
 <div id="tweet-popup" ng-show="map.tweetResult">
   <div class="marker-popup">
@@ -8,7 +8,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
 
-      <img class="mc-weet-thumb" ng-src="{{ map.formatPictureUrl(map.tweetResult['user.profile_image_url']) }}" alt="" width="94" height="94" />
+      <img class="mc-weet-thumb" err-src="https://s3.amazonaws.com/deploy.gogeo/cdn/twitter-bird-logo.png" ng-src="{{ map.formatPictureUrl(map.tweetResult['user.profile_image_url']) }}" alt="" width="94" height="94" />
 
       <div class="mc-tweet-user">
         <div class="row">
@@ -17,22 +17,62 @@
             <a target="_blank" href="http://www.twitter.com/{{ map.tweetResult['user.screen_name'] }}">@{{ map.tweetResult["user.screen_name"] }}</a>
           </div>
         </div>
-        <!-- <div class="row">
-          <div class="col-md-6">
-            <label>Retweets</label>
-            <span><strong>4</strong></span>
+        <div style="padding-top: 15px; padding-right: 5px; font-size: 12px;">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <label>Place</label> -->
+              <span>
+                <strong>
+                  {{ map.tweetResult["place.full_name"] }}
+                </strong>
+              </span>
+            </div>
           </div>
-          <div class="col-md-6">
-            <label>Favs</label>
-            <span><strong>6</strong></span>
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <label>Favs</label> -->
+              <span>
+                <strong>
+                  {{ map.tweetResult["created_at"] | date: 'medium' }}
+                </strong>
+              </span>
+            </div>
           </div>
-        </div> -->
+        </div>
       </div>
 
       <div class="mc-tweet-msg">
-        <label>Message</label>
+        <label>
+          <a ng-href="{{ map.formatTweetUrl() }}" target="_blank">
+            Message
+          </a>
+        </label>
         <p>{{ map.tweetResult["text"] }}</p>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="map-control">
+  <div class="row">
+    <ul class="list-inline item">
+      <li id="cluster" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'cluster' ? 'active' : 'inactive' }}">
+        CLUSTER
+      </li>
+      <li id="point" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'point' ? 'active' : 'inactive' }}">
+        POINT
+      </li>
+      <li id="intensity" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
+        INTENSITY
+      </li>
+      <li id="thematic" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
+        THEMATIC
+      </li>
+    </ul>
+
+    <ul class="list-inline draw-item" ng-show="false">
+      <li class="draw {{ map.drawing ? 'active' : 'inactive' }}" ng-click="map.drawArea()">
+      </li>
+    </ul>
   </div>
 </div>

@@ -3,10 +3,12 @@
 ///<reference path="typings/angularjs/angular-route.d.ts"/>
 ///<reference path="typings/leaflet/leaflet.d.ts"/>
 ///<reference path="typings/leaflet.google/leaflet.google.d.ts"/>
+///<reference path="typings/leaflet.tilecluster/leaflet.tilecluster.d.ts"/>
 ///<reference path="typings/rx/rx-lite.d.ts"/>
 ///<reference path="typings/rx/rx.time-lite.d.ts"/>
 ///<reference path="typings/linq/linq.3.0.3-Beta4.d.ts"/>
 ///<reference path="typings/numeraljs/numeraljs.d.ts"/>
 ///<reference path="typings/bootstrap.tagsinput/bootstrap-tagsinput.d.ts"/>
+///<reference path="typings/angularytics/angularytics.d.ts"/>
 ///<reference path="shared/support/rx-angular.d.ts"/>
 ///<reference path="shared/custom-filters.ts"/>

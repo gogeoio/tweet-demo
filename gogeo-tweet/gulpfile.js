@@ -38,6 +38,7 @@ gulp.task("copyResources", function() {
             fromBower("font-awesome/**/*.woff"),
             fromBower("font-awesome/**/*.woff2"),
             fromBower("leaflet.draw/dist/**/*.png"),
+            "./lib/**/*.png",
             "app/**/*.png",
             "app/**/*.html",
             "app/**/*.jpg"
@@ -64,6 +65,8 @@ gulp.task("bundleCSS", function() {
         fromBower("font-awesome/css/font-awesome.css"),
         fromBower("mapbox.js/mapbox.css"),
         fromBower("leaflet.draw/dist/leaflet.draw.css"),
+        "./lib/css/MarkerCluster.css",
+        "./lib/css/MarkerCluster.Default.css",
         "app/**/*.css"
     ];
 
@@ -81,6 +84,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("bootstrap-tagsinput/dist/bootstrap-tagsinput.js"),
         fromBower("angular/angular.js"),
         fromBower("angular-route/angular-route.js"),
+        fromBower("angularytics/dist/angularytics.min.js"),
         fromBower("mapbox.js/mapbox.js"),
         fromBower("leaflet.draw/dist/leaflet.draw.js"),
         fromBower("leaflet-plugins/layer/tile/Google.js"),
@@ -89,7 +93,8 @@ gulp.task("bundleCoreJS", function() {
         fromBower("linqjs/linq.js"),
         fromBower("numeral/min/numeral.min.js"),
         fromBower("numeral/min/languages.min.js"),
-        "app/shared/support/rx-angular.js"
+        "app/shared/support/rx-angular.js",
+        "./lib/js/leaflet.tilecluster.js"
     ];
 
     return gulp.src(filesToBundle)
