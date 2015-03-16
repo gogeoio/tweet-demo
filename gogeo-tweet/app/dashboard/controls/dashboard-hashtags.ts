@@ -23,6 +23,13 @@ module gogeo {
             private service: DashboardService) {
 
             this.message = "Top 10 most used hashtags";
+
+            this.service.hashtagResultObservable
+                .subscribeAndApply(this.$scope, (result) => {
+                    if (result && result["buckets_qtd"] == 10) {
+                        this.message = "Top 10 most used hashtags";
+                    }
+                });
         }
 
         hasSelected() {
@@ -33,12 +40,6 @@ module gogeo {
             this.message = "Top 5 where is most used";
             this.selectedHashtag = bucket;
             this.service.updateHashtagBucket(bucket);
-        }
-
-        unselect() {
-            this.message = "Top 10 most used hashtags";
-            this.selectedHashtag = null;
-            this.service.updateHashtagBucket(null);
         }
     }
 

@@ -34,24 +34,18 @@ a {
   float: left;
 }
 .dashboard-panel .dashboard-right-panel {
-
   display: block;
-  /*position: fixed;*/
   position: relative;
   float: right;
   background: #fcfcfc;
-  /*width: 450px;*/
-  /*width: 30% !important;*/
   height: 100%;
   margin: 0px;
   padding: 0px;
   z-index: 2;
-
   width: 30%;
   height: 100%;
   position: relative;
   float: right;
-  /*border-left: solid 2px #1cb4db;*/
 }
 .dashboard-header .navbar {
   padding-top: 5px;
@@ -82,6 +76,76 @@ a {
 .dashboard-right-panel .nav {
   margin-bottom: 8px;
 }
+
+.dashboard-right-panel .nav-tabs {
+  border-top: 1px solid #D8D8D8;
+  border-bottom: 1px solid #D8D8D8;
+}
+
+.dashboard-right-panel .nav-tabs li {
+  float: right;
+}
+
+.dashboard-right-panel .nav-tabs li.active a {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1CB4DB;
+  line-height: 20px;
+  border-top: none;
+  margin-top: 0px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  margin-right: 0px;
+}
+
+.dashboard-right-panel .nav-tabs li.active a:hover {
+  padding-top: 10px;
+  padding-bottom: 16px;
+}
+
+.dashboard-right-panel .nav-tabs li a {
+  font-weight: 400;
+  font-size: 14px;
+  color: #D7D7D7;
+  line-height: 20px;
+  border-radius: 0px;
+}
+
+.dashboard-right-panel .nav-tabs li a:hover {
+  padding-top: 10px;
+  padding-bottom: 14px;
+  margin-top: 0px;
+  border-bottom: none;
+}
+
+.dashboard-right-panel .nav-tabs.search-filter {
+  background-color: #1cb4db;
+}
+.dashboard-right-panel .nav-tabs.search-filter .filter {
+  float: left;
+  width: 57.8069%;
+  /*margin: 0px;*/
+  margin-right: 0px;
+}
+.dashboard-right-panel .nav-tabs.search-filter .filter a {
+  width: 100%;
+  color: #fcfcfc;
+  font-weight: 600;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  /*span{*/
+  /*line-height: 1.2em;*/
+  /*}*/
+}
+.dashboard-right-panel .nav-tabs.search-filter .filter a button {
+  margin-top: -2px;
+}
+.dashboard-right-panel .nav-tabs.search-filter .filter a:hover {
+  background-color: #106a81;
+  border-color: #106a81;
+  /*border:none;*/
+}
+
 .dashboard-right-panel .hashtag-active {
   border: none;
   background-color: #43c5e7;
@@ -325,4 +389,73 @@ a {
 
 .map-control .draw-item .draw:hover {
   background-color: #C6F1FC
+}
+
+.thematic-legend ul {
+  background-color: transparent;
+}
+
+.thematic-legend ul li {
+  cursor: pointer;
+  margin: 0 3px;
+}
+
+.thematic-legend ul li.android {
+  background-color: white;
+  color: #F84F40;
+}
+
+.thematic-legend ul li.android.disabled {
+  background-color: #F84F40;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.iphone {
+  background-color: white;
+  color: #5CA2D1;
+}
+
+.thematic-legend ul li.iphone.disabled {
+  background-color: #5CA2D1;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.foursquare {
+  background-color: white;
+  color: #229A00;
+}
+
+.thematic-legend ul li.foursquare.disabled {
+  background-color: #229A00;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.web {
+  background-color: white;
+  color: #A53ED5;
+}
+
+.thematic-legend ul li.web.disabled {
+  background-color: #A53ED5;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.instagram {
+  background-color: white;
+  color: #FFB61E;
+}
+
+.thematic-legend ul li.instagram.disabled {
+  background-color: #FFB61E;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.others {
+  background-color: white;
+  color: #0036B3;
+}
+
+.thematic-legend ul li.others.disabled {
+  background-color: #0036B3;
+  color: #EEEEEE;
 }

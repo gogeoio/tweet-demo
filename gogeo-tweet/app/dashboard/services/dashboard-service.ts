@@ -6,18 +6,21 @@
 
 module gogeo {
 
+    export interface Query {
+        build(): any;
+    }
+
     export class NeSwPoint {
         constructor(public ne:L.LatLng, public sw:L.LatLng) {
 
         }
     }
 
-    export class QueryString {
+    export class QueryString implements Query {
         static HashtagText = "entities.hashtags.text";
         static UserScreenName = "user.screen_name";
 
-        constructor(public field:string, public term:string) {
-
+        constructor(public field: string, public term: string) {
         }
 
         build() {
@@ -31,6 +34,53 @@ module gogeo {
                     }
                 }
             };
+        }
+    }
+
+    export class ThematicQuery implements Query {
+        constructor(public queries: Array<Query>, public prevQuery?: QueryString) {
+        }
+
+        build() {
+            var query = {
+                query: {
+                    filtered: {
+                        filter: {
+                            or: {
+                                filters: []
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (this.prevQuery) {
+                query["query"]["filtered"]["query"] = this.prevQuery["query"];
+            }
+
+            for (var index in this.queries) {
+                var stq = this.queries[index];
+                query["query"]["filtered"]["filter"]["or"]["filters"].push(stq.build());
+            }
+
+            return query;
+        }
+    }
+
+    export class SourceTermQuery implements Query {
+
+        constructor(public term: string) {
+
+        }
+
+        build() {
+            return {
+                query: {
+                    term: {
+                        source: this.term
+                    }
+                }
+            }
         }
     }
 
@@ -182,15 +232,19 @@ module gogeo {
             }
         }
 
-        getTweet(latlng: L.LatLng, zoom: number) {
-            return this.getTweetData(latlng, zoom);
+        getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
+            return this.getTweetData(latlng, zoom, thematicQuery);
         }
 
-        private getTweetData(latlng: L.LatLng, zoom: number) {
-            var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
-            // var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+        private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
+            // var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
+            var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
-            var query = this.composeQuery().requestData;
+            var query = this.composeQuery().requestData.q;
+
+            if (thematicQuery) {
+                query = thematicQuery.build();
+            }
 
             var data:any = {
                 geom: {
@@ -244,7 +298,7 @@ module gogeo {
                     "lang",
                     "timestamp_ms"
                 ],
-                q: angular.toJson(query.q) // Essa query e passada como string mesmo
+                q: angular.toJson(query) // Essa query e passada como string mesmo
             };
 
             return this.$http.post<ITweet>(url, data);

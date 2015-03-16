@@ -91,6 +91,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("linqjs/linq.js"),
         fromBower("numeral/min/numeral.min.js"),
         fromBower("numeral/min/languages.min.js"),
+        fromBower("angular-linkify/angular-linkify.min.js"),
         "app/shared/support/rx-angular.js",
         "./lib/js/leaflet.tilecluster.js"
     ];

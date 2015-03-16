@@ -29,13 +29,23 @@
         <div class="col-md-12">
             <div class="tab-container" role="tabpanel">
                 <!-- Nav tabs -->
-                <ul class="nav nav-pills" role="tablist">
-                    <li role="presentation" class="active">
-                        <a href="" class="btn" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
+                <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="tablist">
+                <!-- <ul class="nav nav-tabs search-filter" role="tablist"> -->
+                    <li role="presentation" class="disabled">
+                        <a href="" class="btn" aria-controls="tweetsList" class="disabled" role="tab" data-toggle="tab" ng-disabled="true">Tweets</a>
                     </li>
 
-                    <li role="presentation" ng-show="false" class="disabled">
-                        <a href="" class="btn" aria-controls="tweetsList" role="tab" data-toggle="tab" ng-disabled="true">Tweets</a>
+                    <li role="presentation" class="active">
+                        <a href="" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
+                    </li>
+
+                    <li class="filter" ng-show="details.selectedHashtag">
+                        <a href="javascript:">
+                            <span>#{{ details.selectedHashtag.key }}</span>
+                            <button type="button" class="close" ng-click="details.unselect()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </a>
                     </li>
                 </ul>
 

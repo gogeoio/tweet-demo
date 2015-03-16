@@ -1,0 +1,145 @@
+@android-color: #F84F40;
+
+#android[source=~".*Android.*"] {
+
+  marker-comp-op: lighten;
+  marker-fill-opacity: 0.9;
+  marker-fill: @android-color;
+  marker-line-color: @android-color;
+
+  [zoom >= 1][zoom <= 3] {
+    marker-width: 1;
+  }
+
+  [zoom >= 4][zoom <= 6] {
+    marker-width: 1.75;
+  }
+
+  [zoom >= 7][zoom <= 7] {
+    marker-width: 3.5;
+  }
+
+  [zoom >= 8][zoom <= 12] {
+    marker-width: 4.5;
+  }
+
+  [zoom >= 13][zoom <= 22] {
+    marker-width: 5.5;
+  }
+}
+
+@foursquare-color: #229A00;
+
+#foursquare {
+  marker-comp-op: lighten;
+  marker-fill-opacity: 0.9;
+  marker-fill: @foursquare-color;
+  marker-line-color: @foursquare-color;
+
+  [zoom >= 1][zoom <= 3] {
+    marker-width: 1;
+  }
+
+  [zoom >= 4][zoom <= 6] {
+    marker-width: 1.75;
+  }
+
+  [zoom >= 7][zoom <= 7] {
+    marker-width: 3.5;
+  }
+
+  [zoom >= 8][zoom <= 12] {
+    marker-width: 4.5;
+  }
+
+  [zoom >= 13][zoom <= 22] {
+    marker-width: 5.5;
+  }
+}
+
+@instagram-color: #447299;
+
+#instagram {
+  marker-comp-op: lighten;
+  marker-fill-opacity: 0.9;
+  marker-fill: @instagram-color;
+  marker-line-color: @instagram-color;
+
+  [zoom >= 1][zoom <= 3] {
+    marker-width: 1;
+  }
+
+  [zoom >= 4][zoom <= 6] {
+    marker-width: 1.75;
+  }
+
+  [zoom >= 7][zoom <= 7] {
+    marker-width: 3.5;
+  }
+
+  [zoom >= 8][zoom <= 12] {
+    marker-width: 4.5;
+  }
+
+  [zoom >= 13][zoom <= 22] {
+    marker-width: 5.5;
+  }
+}
+
+@iphone-color: #5CA2D1;
+
+#iphone {
+  marker-comp-op: lighten;
+  marker-fill-opacity: 0.9;
+  marker-fill: @iphone-color;
+  marker-line-color: @iphone-color;
+
+  [zoom >= 1][zoom <= 3] {
+    marker-width: 1;
+  }
+
+  [zoom >= 4][zoom <= 6] {
+    marker-width: 1.75;
+  }
+
+  [zoom >= 7][zoom <= 7] {
+    marker-width: 3.5;
+  }
+
+  [zoom >= 8][zoom <= 12] {
+    marker-width: 4.5;
+  }
+
+  [zoom >= 13][zoom <= 22] {
+    marker-width: 5.5;
+  }
+}
+
+@web-color: #A53ED5;
+
+#web {
+  marker-comp-op: lighten;
+  marker-fill-opacity: 0.9;
+  marker-fill: @web-color;
+  marker-line-color: @web-color;
+
+  [zoom >= 1][zoom <= 3] {
+    marker-width: 1;
+  }
+
+  [zoom >= 4][zoom <= 6] {
+    marker-width: 1.75;
+  }
+
+  [zoom >= 7][zoom <= 7] {
+    marker-width: 3.5;
+  }
+
+  [zoom >= 8][zoom <= 12] {
+    marker-width: 4.5;
+  }
+
+  [zoom >= 13][zoom <= 22] {
+    marker-width: 5.5;
+  }
+}
