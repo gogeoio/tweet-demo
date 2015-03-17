@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dashboard">
+<nav class="navbar navbar-dashboard" ng-init="header.initialize()">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -16,17 +16,17 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form form-inline" role="search">
+            <form class="navbar-form form-inline search-input-container" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Looking for something?" ng-model="header.term">
+                    <input type="text" class="form-control" placeholder="Looking for something?" ng-model="header.somethingTerm"/>
                 </div>
 
-                <div class="form-group" ng-show="false">
-                    <input type="text" class="form-control" placeholder="Where? Country only">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Where? Country only" ng-model="header.place"/>
                 </div>
 
-                <div class="form-group" ng-show="false">
-                    <daterange></daterange>
+                <div class="form-group">
+                    <daterange data-start-date="header.startDate" data-end-date="header.endDate"></daterange>
                 </div>
             </form>
 

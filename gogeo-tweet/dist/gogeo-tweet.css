@@ -5,12 +5,10 @@
  */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 body,figure{margin:0}
-.leaflet-container *,.leaflet-container :after,.leaflet-container :before,input[type=search]{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 .navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse,.pre-scrollable{max-height:340px}
 .popover>.arrow,.popover>.arrow:after,.tooltip-arrow{width:0;height:0;border-color:transparent;border-style:solid}
-.btn,.datepicker table{user-select:none;-ms-user-select:none}
-.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
 .btn,.datepicker table{-webkit-user-select:none}
+.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
 .btn,.datepicker table,.leaflet-overlay-pane svg{-moz-user-select:none}
 html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:transparent}
 article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
@@ -29,6 +27,7 @@ sub{bottom:-.25em}
 img{border:0;vertical-align:middle}
 svg:not(:root){overflow:hidden}
 hr{height:0;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}
+.leaflet-container *,.leaflet-container :after,.leaflet-container :before,input[type=search]{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 pre,textarea{overflow:auto}
 code,kbd,pre,samp{font-size:1em}
 button,input,optgroup,select,textarea{margin:0;font:inherit;color:inherit}
@@ -756,7 +755,7 @@ select[multiple].form-group-lg .form-control,textarea.form-group-lg .form-contro
 @media (min-width:768px){.form-horizontal .control-label{padding-top:7px;margin-bottom:0;text-align:right}
 .form-horizontal .form-group-lg .control-label{padding-top:14.33px}
 .form-horizontal .form-group-sm .control-label{padding-top:6px}}
-.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;border:1px solid transparent;border-radius:4px}
+.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-ms-user-select:none;user-select:none;border:1px solid transparent;border-radius:4px}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus{outline:dotted thin;outline:-webkit-focus-ring-color auto 5px;outline-offset:-2px}
 .btn.focus,.btn:focus,.btn:hover{color:#333;text-decoration:none}
 .btn.active,.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
@@ -1297,7 +1296,7 @@ button.close{-webkit-appearance:none;padding:0;cursor:pointer;background:0 0;bor
 .popover-title{padding:8px 14px;margin:0;font-size:14px;background-color:#f7f7f7;border-bottom:1px solid #ebebeb;border-radius:5px 5px 0 0}
 .popover-content{padding:9px 14px}
 .popover>.arrow,.popover>.arrow:after{position:absolute;display:block}
-.carousel,.carousel-inner{position:relative}
+.carousel,.carousel-inner,.fa-ul>li{position:relative}
 .popover>.arrow{border-width:11px}
 .popover>.arrow:after{content:"";border-width:10px}
 .popover.bottom>.arrow:after,.popover.left>.arrow:after,.popover.right>.arrow:after,.popover.top>.arrow:after{content:" "}
@@ -1495,7 +1494,7 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .datepicker-dropdown.datepicker-orient-bottom:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}
 .datepicker>div{display:none}
 .datepicker.days div.datepicker-days,.datepicker.months div.datepicker-months,.datepicker.years div.datepicker-years{display:block}
-.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none}
+.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;-ms-user-select:none;user-select:none}
 .datepicker table tr td,.datepicker table tr th{text-align:center;width:30px;height:30px;border-radius:4px;border:none}
 .table-striped .datepicker table tr td,.table-striped .datepicker table tr th{background-color:transparent}
 .datepicker table tr td.day.focused,.datepicker table tr td.day:hover{background:#eee;cursor:pointer}
@@ -1538,8 +1537,16 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .input-daterange input:last-child{border-radius:0 3px 3px 0}
 .input-daterange .input-group-addon{width:auto;min-width:16px;padding:4px 5px;font-weight:400;line-height:1.42857143;text-align:center;text-shadow:0 1px 0 #fff;vertical-align:middle;background-color:#eee;border:solid #ccc;border-width:1px 0;margin-left:-5px;margin-right:-5px}
 .datepicker.dropdown-menu{position:absolute;top:100%;left:0;z-index:1000;float:left;display:none;min-width:160px;list-style:none;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,.2);border-radius:5px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,.2);box-shadow:0 5px 10px rgba(0,0,0,.2);-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box;color:#333;font-size:13px;line-height:1.42857143}
-.fa,.fa-stack{display:inline-block}
+.bootstrap-tagsinput,.fa,.fa-stack{display:inline-block}
 .datepicker.datepicker-inline td,.datepicker.datepicker-inline th,.datepicker.dropdown-menu td,.datepicker.dropdown-menu th{padding:0 5px}
+.bootstrap-tagsinput{background-color:#fff;border:1px solid #ccc;box-shadow:inset 0 1px 1px rgba(0,0,0,.075);padding:4px 6px;margin-bottom:10px;color:#555;vertical-align:middle;border-radius:4px;max-width:100%;line-height:22px;cursor:text}
+.bootstrap-tagsinput input,.bootstrap-tagsinput input:focus{border:none;box-shadow:none}
+.bootstrap-tagsinput input{outline:0;background-color:transparent;padding:0;margin:0;width:auto!important;max-width:inherit}
+.bootstrap-tagsinput .tag{margin-right:2px;color:#fff}
+.bootstrap-tagsinput .tag [data-role=remove]{margin-left:8px;cursor:pointer}
+.bootstrap-tagsinput .tag [data-role=remove]:after{content:"x";padding:0 2px}
+.bootstrap-tagsinput .tag [data-role=remove]:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05)}
+.bootstrap-tagsinput .tag [data-role=remove]:hover:active{box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
 /*!
  *  Font Awesome 4.3.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -1553,7 +1560,6 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .fa-5x{font-size:5em}
 .fa-fw{width:1.28571429em;text-align:center}
 .fa-ul{padding-left:0;margin-left:2.14285714em;list-style-type:none}
-.fa-ul>li{position:relative}
 .fa-li{position:absolute;left:-2.14285714em;width:2.14285714em;top:.14285714em;text-align:center}
 .fa-li.fa-lg{left:-1.85714286em}
 .fa-border{padding:.2em .25em .15em;border:.08em solid #eee;border-radius:.1em}
@@ -2319,7 +2325,6 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .leaflet-oldie .marker-cluster-extra-large,.leaflet-oldie .marker-cluster-extra-large div{background-color:#d7191c}
 .marker-cluster{background-clip:padding-box;border-radius:40px}
 .marker-cluster div{text-align:center;border-radius:20px;font:12px "Helvetica Neue",Arial,Helvetica,sans-serif}
-.jumbotron a,.jumbotron h1,.jumbotron p,.numberpad,body,h1,h2,h3,h4,h5,h6{font-family:'Titillium Web',sans-serif}
 .marker-cluster div.small{width:40px;height:40px;margin-left:5px;margin-top:5px}
 .marker-cluster div.medium{width:45px;height:45px;margin-left:5px;margin-top:5px;border-radius:30px!important}
 .marker-cluster div.large{width:55px;height:55px;margin-left:5px;margin-top:5px;border-radius:35px!important}
@@ -2336,20 +2341,22 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 body,html{height:100%;min-height:100%}
 .welcome-map{position:absolute;top:0;bottom:0;width:100%;z-index:-1}
 .jumbotron{width:100%;z-index:10}
-.jumbotron a,.jumbotron h1,.jumbotron p{color:#fcfcfc}
+.jumbotron a,.jumbotron h1,.jumbotron p{font-family:'Titillium Web',sans-serif;color:#fcfcfc}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
 .jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
-@font-face{font-family:'Titillium Web',sans-serif}
+@font-face{font-family:"Titillium Web",sans-serif}
+body,h1,h2,h3,h4,h5,h6{font-family:"Titillium Web"!important}
 a{color:#168fae}
-.numberpad{font-size:18pt;color:#1cb4db}
+.numberpad{font-family:"Titillium Web";font-size:18pt;color:#1cb4db}
 .numberpad-big{font-size:28pt}
 .dashboard-panel .dashboard-top-panel .navbar .navbar-brand{margin-right:16px}
 .dashboard-panel .dashboard-map-panel{width:70%;height:100%;position:relative;float:left}
-.dashboard-panel .dashboard-right-panel{display:block;background:#fcfcfc;margin:0;padding:0;z-index:2;width:30%;height:100%;position:relative;float:right}
+.dashboard-panel .dashboard-right-panel{display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:30%;height:100%;border-left:solid 2px #1cb4db}
 .dashboard-header .navbar{padding-top:5px}
 .dashboard-header .navbar-dashboard{background-color:transparent;border:none}
 .dashboard-header .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0 10px 0 0}
+.dashboard-map,.dashboard-map .dashboard-map-container{width:100%;height:100%}
 .dashboard-header .navbar-header .navbar-brand img{margin:0}
 .dashboard-details{position:relative}
 .tab-container{margin-top:20px}
@@ -2358,29 +2365,17 @@ a{color:#168fae}
 .dashboard-right-panel .hashtag-active{border:none;background-color:#43c5e7;margin-left:-16px;margin-right:-16px;padding:10px 16px;font-size:18pt;color:#f5f5f5;text-shadow:1px 2px #1cb4db}
 .dashboard-right-panel .hashtag-active .badge{background-color:#f5f5f5;color:#1cb4db;text-shadow:none}
 .dashboard-right-panel .table th{color:#666}
-.dashboard-right-panel .tweets-amounts-plus{padding-top:15px}
+.dashboard-right-panel .tweets-amounts-plus{font-size:28pt;padding-top:15px}
 .dashboard-right-panel .tweets-amounts-plus label{font-weight:600;font-size:12px;color:#868686;line-height:20px;display:block;width:100%;margin:0;padding:0}
 .dashboard-right-panel .tweets-amounts-plus span{font-weight:600;font-size:36px;color:#1CB4DB;line-height:1.1em;margin:0;padding:0}
-.dashboard-map{width:100%;height:100%;position:relative}
-.dashboard-map .dashboard-map-container{width:100%;height:100%;cursor:crosshair}
+.dashboard-map{position:relative}
 .dashboard-map .dashboard-map-container .leaflet-map-pane{position:absolute;z-index:3!important;left:0;right:0;top:0;bottom:0}
-.dashboard-map .dashboard-map-container .leaflet-control-container{position:absolute;left:0;right:0;top:0;bottom:0}
-.marker-popup{display:block;width:auto;height:auto;position:absolute}
-.marker-popup .marker-content{background:#F5F5F5;width:455px;height:261px;display:block;position:relative;margin:0;padding:0;box-shadow:0 10px 5px 0 rgba(0,0,0,.3)}
-.marker-popup .marker-content .close{margin-right:14px;margin-top:10px}
 .marker-popup .marker-content .mc-weet-thumb{float:left;margin:20px;padding:0}
-.marker-popup .marker-content .mc-tweet-user{font-weight:400;font-size:14px;color:#878787;line-height:20px;display:block;position:relative;float:left;width:280px;height:auto;margin:20px 0;padding:0}
-.map-control .draw-item,.map-control .item{display:inline;margin-top:0;margin-bottom:0}
-.marker-popup .marker-content .mc-tweet-user p,.marker-popup .marker-content .mc-tweet-user span{padding:0;margin:0;width:100%}
-.marker-popup .marker-content .mc-tweet-user a{color:#6DBFE3;padding:0;margin:0}
 .marker-popup .marker-content .mc-tweet-user label{font-weight:400;margin-top:10px;width:100%}
 .marker-popup .marker-content .mc-tweet-msg{background:#FFF;padding:12px;font-weight:400;font-size:14px;color:#868686;display:block;float:left;width:100%;height:127px}
-.map-control li,.map-control li:hover{line-height:15px;font-weight:600;font-size:10px}
-.marker-popup .marker-content .mc-tweet-msg label{line-height:21.33px;text-transform:uppercase}
-.marker-popup .marker-content .mc-tweet-msg p{color:grey;line-height:25.2px}
-.marker-popup .marker-content .marker-view{width:37px;height:48px;position:absolute;display:block;left:50%;bottom:-32px;margin-left:-18.5px}
-.leaflet-popup-content{padding:0}
-.loading{color:#1CB4DB}
+.search-input-container input{height:45px!important}
+.map-control li,.map-control li:hover{font-weight:600;font-size:10px;line-height:15px}
+.map-control .draw-item,.map-control .item{display:inline;margin-top:0;margin-bottom:0}
 .map-control{display:block;top:11px;left:25px;position:absolute;z-index:10}
 .map-control .item{padding-left:0;margin-left:30px;list-style:none}
 .map-control li{background:#FFF;border-top:1px solid #979797;border-bottom:1px solid #979797;padding:6px 15px 7px;color:#979797;display:inline}
@@ -2391,5 +2386,17 @@ a{color:#168fae}
 .map-control .draw-item{padding-left:0;margin-left:5px;list-style:none}
 .map-control .draw-item .draw{background:url(images/select-map.png)6px 2px no-repeat #FCFCFC;border:1px solid #979797;border-radius:2px;background-size:20px 18px}
 .map-control .draw-item .draw.active{background-color:#EBEBEB;border:1px solid #EBEBEB;border-radius:2px 0 0 2px}
-.map-control .draw-item .draw:hover{background-color:#C6F1FC}
+.map-control .draw-item .draw:hover{background-color:#c6f1fc}
+.marker-popup{display:block;width:auto;height:auto;position:absolute}
+.marker-popup .marker-content{background:#F5F5F5;width:455px;height:261px;display:block;position:relative;margin:0;padding:0;box-shadow:0 10px 5px 0 rgba(0,0,0,.3)}
+.marker-popup .marker-content .close{margin-right:14px;margin-top:10px}
+.marker-popup .marker-content .mc-tweet-thumb{float:left;margin:20px;padding:0}
+.marker-popup .marker-content .mc-tweet-user{font-weight:400;font-size:14px;color:#878787;line-height:20px;display:block;position:relative;float:left;width:280px;height:auto;margin:20px 0;padding:0}
+.marker-popup .marker-content .mc-tweet-user p,.marker-popup .marker-content .mc-tweet-user span{padding:0;margin:0;width:100%}
+.marker-popup .marker-content .mc-tweet-user a{color:#6DBFE3;padding:0;margin:0}
+.marker-popup .marker-content .mc-tweet-msg label{line-height:21.33px;text-transform:uppercase}
+.marker-popup .marker-content .mc-tweet-msg p{color:grey;line-height:25.2px}
+.marker-popup .marker-content .marker-view{width:37px;height:48px;position:absolute;display:block;left:50%;bottom:-32px;margin-left:-18.5px}
+.leaflet-popup-content{padding:0}
+.loading{color:#1CB4DB}
 .daterange input.form-control{width:100px;max-width:100px}

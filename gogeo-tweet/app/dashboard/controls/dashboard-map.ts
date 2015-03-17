@@ -155,8 +155,6 @@ module gogeo {
         }
 
         private configureUrl(): string {
-            var host = "{s}.gogeo.io/1.0";
-            // host = "172.16.2.106:9090";
             var database = "db1";
             var collection = "tweets";
             var buffer = 8;
@@ -175,7 +173,7 @@ module gogeo {
                 stylename = "gogeo_intensity";
             }
 
-            var url = "http://" + host + "/map/"
+            var url = "/map/"
                 + database + "/" +
                 collection + "/{z}/{x}/{y}/"
                 + serviceName + "?buffer=" + buffer +
@@ -189,7 +187,7 @@ module gogeo {
                 url = `${url}&geom=${angular.toJson(this.drawnGeom)}`;
             }
 
-            return url;
+            return Configuration.makeUrl(url);
         }
 
         onMapLoaded(geom?: IGeomSpace) {
