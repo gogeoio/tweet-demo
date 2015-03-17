@@ -455,7 +455,7 @@ module gogeo {
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(34.717232, -92.353034),
-                        zoom: 12
+                        zoom: 6
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
