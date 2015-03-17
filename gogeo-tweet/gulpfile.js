@@ -11,6 +11,10 @@ var gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     less = require("gulp-less");
 
+
+var environment = "development";
+
+
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
  */
@@ -99,8 +103,10 @@ gulp.task("bundleCoreJS", function() {
         fromBower("linqjs/linq.js"),
         fromBower("numeral/min/numeral.min.js"),
         fromBower("numeral/min/languages.min.js"),
+        fromBower("momentjs/min/moment-with-locales.min.js"),
         "app/shared/support/rx-angular.js",
-        "./lib/js/leaflet.tilecluster.js"
+        "./lib/js/leaflet.tilecluster.js",
+        "./config/" + environment + ".js"
     ];
 
     return gulp.src(filesToBundle)
@@ -126,6 +132,11 @@ gulp.task("default", [
     "bundleCoreJS",
     "bundleTS"
 ]);
+
+gulp.task("deploy", function() {
+    environment = "deployment";
+    gulp.start("default");
+});
 
 gulp.task("watch", ["default"], function() {
     gulp.watch(["./app/**/*.ts"], ["bundleTS"]);

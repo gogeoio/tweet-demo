@@ -6,9 +6,13 @@
 ///<reference path="typings/leaflet.tilecluster/leaflet.tilecluster.d.ts"/>
 ///<reference path="typings/rx/rx-lite.d.ts"/>
 ///<reference path="typings/rx/rx.time-lite.d.ts"/>
+///<reference path="typings/rx/rx.binding-lite.d.ts"/>
+///<reference path="typings/rx-jquery/rx.jquery.d.ts"/>
 ///<reference path="typings/linq/linq.3.0.3-Beta4.d.ts"/>
 ///<reference path="typings/numeraljs/numeraljs.d.ts"/>
-///<reference path="typings/bootstrap.tagsinput/bootstrap-tagsinput.d.ts"/>
+///<reference path="typings/typeahead/typeahead.d.ts"/>
 ///<reference path="typings/angularytics/angularytics.d.ts"/>
+///<reference path="typings/moment/moment.d.ts"/>
 ///<reference path="shared/support/rx-angular.d.ts"/>
+///<reference path="shared/support/utilities.d.ts"/>
 ///<reference path="shared/custom-filters.ts"/>

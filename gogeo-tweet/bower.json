@@ -28,6 +28,7 @@
     "leaflet-plugins": "~1.2.1",
     "linqjs": "~3.0.4-beta",
     "numeral": "~1.5.3",
-    "angularytics": "~0.3.0"
+    "angularytics": "~0.3.0",
+    "momentjs": "~2.9.0"
   }
 }

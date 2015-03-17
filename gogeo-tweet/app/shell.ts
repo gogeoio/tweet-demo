@@ -1,6 +1,25 @@
 ///<reference path="./_references.d.ts"/>
 
+
 module gogeo {
+
+    export var settings;
+
+    export class Configuration {
+        static get serverRootUrl() {
+            return <string> settings["server.url"];
+        }
+
+        static makeUrl(path: string) {
+            var serverUrl: string = Configuration.serverRootUrl;
+
+            if (!serverUrl.endsWith("/"))
+                serverUrl = "/";
+
+            return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+        }
+    }
+
 
     var mod = angular.module("gogeo", ["ngRoute", "angularytics"])
         .config([

@@ -25,11 +25,15 @@ declare module bootstrap.tagsinput {
     }
 
     interface ITypeAhead<T> {
-        source: T[] | IPromiseFactory<T>;
+        source: T[] | IPromiseFactory<T> | IDirectSource<T>;
     }
 
     interface IPromiseFactory<T> {
         (query: string): JQueryPromise<T>;
+    }
+
+    interface IDirectSource<T> {
+        (query: string): T[];
     }
 
 }
