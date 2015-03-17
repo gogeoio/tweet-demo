@@ -1,12 +1,11 @@
+@fontName: "Titillium Web";
+
 @font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+  font-family: @fontName, sans-serif;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: Ubuntu !important;
+  font-family: @fontName !important;
 }
 
 @division: 30%;
@@ -18,7 +17,7 @@ a {
 }
 
 .numberpad {
-  font-family: Ubuntu;
+  font-family: @fontName;
   font-size: 18pt;
   color: @bgColor;
 }
@@ -47,10 +46,15 @@ a {
   }
 
   .dashboard-right-panel {
-    width: @division;
-    height: 100%;
+    display: block;
     position: relative;
     float: right;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    width: @division;
+    height: 100%;
     border-left: solid 2px @borderColor;
   }
 
@@ -115,6 +119,31 @@ a {
       color: #666;
     }
   }
+
+  .tweets-amounts-plus {
+    font-size: 28pt;
+    padding-top: 15px;
+
+    label {
+      font-weight: 600;
+      font-size: 12px;
+      color: #868686;
+      line-height: 20px;
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 36px;
+      color: #1CB4DB;
+      line-height: 1.1em;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .dashboard-map {
@@ -142,5 +171,12 @@ a {
     .leaflet-control-container {
       .map(2);
     }
+  }
+}
+
+
+.search-input-container {
+  input {
+    height: 45px !important;
   }
 }

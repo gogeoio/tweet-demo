@@ -1,0 +1,84 @@
+.marker-popup {
+  display: block;
+  width: auto;
+  height: auto;
+  position: absolute;
+
+  .marker-content {
+    background: #F5F5F5;
+    width: 455px;
+    height: 261px;
+    display: block;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.3);
+
+    .close {
+      margin-right: 14px;
+      margin-top: 10px;
+    }
+
+    .mc-tweet-thumb {
+      float: left;
+      margin: 20px;
+      padding: 0px;
+    }
+
+    .mc-tweet-user {
+      font-weight: 400;
+      font-size: 14px;
+      color: #878787;
+      line-height: 20px;
+      display: block;
+      position: relative;
+      float: left;
+      width: 280px;
+      height: auto;
+      margin: 20px 0px;
+      padding: 0px;
+
+      span, p {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+      }
+
+      a {
+        color: #6DBFE3;
+        padding: 0px;
+        margin: 0px;
+      }
+    }
+
+    .mc-tweet-msg {
+      label {
+        line-height: 21.33px;
+        text-transform: uppercase;
+      }
+
+      p {
+        color: #808080;
+        line-height: 25.2px;
+      }
+    }
+
+    .marker-view {
+      width: 37px;
+      height: 48px;
+      position: absolute;
+      display: block;
+      left: 50%;
+      bottom: -32px;
+      margin-left: -18.5px;
+    }
+  }
+}
+
+.leaflet-popup-content {
+  padding: 0px;
+}
+
+.loading {
+  color: #1CB4DB;
+}
