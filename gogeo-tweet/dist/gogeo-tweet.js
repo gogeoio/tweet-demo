@@ -311,7 +311,6 @@ var gogeo;
                     for (var k in subFilters) {
                         filters.push(subFilters[k]);
                     }
-                    console.log("stq", stq);
                 }
             }
             query["query"]["filtered"]["filter"]["or"]["filters"] = filters;
@@ -1135,7 +1134,6 @@ var gogeo;
                     }
                 }
                 var thematicQuery = new gogeo.ThematicQuery(queries, this.query);
-                console.log(JSON.stringify(thematicQuery.build(), null, 2));
                 this.service.getTweet(levent.latlng, zoom, thematicQuery).success(function (result) { return _this.handlePopupResult(result, levent); });
             }
         };
@@ -1205,7 +1203,7 @@ var gogeo;
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(34.717232, -92.353034),
-                        zoom: 12
+                        zoom: 6
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
