@@ -3,7 +3,7 @@
 <div id="tweet-popup" ng-show="map.tweetResult">
   <div class="marker-popup">
     <div class="marker-content">
-      <img src="dashboard/images/active-tweet-marker.png" class="marker-view">
+      <img src="shared/images/active-tweet-marker.png" class="marker-view">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="map.hidePopup()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -56,17 +56,17 @@
 <div class="map-control">
   <div class="row">
     <ul class="list-inline item">
-      <li id="cluster" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'cluster' ? 'active' : 'inactive' }}">
+      <li id="cluster" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'cluster' ? 'active' : 'inactive' }}">
         CLUSTER
       </li>
-      <li id="point" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'point' ? 'active' : 'inactive' }}">
+      <li id="point" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'point' ? 'active' : 'inactive' }}">
         POINT
       </li>
-      <li id="intensity" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
-        INTENSITY
-      </li>
-      <li id="thematic" ng-click="map.changeMapView($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
+      <!-- <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
         THEMATIC
+      </li> -->
+      <li id="intensity" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
+        INTENSITY
       </li>
     </ul>
 

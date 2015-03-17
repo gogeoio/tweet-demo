@@ -387,7 +387,12 @@ var gogeo;
             return this.getTweetData(latlng, zoom);
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom) {
+<<<<<<< HEAD
+            var url = "http://172.16.2.106:9090/geosearch/db1/tweets?mapkey=123";
+            // var url = "http://api.gogeo.io/1.0/geosearch/db1/tweets?mapkey=123";
+=======
             var url = gogeo.Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
+>>>>>>> master
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData;
             var data = {
@@ -846,6 +851,8 @@ var gogeo;
             }
         };
         DashboardMapController.prototype.configureUrl = function () {
+            var host = "{s}.gogeo.io/1.0";
+            // host = "172.16.2.106:9090";
             var database = "db1";
             var collection = "tweets";
             var buffer = 8;
@@ -860,14 +867,14 @@ var gogeo;
             if (this.mapSelected === "intensity") {
                 stylename = "gogeo_intensity";
             }
-            var url = "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&stylename=" + stylename + "&mapkey=123";
+            var url = "http://" + host + "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&stylename=" + stylename + "&mapkey=123";
             if (this.query) {
                 url = "" + url + "&q=" + angular.toJson(this.query);
             }
             if (this.drawnGeom) {
                 url = "" + url + "&geom=" + angular.toJson(this.drawnGeom);
             }
-            return gogeo.Configuration.makeUrl(url);
+            return url;
         };
         DashboardMapController.prototype.onMapLoaded = function (geom) {
             if (this.restricted) {
