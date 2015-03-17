@@ -1,19 +1,4 @@
 <div>
-    <!-- <div class="hashtag-active" ng-if="hashtags.hasSelected()">
-        <div class="row">
-            
-            <div class="col-xs-8">
-                #{{ hashtags.selectedHashtag.key }}
-            </div>
-
-            <div class="col-xs-4 text-right">
-                <button class="btn btn-default" ng-click="hashtags.unselect()">
-                    <i class="fa fa-remove"></i>
-                </button>
-            </div>
-        </div>
-    </div> -->
-
     <table class="table table-responsive table-hover">
         <thead>
         <tr>
@@ -32,7 +17,7 @@
             <td>
                 {{ bucket.doc_count | number:0 }}
             </td>
-            <td class="text-center" ng-hide="hashtags.hasSelected()">
+            <td class="text-center hashtag-marker-button" ng-hide="hashtags.hasSelected()">
                 <button type="button" class="btn btn-link"
                         ng-click="hashtags.selectHashtag(bucket)">
                     <i class="fa fa-map-marker"></i>

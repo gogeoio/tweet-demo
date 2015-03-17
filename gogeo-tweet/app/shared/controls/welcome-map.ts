@@ -15,12 +15,10 @@ module gogeo {
                     // template: "<div></div>",
                     link: (scope, element, attrs) => {
                         var rawElement = element[0];
-                        var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&style_name=gogeo_many_points";
-                        // var url = "http://172.16.2.106:9090/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
-
+                        var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
                         var initialPos = L.latLng(43.717232, -92.353034);
                         var map = L.map("welcome-map").setView(initialPos, 5);
-                        // map.addLayer(new L.Google('ROADMAP'));
+
                         map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
                           attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
                         }));

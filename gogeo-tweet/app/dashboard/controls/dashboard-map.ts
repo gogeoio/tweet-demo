@@ -174,8 +174,6 @@ module gogeo {
         }
 
         private configureUrl(): string {
-            var host = "{s}.gogeo.io/1.0";
-            // var host = "172.16.2.106:9090";
             var database = "db1";
             var collection = "tweets";
             var buffer = 8;
@@ -194,7 +192,7 @@ module gogeo {
                 stylename = "gogeo_intensity";
             }
 
-            var url = "http://" + host + "/map/"
+            var url = "/map/"
                 + database + "/" +
                 collection + "/{z}/{x}/{y}/"
                 + serviceName + "?buffer=" + buffer +
@@ -208,15 +206,12 @@ module gogeo {
                 url = `${url}&geom=${angular.toJson(this.drawnGeom)}`;
             }
 
-            return url;
+            return Configuration.makeUrl(url);
         }
 
         private createThematicLayers(url: string, options: any) {
             var array = [];
             var layer = null;
-
-            // this.query = thematicQuery.build();
-            // console.log("thematicQuery", JSON.stringify(thematicQuery.build(), null, 2));
 
             url = this.configureThematicUrl("iphone", "iphone_1");
             layer = L.tileLayer(url, options);
@@ -254,19 +249,13 @@ module gogeo {
         private configureThematicUrl(term: string, stylename: string): string {
             var originalQuery = this.query;
 
-            var sourceTermQuery = new SourceTermQuery(this.queries[term]);
-            var thematicQuery = new ThematicQuery([sourceTermQuery], this.query);
-
-            this.query = thematicQuery.build();
-
             if (term === 'others') {
-                var q1 = new QueryString("source", "*ipad*");
-                var q2 = new QueryString("source", "*windows*");
-                var q3 = new QueryString("source", "*jobs*");
-                var q4 = new QueryString("source", "*mac*");
-
-                this.query = new ThematicQuery([ q1, q2, q3, q4 ]).build();
-                // console.log("this.query", JSON.stringify(this.query, null, 2));
+                var thematicQuery = this.createThematicOthersQuery(this.query);
+                this.query = thematicQuery.build();
+            } else {
+                var sourceTermQuery = new SourceTermQuery(this.queries[term]);
+                var thematicQuery = new ThematicQuery([sourceTermQuery], this.query);
+                this.query = thematicQuery.build();
             };
 
             var url = this.configureUrl();
@@ -277,8 +266,30 @@ module gogeo {
             return url;
         }
 
+        private createThematicOthersQuery(query?: TextQueryBuilder): ThematicQuery {
+            var q1 = new TextQueryBuilder("source", "*ipad*");
+            var q2 = new TextQueryBuilder("source", "*windows*");
+            var q3 = new TextQueryBuilder("source", "*jobs*");
+            var q4 = new TextQueryBuilder("source", "*mac*");
+
+            var tq = null;
+
+            if (query) {
+                tq = new ThematicQuery([ q1, q2, q3, q4 ], query);
+            } else {
+                tq = new ThematicQuery([ q1, q2, q3, q4 ]);
+            }
+
+            return tq;
+        }
+
         formatTweetText(text: string) {
             return this.$sce.trustAsHtml(this.linkify.twitter(text));
+        }
+
+        formatDate(dateString: string) {
+            var date = new Date(dateString);
+            return moment(date).utc().format("LLLL");
         }
 
         toggle(layer: L.ILayer) {
@@ -352,7 +363,20 @@ module gogeo {
                     var thematicLayer = this.thematicMaps[index];
 
                     if (this.layerGroup.hasLayer(thematicLayer)) {
-                        var query = new SourceTermQuery(this.queries[index]);
+                        var query = null;
+
+                        if (index === 'others') {
+                            query = this.createThematicOthersQuery().build();
+
+                            // var q1 = new TextQueryBuilder("source", "*ipad*");
+                            // var q2 = new TextQueryBuilder("source", "*windows*");
+                            // var q3 = new TextQueryBuilder("source", "*jobs*");
+                            // var q4 = new TextQueryBuilder("source", "*mac*");
+                            // query = new ThematicQuery([ q1, q2, q3, q4 ]).build();
+                        } else {
+                            query = new SourceTermQuery(this.queries[index]);
+                        }
+
                         queries.push(query);
                     }
                 }
@@ -431,7 +455,7 @@ module gogeo {
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(34.717232, -92.353034),
-                        zoom: 6
+                        zoom: 12
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];

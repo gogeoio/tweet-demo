@@ -12,12 +12,17 @@ module gogeo {
 
             template:
                 `<div class="input-group daterange">
-                    <input class="form-control" type="text" data-provide="datepicker" data-date-clear-btn="true"/>
+                    <input class="form-control" type="text" data-provide="datepicker" data-date-clear-btn="true" ng-model="startDate"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </span>
-                    <input class="form-control" type="text" data-provide="datepicker" data-date-clear-btn="true"/>
+                    <input class="form-control" type="text" data-provide="datepicker" data-date-clear-btn="true" ng-model="endDate"/>
                  </div>`,
+
+            scope: {
+                startDate: "=",
+                    endDate: "="
+            },
 
             link(scope, element, attrs) {
             }

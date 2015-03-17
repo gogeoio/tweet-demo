@@ -1,16 +1,14 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-7 tweets-amounts-plus" ng-show="false">
-            <!-- <h6 class="text-muted">Total of tweets</h6> -->
             <label>Total of tweets</label>
-            <!-- <span class="text-primary numberpad numberpad-big">{{ 100000000 | number:0 }}</span> -->
             <span>{{ 100000000 | number:0 }}</span>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-7">
-            <h6 class="text-muted">Tweets on viewport</h6>
+            <h6 class="text-muted">Total tweets on mapview</h6>
             <span class="numberpad" ng-show="!details.service.isLoading()">
                 {{ details.hashtagResult.doc_total | number:0 }}
             </span>
@@ -18,11 +16,6 @@
                 <i class="loading fa fa-spinner fa-pulse fa-2x"></i>
             </span>
         </div>
-
-        <!-- <div class="col-md-5">
-            <h6 class="text-muted">Users</h6>
-            <span class="numberpad">{{ 50148 | number:0 }}</span>
-        </div> -->
     </div>
 
     <div class="row">
@@ -74,12 +67,12 @@
 
     <div class="row">
         <div class="col-md-6 col-md-offset-6">
-            <footer class="footer pull-right" style="margin-right: -15px;">
+            <footer class="footer pull-right" style="margin: -15px -15px;">
                 <span style="font-size: 12px;">
                     <strong>Powered by</strong>
                 </span>
                 <a href="http://www.gogeo.io" target="_blank">
-                    <img src="dashboard/images/gogeo-brand.png" alt="" width="30%" height="30%">
+                    <img src="shared/images/gogeo-brand.png" alt="" width="40%" height="40%">
                 </a>
             </footer>
         </div>

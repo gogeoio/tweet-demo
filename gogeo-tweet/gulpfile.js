@@ -8,7 +8,12 @@ var gulp = require("gulp"),
     rename = require("gulp-rename"),
     ignore = require("gulp-ignore"),
     minifyCSS = require("gulp-minify-css"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    less = require("gulp-less");
+
+
+var environment = "development";
+
 
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
@@ -57,10 +62,16 @@ gulp.task("copySharedResources", function() {
 });
 
 gulp.task("bundleCSS", function() {
+    gulp.src("./app/**/*.less")
+        .pipe(less())
+        .pipe(minifyCSS())
+        .pipe(gulp.dest("./app"));
+
     var filesToBundle = [
         fromBower("bootstrap/dist/css/bootstrap.css"),
         fromBower("bootstrap/dist/css/bootstrap-theme.css"),
         fromBower("bootstrap-datepicker/css/datepicker3.css"),
+        fromBower("bootstrap-tagsinput/dist/bootstrap-tagsinput.css"),
         fromBower("font-awesome/css/font-awesome.css"),
         fromBower("mapbox.js/mapbox.css"),
         fromBower("leaflet-draw/dist/leaflet.draw.css"),
@@ -80,6 +91,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("jquery/dist/jquery.js"),
         fromBower("bootstrap/dist/js/bootstrap.js"),
         fromBower("bootstrap-datepicker/js/bootstrap-datepicker.js"),
+        fromBower("bootstrap-tagsinput/dist/bootstrap-tagsinput.js"),
         fromBower("angular/angular.js"),
         fromBower("angular-route/angular-route.js"),
         fromBower("angularytics/dist/angularytics.min.js"),
@@ -92,8 +104,10 @@ gulp.task("bundleCoreJS", function() {
         fromBower("numeral/min/numeral.min.js"),
         fromBower("numeral/min/languages.min.js"),
         fromBower("angular-linkify/angular-linkify.min.js"),
+        fromBower("momentjs/min/moment-with-locales.min.js"),
         "app/shared/support/rx-angular.js",
-        "./lib/js/leaflet.tilecluster.js"
+        "./lib/js/leaflet.tilecluster.js",
+        "./config/" + environment + ".js"
     ];
 
     return gulp.src(filesToBundle)
@@ -114,15 +128,20 @@ gulp.task("bundleTS", function() {
 
 gulp.task("default", [
     "copyResources",
-    // "copySharedResources",
+    "copySharedResources",
     "bundleCSS",
     "bundleCoreJS",
     "bundleTS"
 ]);
 
+gulp.task("deploy", function() {
+    environment = "deployment";
+    gulp.start("default");
+});
+
 gulp.task("watch", ["default"], function() {
     gulp.watch(["./app/**/*.ts"], ["bundleTS"]);
-    gulp.watch(["./app/**/*.css"], ["bundleCSS"]);
+    gulp.watch(["./app/**/*.less"], ["bundleCSS"]);
     gulp.watch(["./app/**/*.html"], ["copyResources"]);
     gulp.watch(["./app/shared/**/*.png"], ["copySharedResources"]);
 });

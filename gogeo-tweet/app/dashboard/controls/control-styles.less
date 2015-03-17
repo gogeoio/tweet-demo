@@ -1,12 +1,11 @@
+@fontName: "Titillium Web";
+
 @font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v7/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/ubuntu/v7/vRvZYZlUaogOuHbBTT1SNevvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+  font-family: @fontName, sans-serif;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: Ubuntu !important;
+  font-family: @fontName !important;
 }
 
 @division: 30%;
@@ -18,7 +17,7 @@ a {
 }
 
 .numberpad {
-  font-family: Ubuntu;
+  font-family: @fontName;
   font-size: 18pt;
   color: @bgColor;
 }
@@ -47,10 +46,16 @@ a {
   }
 
   .dashboard-right-panel {
-    width: @division;
-    height: 100%;
+    overflow-y: auto;
+    display: block;
     position: relative;
     float: right;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    width: @division;
+    height: 100%;
     border-left: solid 2px @borderColor;
   }
 
@@ -93,6 +98,71 @@ a {
     margin-bottom: 8px;
   }
 
+  .nav-tabs {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+  }
+
+  .nav-tabs li {
+    float: right;
+  }
+
+  .nav-tabs li.active a {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1CB4DB;
+    line-height: 20px;
+    border-top: none;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    margin-right: 0px;
+  }
+
+  .nav-tabs li.active a:hover {
+    padding-top: 10px;
+    padding-bottom: 16px;
+  }
+
+  .nav-tabs li a {
+    font-weight: 400;
+    font-size: 14px;
+    color: #D7D7D7;
+    line-height: 20px;
+    border-radius: 0px;
+  }
+
+  .nav-tabs li a:hover {
+    padding-top: 10px;
+    padding-bottom: 14px;
+    margin-top: 0px;
+    border-bottom: none;
+  }
+
+  .nav-tabs.search-filter {
+    background-color: #1cb4db;
+  }
+  .nav-tabs.search-filter .filter {
+    float: left;
+    width: 55.8069%;
+    /*margin: 0px;*/
+    margin-right: 0px;
+  }
+  .nav-tabs.search-filter .filter a {
+    width: 100%;
+    color: #fcfcfc;
+    font-weight: 600;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .nav-tabs.search-filter .filter a button {
+    margin-top: -2px;
+  }
+  .nav-tabs.search-filter .filter a:hover {
+    background-color: #106a81;
+    border-color: #106a81;
+  }
+
   .hashtag-active {
     border: none;
     background-color: lighten(@bgColor, 10%);
@@ -115,6 +185,31 @@ a {
       color: #666;
     }
   }
+
+  .tweets-amounts-plus {
+    font-size: 28pt;
+    padding-top: 15px;
+
+    label {
+      font-weight: 600;
+      font-size: 12px;
+      color: #868686;
+      line-height: 20px;
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 36px;
+      color: #1CB4DB;
+      line-height: 1.1em;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .dashboard-map {
@@ -125,6 +220,7 @@ a {
   .dashboard-map-container {
     width: 100%;
     height: 100%;
+    cursor: crosshair;
 
     .map(@zindex) {
       position: absolute;
@@ -138,9 +234,262 @@ a {
     .leaflet-map-pane {
       .map(3);
     }
-
-    .leaflet-control-container {
-      .map(2);
-    }
   }
+}
+
+.marker-popup {
+  display: block;
+  width: auto;
+  height: auto;
+  position: absolute;
+}
+
+.marker-popup .marker-content {
+  background: #F5F5F5;
+  width: 455px;
+  height: 261px;
+  display: block;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.marker-popup .marker-content .close {
+  margin-right: 14px;
+  margin-top: 10px;
+}
+.marker-popup .marker-content .mc-weet-thumb {
+  float: left;
+  margin: 20px;
+  padding: 0px;
+}
+.marker-popup .marker-content .mc-tweet-user {
+  font-weight: 400;
+  font-size: 14px;
+  color: #878787;
+  line-height: 20px;
+  display: block;
+  position: relative;
+  float: left;
+  width: 280px;
+  height: auto;
+  margin: 20px 0px;
+  padding: 0px;
+}
+.marker-popup .marker-content .mc-tweet-user span,
+.marker-popup .marker-content .mc-tweet-user p {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+}
+.marker-popup .marker-content .mc-tweet-user a {
+  color: #6DBFE3;
+  padding: 0px;
+  margin: 0px;
+}
+.marker-popup .marker-content .mc-tweet-user label {
+  /*text-transform: uppercase;*/
+  font-weight: 400;
+  margin-top: 10px;
+  width: 100%;
+}
+.marker-popup .marker-content .mc-tweet-msg {
+  background: #FFFFFF;
+  padding: 12px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #868686;
+  display: block;
+  float: left;
+  width: 100%;
+  height: 127px;
+}
+.marker-popup .marker-content .mc-tweet-msg label {
+  line-height: 21.33px;
+  text-transform: uppercase;
+}
+.marker-popup .marker-content .mc-tweet-msg p {
+  color: #808080;
+  line-height: 25.2px;
+}
+.marker-popup .marker-content .marker-view {
+  width: 37px;
+  height: 48px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  bottom: -32px;
+  margin-left: -18.5px;
+}
+
+.leaflet-popup-content {
+  padding: 0px;
+}
+
+.loading {
+  color: #1CB4DB;
+}
+
+.map-control {
+  display: block;
+  top: 13px;
+  left: 30px;
+  position: absolute;
+  z-index: 7;
+}
+
+.map-control .item {
+  padding-left: 0;
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 30px;
+  list-style: none;
+}
+
+.map-control li {
+  background: #FFFFFF;
+  border-top: 1px solid #979797;
+  border-bottom: 1px solid #979797;
+  line-height: 15px;
+  padding: 6px 15px 7px 15px;
+  font-weight: 600;
+  font-size: 10px;
+  color: #979797;
+  line-height: 15px;
+  display: inline;
+}
+
+.map-control li:first-child {
+  border-radius: 2px 0 0 2px;
+  border-left: 1px solid #979797;
+}
+
+.map-control li:last-child {
+  border-radius: 0 2px 2px 0;
+  border-right: 1px solid #979797;
+}
+
+.map-control li.active {
+  background: #979797;
+  border-color: #979797;
+  color: #FFFFFF;
+}
+
+.map-control li:hover {
+  background:#C6F1FC;
+  border-color: #C6F1FC;
+  font-weight: 600;
+  font-size: 10px;
+  color: #1B8199;
+  line-height: 15px;
+  cursor: pointer;
+}
+
+.map-control .draw-item {
+  padding-left: 0;
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 5px;
+  list-style: none;
+}
+
+.map-control .draw-item .draw {
+  background: #FCFCFC;
+  border: 1px solid #979797;
+  border-radius: 2px;
+  background-image: url("images/select-map.png");
+  background-size: 20px 18px;
+  background-repeat: no-repeat;
+  background-position: 6px 2px;
+}
+
+.map-control .draw-item .draw.active {
+  background-color:#EBEBEB;
+  border: 1px solid #EBEBEB;
+  border-radius: 2px 0px 0px 2px;
+}
+
+.map-control .draw-item .draw:hover {
+  background-color: #C6F1FC
+}
+
+.search-input-container {
+  input {
+    height: 45px !important;
+  }
+}
+
+.thematic-legend ul {
+  background-color: transparent;
+}
+
+.thematic-legend ul li {
+  cursor: pointer;
+  margin: 0 3px;
+}
+
+.thematic-legend ul li.android {
+  background-color: white;
+  color: #F84F40;
+}
+
+.thematic-legend ul li.android.disabled {
+  background-color: #F84F40;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.iphone {
+  background-color: white;
+  color: #5CA2D1;
+}
+
+.thematic-legend ul li.iphone.disabled {
+  background-color: #5CA2D1;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.foursquare {
+  background-color: white;
+  color: #229A00;
+}
+
+.thematic-legend ul li.foursquare.disabled {
+  background-color: #229A00;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.web {
+  background-color: white;
+  color: #A53ED5;
+}
+
+.thematic-legend ul li.web.disabled {
+  background-color: #A53ED5;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.instagram {
+  background-color: white;
+  color: #FFB61E;
+}
+
+.thematic-legend ul li.instagram.disabled {
+  background-color: #FFB61E;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.others {
+  background-color: white;
+  color: #0036B3;
+}
+
+.thematic-legend ul li.others.disabled {
+  background-color: #0036B3;
+  color: #EEEEEE;
+}
+
+.hashtag-marker-button {
+  padding-top: 5px !important;
 }

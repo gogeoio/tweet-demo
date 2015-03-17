@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dashboard">
+<nav class="navbar navbar-dashboard" ng-init="header.initialize()">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -16,23 +16,23 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form form-inline" role="search">
+            <form class="navbar-form form-inline search-input-container" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Looking for something?" ng-model="header.term">
+                    <input type="text" class="form-control" placeholder="Looking for something?" ng-model="header.somethingTerm"/>
                 </div>
 
-                <div class="form-group" ng-show="false">
-                    <input type="text" class="form-control" placeholder="Where? Country only">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Where? Country only" ng-model="header.place"/>
                 </div>
 
-                <div class="form-group" ng-show="false">
-                    <daterange></daterange>
+                <div class="form-group">
+                    <daterange data-start-date="header.startDate" data-end-date="header.endDate"></daterange>
                 </div>
             </form>
 
-            <div class="nav navbar-nav navbar-right social-media" style="margin: -45px -30px 0px 0px;">
+            <div class="nav navbar-nav navbar-right social-media" style="margin: -55px -25px 0px 0px;">
                 <div class="tweet-button">
-                    <a class="twitter-share-button" href="https://twitter.com/share?text=Check out the live tweets on the map @gogeo_io&hashtags=gogeo,gogeo_io,twittermap">
+                    <a class="twitter-share-button" data-count="none" href="https://twitter.com/share?text=Check out the live tweets on the map @gogeo_io&hashtags=gogeo,gogeo_io,twittermap">
                         Tweet
                     </a>
                     <script>
@@ -40,7 +40,7 @@
                     </script>
                 </div>
                 <div id="facebook-button" class="facebook-button">
-                    <div class="fb-share-button" data-href="http://twittermap.gogeo.io/#/dashboard" data-layout="button_count"></div>
+                    <div class="fb-share-button" data-href="http://twittermap.gogeo.io/#/dashboard" data-layout="button"></div>
                 </div>
             </div>
         </div>
