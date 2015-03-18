@@ -183,6 +183,100 @@ var gogeo;
     gogeo.WelcomeController = WelcomeController;
     gogeo.registerController(WelcomeController);
 })(gogeo || (gogeo = {}));
+var gogeo;
+(function (gogeo) {
+    var DashboardQuery = (function () {
+        function DashboardQuery($http, geomSpace) {
+            this.$http = $http;
+            this.requestData = {};
+            this.requestData = {
+                agg_size: 10,
+                field: "entities.hashtags.text",
+                geom: geomSpace,
+                q: {
+                    query: {
+                        filtered: {
+                            filter: {}
+                        }
+                    }
+                }
+            };
+        }
+        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
+            var and = filter["and"];
+            if (!and) {
+                and = filter.and = {
+                    filters: []
+                };
+            }
+            return and;
+        };
+        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
+            for (var i = 0; i < terms.length; i++) {
+                this.filterBySearchTerm(terms[i]);
+            }
+        };
+        DashboardQuery.prototype.filterBySearchTerm = function (term) {
+            var _this = this;
+            Enumerable.from(term.split(' ')).select(function (entry) { return entry.trim(); }).where(function (entry) { return entry != null && entry.length > 0; }).forEach(function (entry) {
+                switch (entry.charAt(0)) {
+                    case "@":
+                        _this.filterByUsername(entry.substring(1));
+                        break;
+                    case "#":
+                        _this.filterByHashtag({
+                            key: entry.substring(1),
+                            doc_count: 0
+                        });
+                        break;
+                    default:
+                        _this.filterByText(term);
+                        break;
+                }
+            });
+        };
+        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
+            var filter = this.requestData.q.query.filtered.filter;
+            if (hashtag) {
+                this.requestData["field"] = "place.full_name.raw";
+                this.requestData["agg_size"] = 5;
+                var and = this.getOrCreateAndRestriction(filter);
+                var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.HashtagText, hashtag.key);
+                and.filters.push(queryString.build());
+            }
+        };
+        DashboardQuery.prototype.filterByUsername = function (username) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.UserScreenName, username + "*");
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByText = function (text) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Text, text);
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByPlace = function (text) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text + "*");
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByDateRange = function (range) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.DateRangeQueryBuilder(gogeo.DateRangeQueryBuilder.DateRange, range);
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.execute = function (resultHandler) {
+            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+            return this.$http.post(url, this.requestData).success(resultHandler);
+        };
+        return DashboardQuery;
+    })();
+    gogeo.DashboardQuery = DashboardQuery;
+})(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 /**
  * Created by danfma on 06/03/15.
@@ -202,52 +296,7 @@ var gogeo;
         };
     });
 })(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/**
- * Created by danfma on 05/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    angular.module("gogeo").directive("welcomeMap", [
-        function () {
-            return {
-                restrict: "C",
-                // template: "<div></div>",
-                link: function (scope, element, attrs) {
-                    var rawElement = element[0];
-                    var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
-                    var initialPos = L.latLng(43.717232, -92.353034);
-                    var map = L.map("welcome-map").setView(initialPos, 5);
-                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-                    }));
-                    L.tileLayer(url).addTo(map);
-                    scope.$on("destroy", function () { return map.remove(); });
-                }
-            };
-        }
-    ]);
-})(gogeo || (gogeo = {}));
-/**
- * Created by danfma on 07/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    function prefix(eventName) {
-        return "gogeo:" + eventName;
-    }
-    var DashboardEvent = (function () {
-        function DashboardEvent() {
-        }
-        DashboardEvent.mapLoaded = prefix("dashboard:mapLoaded");
-        return DashboardEvent;
-    })();
-    gogeo.DashboardEvent = DashboardEvent;
-})(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/**
- * Created by danfma on 07/03/15.
- */
+///<reference path="./interfaces.ts" />
 var gogeo;
 (function (gogeo) {
     var NeSwPoint = (function () {
@@ -363,12 +412,184 @@ var gogeo;
         return SourceTermQuery;
     })();
     gogeo.SourceTermQuery = SourceTermQuery;
-    var DashboardService = (function () {
-        function DashboardService($q, $http, $location, angularytics) {
-            this.$q = $q;
-            this.$http = $http;
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/**
+ * Created by danfma on 05/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    angular.module("gogeo").directive("welcomeMap", [
+        function () {
+            return {
+                restrict: "C",
+                // template: "<div></div>",
+                link: function (scope, element, attrs) {
+                    var rawElement = element[0];
+                    var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
+                    var initialPos = L.latLng(43.717232, -92.353034);
+                    var map = L.map("welcome-map").setView(initialPos, 5);
+                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
+                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+                    }));
+                    L.tileLayer(url).addTo(map);
+                    scope.$on("destroy", function () { return map.remove(); });
+                }
+            };
+        }
+    ]);
+})(gogeo || (gogeo = {}));
+/**
+ * Created by danfma on 07/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    function prefix(eventName) {
+        return "gogeo:" + eventName;
+    }
+    var DashboardEvent = (function () {
+        function DashboardEvent() {
+        }
+        DashboardEvent.mapLoaded = prefix("dashboard:mapLoaded");
+        return DashboardEvent;
+    })();
+    gogeo.DashboardEvent = DashboardEvent;
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/// <reference path="../services/dashboard-service.ts" />
+var gogeo;
+(function (gogeo) {
+    var MetricsService = (function () {
+        function MetricsService($scope, $location, angularytics, service) {
+            this.$scope = $scope;
             this.$location = $location;
             this.angularytics = angularytics;
+            this.service = service;
+            this._lastGeom = null;
+            this._lastBucketResult = null;
+            this._lastTerms = null;
+            this._lastDateRange = null;
+            this._lastPlace = null;
+            this.initialize();
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackPageView("/");
+            }
+        }
+        MetricsService.prototype.initialize = function () {
+            var _this = this;
+            this.service.geomSpaceObservable.subscribeAndApply(this.$scope, function (geom) { return _this.publishGeomMetric(geom); });
+            this.service.hashtagFilterObservable.subscribeAndApply(this.$scope, function (bucketResult) { return _this.publishHashtagMetric(bucketResult); });
+            this.service.somethingTermsObservable.subscribeAndApply(this.$scope, function (terms) { return _this.publishWhatMetric(terms); });
+            this.service.dateRangeObsersable.subscribeAndApply(this.$scope, function (dateRange) { return _this.publishWhenMetric(dateRange); });
+            this.service.placeObservable.subscribeAndApply(this.$scope, function (place) { return _this.publishWhereMetric(place); });
+            this.service.tweetObservable.subscribeAndApply(this.$scope, function (tweet) {
+                _this.publishPopupMetric(tweet);
+            });
+        };
+        MetricsService.prototype.publishGeomMetric = function (geom) {
+            this._lastGeom = geom;
+            if (geom && geom.source === "draw") {
+                this.publishMetric("geom", "geom", "geom");
+            }
+        };
+        MetricsService.prototype.publishHashtagMetric = function (bucketResult) {
+            this._lastBucketResult = bucketResult;
+            if (!bucketResult) {
+                return;
+            }
+            this.publishMetric("hashtag", "click", bucketResult.key);
+        };
+        MetricsService.prototype.publishWhereMetric = function (place) {
+            this._lastPlace = place;
+            if (this.validateParam(place)) {
+                this.publishMetric("where", "where", place);
+            }
+        };
+        MetricsService.prototype.publishWhatMetric = function (terms) {
+            this._lastTerms = terms;
+            if (this.validateParam(terms)) {
+                this.publishMetric("query", "query", terms.join(" "));
+            }
+        };
+        MetricsService.prototype.publishWhenMetric = function (dateRange) {
+            this._lastDateRange = dateRange;
+            if (!dateRange) {
+                return;
+            }
+            var label = this.getDateLabel(dateRange);
+            this.publishMetric("when", "when", label);
+        };
+        MetricsService.prototype.publishThematicMetric = function (selectedLayers) {
+            this.publishMetric("thematic", "thematic", selectedLayers.join(" "));
+        };
+        MetricsService.prototype.publishMapTypeMetric = function (type) {
+            this.publishMetric("mapType", "mapType", type);
+        };
+        MetricsService.prototype.publishPopupMetric = function (tweet) {
+            if (!tweet) {
+                return;
+            }
+            var labels = [];
+            if (this._lastBucketResult) {
+                labels.push("hashtag: " + this._lastBucketResult.key);
+            }
+            if (this.validateParam(this._lastTerms)) {
+                labels.push("what: " + this._lastTerms.join(" "));
+            }
+            if (this._lastDateRange) {
+                labels.push("when: " + this.getDateLabel(this._lastDateRange));
+            }
+            if (this._lastPlace) {
+                labels.push("where: " + this._lastPlace);
+            }
+            this.publishMetric("popup", "popup", labels.join(" | "));
+        };
+        MetricsService.prototype.publishMetric = function (action, category, label) {
+            if (this.$location.host().match("gogeo.io")) {
+                this.angularytics.trackEvent(action, category, label);
+            }
+            else {
+                console.debug("publish metric", action, "category:", category, "label:", label);
+            }
+        };
+        MetricsService.prototype.validateParam = function (param) {
+            return param && param.length > 0;
+        };
+        MetricsService.prototype.getDateLabel = function (dateRange) {
+            var label = "";
+            if (dateRange.start) {
+                label = "start: " + moment(dateRange.start).format("YYYY-MM-DD");
+            }
+            if (dateRange.end) {
+                label = label + " end: " + moment(dateRange.end).format("YYYY-MM-DD");
+            }
+            return label;
+        };
+        MetricsService.$named = "metricsService";
+        MetricsService.$inject = [
+            "$rootScope",
+            "$location",
+            "Angularytics",
+            "dashboardService"
+        ];
+        return MetricsService;
+    })();
+    gogeo.MetricsService = MetricsService;
+    gogeo.registerService(MetricsService);
+})(gogeo || (gogeo = {}));
+///<reference path="../../shell.ts" />
+///<reference path="../../shared/controls/queries.ts"/>
+///<reference path="../../shared/controls/dashboard-query.ts"/>
+///<reference path="./metrics.ts"/>
+/**
+ * Created by danfma on 07/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    var DashboardService = (function () {
+        function DashboardService($q, $http) {
+            this.$q = $q;
+            this.$http = $http;
             this._lastGeomSpace = null;
             this._lastHashtagFilter = null;
             this._lastSomethingTerms = [];
@@ -380,12 +601,10 @@ var gogeo;
             this._somethingTermsObservable = new Rx.BehaviorSubject([]);
             this._placeObservable = new Rx.BehaviorSubject(null);
             this._hashtagResultObservable = new Rx.BehaviorSubject(null);
-            this._dateRange = new Rx.BehaviorSubject(null);
+            this._dateRangeObsersable = new Rx.BehaviorSubject(null);
             this._lastQueryObservable = new Rx.BehaviorSubject(null);
+            this._tweetObservable = new Rx.BehaviorSubject(null);
             this.initialize();
-            if (this.$location.host().match("gogeo.io")) {
-                this.angularytics.trackPageView("/");
-            }
         }
         Object.defineProperty(DashboardService.prototype, "loading", {
             get: function () {
@@ -411,6 +630,13 @@ var gogeo;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DashboardService.prototype, "hashtagFilterObservable", {
+            get: function () {
+                return this._hashtagFilterObservable;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(DashboardService.prototype, "queryObservable", {
             get: function () {
                 return this._lastQueryObservable;
@@ -418,15 +644,43 @@ var gogeo;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DashboardService.prototype, "dateRangeObsersable", {
+            get: function () {
+                return this._dateRangeObsersable;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DashboardService.prototype, "somethingTermsObservable", {
+            get: function () {
+                return this._somethingTermsObservable;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DashboardService.prototype, "placeObservable", {
+            get: function () {
+                return this._placeObservable;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DashboardService.prototype, "tweetObservable", {
+            get: function () {
+                return this._tweetObservable;
+            },
+            enumerable: true,
+            configurable: true
+        });
         DashboardService.prototype.initialize = function () {
             var _this = this;
-            Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable).throttle(400).subscribe(function () { return _this.search(); });
-            Rx.Observable.merge(this._somethingTermsObservable, this._placeObservable, this._dateRange).throttle(800).subscribe(function () { return _this.search(); });
+            Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObsersable).throttle(400).subscribe(function () { return _this.search(); });
+            Rx.Observable.merge(this._somethingTermsObservable, this._placeObservable).throttle(800).subscribe(function () { return _this.search(); });
         };
         DashboardService.prototype.calculateNeSW = function (bounds) {
             var ne = new L.LatLng(bounds.getNorthEast().lng, bounds.getNorthEast().lat);
             var sw = new L.LatLng(bounds.getSouthWest().lng, bounds.getSouthWest().lat);
-            return new NeSwPoint(ne, sw);
+            return new gogeo.NeSwPoint(ne, sw);
         };
         DashboardService.prototype.pointToGeoJson = function (point) {
             var ne = [point.ne.lat, point.ne.lng];
@@ -443,6 +697,7 @@ var gogeo;
                 ]
             ];
             return {
+                source: "mapBounds",
                 type: "Polygon",
                 coordinates: coordinates
             };
@@ -455,7 +710,9 @@ var gogeo;
         DashboardService.prototype.updateGeomSpaceByBounds = function (bounds) {
             var point = this.calculateNeSW(bounds);
             var geomSpace = this.pointToGeoJson(point);
-            this.updateGeomSpace(geomSpace);
+            if (geomSpace) {
+                this.updateGeomSpace(geomSpace);
+            }
         };
         DashboardService.prototype.updateHashtagBucket = function (bucket) {
             this._loading = true;
@@ -473,20 +730,17 @@ var gogeo;
         };
         DashboardService.prototype.updateDateRange = function (startDate, endDate) {
             var dateRange = null;
-            if (startDate || endDate)
+            if (startDate || endDate) {
                 dateRange = { start: startDate, end: endDate };
-            this._lastDateRange = dateRange;
-            this._dateRange.onNext(dateRange);
-        };
-        DashboardService.prototype.publishMetrics = function (action, category, label) {
-            if (this.$location.host().match("gogeo.io")) {
-                this.angularytics.trackEvent(action, category, label);
             }
+            this._lastDateRange = dateRange;
+            this._dateRangeObsersable.onNext(dateRange);
         };
         DashboardService.prototype.getTweet = function (latlng, zoom, thematicQuery) {
             return this.getTweetData(latlng, zoom, thematicQuery);
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom, thematicQuery) {
+            var _this = this;
             var url = gogeo.Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData.q;
@@ -545,7 +799,11 @@ var gogeo;
                 ],
                 q: angular.toJson(query) // Essa query e passada como string mesmo
             };
-            return this.$http.post(url, data);
+            var tweet = this.$http.post(url, data);
+            tweet.then(function (result) {
+                _this._tweetObservable.onNext(result.data);
+            });
+            return tweet;
         };
         DashboardService.prototype.search = function () {
             var _this = this;
@@ -558,13 +816,11 @@ var gogeo;
             this._lastQueryObservable.onNext(query.requestData.q);
         };
         DashboardService.prototype.composeQuery = function () {
-            var query = new DashboardQuery(this.$http, this._lastGeomSpace);
+            var query = new gogeo.DashboardQuery(this.$http, this._lastGeomSpace);
             if (this._lastHashtagFilter) {
-                this.publishMetrics("click", "hashtags", this._lastHashtagFilter.key);
                 query.filterByHashtag(this._lastHashtagFilter);
             }
             if (this._lastSomethingTerms.length > 0) {
-                //this.publishMetrics("search", "search", this._lastSearchTerm);
                 query.filterBySearchTerms(this._lastSomethingTerms);
             }
             if (this._lastPlace) {
@@ -578,103 +834,11 @@ var gogeo;
         DashboardService.$named = "dashboardService";
         DashboardService.$inject = [
             "$q",
-            "$http",
-            "$location",
-            "Angularytics"
+            "$http"
         ];
         return DashboardService;
     })();
     gogeo.DashboardService = DashboardService;
-    var DashboardQuery = (function () {
-        function DashboardQuery($http, geomSpace) {
-            this.$http = $http;
-            this.requestData = {};
-            this.requestData = {
-                agg_size: 10,
-                field: "entities.hashtags.text",
-                geom: geomSpace,
-                q: {
-                    query: {
-                        filtered: {
-                            filter: {}
-                        }
-                    }
-                }
-            };
-        }
-        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
-            var and = filter["and"];
-            if (!and) {
-                and = filter.and = {
-                    filters: []
-                };
-            }
-            return and;
-        };
-        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
-            for (var i = 0; i < terms.length; i++) {
-                this.filterBySearchTerm(terms[i]);
-            }
-        };
-        DashboardQuery.prototype.filterBySearchTerm = function (term) {
-            var _this = this;
-            Enumerable.from(term.split(' ')).select(function (entry) { return entry.trim(); }).where(function (entry) { return entry != null && entry.length > 0; }).forEach(function (entry) {
-                switch (entry.charAt(0)) {
-                    case "@":
-                        _this.filterByUsername(entry.substring(1));
-                        break;
-                    case "#":
-                        _this.filterByHashtag({
-                            key: entry.substring(1),
-                            doc_count: 0
-                        });
-                        break;
-                    default:
-                        _this.filterByText(term);
-                        break;
-                }
-            });
-        };
-        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
-            var filter = this.requestData.q.query.filtered.filter;
-            if (hashtag) {
-                this.requestData["field"] = "place.full_name.raw";
-                this.requestData["agg_size"] = 5;
-                var and = this.getOrCreateAndRestriction(filter);
-                var queryString = new TextQueryBuilder(TextQueryBuilder.HashtagText, hashtag.key);
-                and.filters.push(queryString.build());
-            }
-        };
-        DashboardQuery.prototype.filterByUsername = function (username) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.UserScreenName, username + "*");
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByText = function (text) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.Text, text);
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByPlace = function (text) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.Place, text + "*");
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByDateRange = function (range) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new DateRangeQueryBuilder(DateRangeQueryBuilder.DateRange, range);
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
-            return this.$http.post(url, this.requestData).success(resultHandler);
-        };
-        return DashboardQuery;
-    })();
     gogeo.registerService(DashboardService);
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
@@ -799,10 +963,10 @@ var gogeo;
         DashboardController.prototype.initialize = function () {
             var _this = this;
             _super.prototype.initialize.call(this);
-            this.watchAsObservable("somethingTerm").skip(1).throttle(400).select(function (term) {
+            this.watchAsObservable("somethingTerm").skip(1).throttle(800).select(function (term) {
                 return Enumerable.from(term.split(" ")).select(function (part) { return part.trim(); }).toArray();
             }).subscribe(function (terms) { return _this.dashboardService.updateSomethingTerms(terms); });
-            this.watchAsObservable("place").skip(1).throttle(400).subscribe(function (place) { return _this.dashboardService.updatePlace(place); });
+            this.watchAsObservable("place").skip(1).throttle(800).subscribe(function (place) { return _this.dashboardService.updatePlace(place); });
             Rx.Observable.merge(this.watchAsObservable("startDate"), this.watchAsObservable("endDate")).skip(1).throttle(400).subscribe(function (range) {
                 var startDate = null;
                 var endDate = null;
@@ -835,18 +999,20 @@ var gogeo;
 /// <reference path="../../shell.ts" />
 /// <reference path="../services/dashboard-events.ts" />
 /// <reference path="../services/dashboard-service.ts" />
+/// <reference path="../services/metrics.ts" />
 /**
  * Created by danfma on 07/03/15.
  */
 var gogeo;
 (function (gogeo) {
     var DashboardMapController = (function () {
-        function DashboardMapController($scope, $rootScope, linkify, $sce, service) {
+        function DashboardMapController($scope, $rootScope, linkify, $sce, service, metrics) {
             this.$scope = $scope;
             this.$rootScope = $rootScope;
             this.linkify = linkify;
             this.$sce = $sce;
             this.service = service;
+            this.metrics = metrics;
             this.query = { query: { filtered: { filter: {} } } };
             this.selected = "inactive";
             this.mapSelected = "thematic"; // cluster, point, intensity or thematic
@@ -857,6 +1023,14 @@ var gogeo;
             this.restricted = false;
             this.canOpenPopup = true;
             this.thematicMaps = {};
+            this.thematicSelectedLayers = [
+                "android",
+                "foursquare",
+                "instagram",
+                "iphone",
+                "others",
+                "web"
+            ];
             this.queries = {
                 android: '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
                 iphone: '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>',
@@ -865,8 +1039,17 @@ var gogeo;
                 foursquare: '<a href="http://foursquare.com" rel="nofollow">Foursquare</a>',
                 others: ''
             };
+            this._thematicLayers = new Rx.BehaviorSubject(this.thematicSelectedLayers);
+            this._selectedMap = new Rx.BehaviorSubject(null);
             this.layerGroup = L.layerGroup([]);
         }
+        Object.defineProperty(DashboardMapController.prototype, "thematicLayers", {
+            get: function () {
+                return this._thematicLayers;
+            },
+            enumerable: true,
+            configurable: true
+        });
         DashboardMapController.prototype.initialize = function (map) {
             var _this = this;
             this.map = map;
@@ -888,6 +1071,12 @@ var gogeo;
             this.map.addLayer(this.drawnItems);
             this.initializeDrawControl();
             this.service.geomSpaceObservable.subscribeAndApply(this.$scope, function (geom) { return _this.handleGeom(geom); });
+            Rx.Observable.merge(this._thematicLayers).throttle(800).subscribe(function () {
+                _this.metrics.publishThematicMetric(_this.thematicSelectedLayers);
+            });
+            Rx.Observable.merge(this._selectedMap).throttle(800).subscribe(function () {
+                _this.metrics.publishMapTypeMetric(_this.mapSelected);
+            });
         };
         DashboardMapController.prototype.initializeLayer = function () {
             var _this = this;
@@ -949,7 +1138,7 @@ var gogeo;
                 this.restricted = false;
                 var geojson = layer.toGeoJSON();
                 this.drawnItems.addLayer(layer);
-                this.onMapLoaded(geojson["geometry"]);
+                this.onMapLoaded(this.getDrawGeomSpace(geojson["geometry"]));
                 layer.on("click", function (e) { return _this.openPopup(e); });
             }
             else {
@@ -958,6 +1147,13 @@ var gogeo;
                 this.updateLayer();
                 this.onMapLoaded();
             }
+        };
+        DashboardMapController.prototype.getDrawGeomSpace = function (geojson) {
+            return {
+                source: "draw",
+                type: geojson["type"],
+                coordinates: geojson["coordinates"]
+            };
         };
         DashboardMapController.prototype.createLayers = function () {
             var url = this.configureUrl();
@@ -1063,13 +1259,16 @@ var gogeo;
             var date = new Date(dateString);
             return moment(date).utc().format("LLLL");
         };
-        DashboardMapController.prototype.toggle = function (layer) {
+        DashboardMapController.prototype.toggleThematicMap = function (id, layer) {
             if (this.layerGroup.hasLayer(layer)) {
                 this.layerGroup.removeLayer(layer);
+                this.thematicSelectedLayers.splice(this.thematicSelectedLayers.indexOf(id), 1);
             }
             else {
                 this.layerGroup.addLayer(layer);
+                this.thematicSelectedLayers.splice(0, 0, id);
             }
+            this._thematicLayers.onNext(this.thematicSelectedLayers);
         };
         DashboardMapController.prototype.onMapLoaded = function (geom) {
             if (this.restricted) {
@@ -1160,6 +1359,7 @@ var gogeo;
         };
         DashboardMapController.prototype.changeMapType = function (element) {
             this.mapSelected = element.target.id;
+            this._selectedMap.onNext(this.mapSelected);
             this.updateLayer();
         };
         DashboardMapController.prototype.updateLayer = function () {
@@ -1184,7 +1384,8 @@ var gogeo;
             "$rootScope",
             "linkify",
             "$sce",
-            gogeo.DashboardService.$named
+            gogeo.DashboardService.$named,
+            gogeo.MetricsService.$named
         ];
         return DashboardMapController;
     })();

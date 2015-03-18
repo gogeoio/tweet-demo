@@ -3,7 +3,6 @@
 
 module gogeo {
 
-
     export var settings;
 
     export class Configuration {

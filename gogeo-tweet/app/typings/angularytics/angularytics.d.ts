@@ -7,6 +7,7 @@ declare module angularytics {
   class Angularytics {
     trackPageView(url: string): void;
 
+    trackEvent(category: string): void;
     trackEvent(category: string, action: string): void;
     trackEvent(category: string, action: string, opt_label: string): void;
     trackEvent(category: string, action: string, opt_label: string, opt_value: number): void;
