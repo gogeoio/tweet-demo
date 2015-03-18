@@ -25,14 +25,16 @@ module gogeo {
         popup: L.Popup;
         query: any = { query: { filtered: { filter: { } } } };
         selected: string = "inactive";
-        mapSelected: string = "thematic"; // cluster, point, intensity or thematic
+        mapSelected: string = "point"; // cluster, point, intensity or thematic
         drawing: boolean = false;
+        baseLayers: L.FeatureGroup<L.ILayer> = null;
         layerGroup: L.LayerGroup<L.ILayer> = null;
         drawnItems: L.FeatureGroup<L.ILayer> = null;
         drawnGeom: IGeomSpace = null;
         restricted: boolean = false;
         canOpenPopup: boolean = true;
         thematicMaps: any = {};
+        baseLayerSelected: string = "day";
         thematicSelectedLayers: Array<string> = [
             "android", "foursquare", "instagram", "iphone", "others", "web"
         ];
@@ -55,6 +57,7 @@ module gogeo {
                     private service:    DashboardService,
                     private metrics:    MetricsService) {
             this.layerGroup = L.layerGroup([]);
+            this.baseLayers = L.featureGroup([]);
         }
 
         get thematicLayers():Rx.BehaviorSubject<Array<string>> {
@@ -64,11 +67,9 @@ module gogeo {
         initialize(map: L.Map) {
             this.map = map;
 
-            this.map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-              attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-            }));
+            this.baseLayers.addLayer(this.getDayMap());
+            this.map.addLayer(this.baseLayers);
 
-            // this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
             this.map.on("click", (e) => this.openPopup(e));
             this.map.on("draw:created", (e) => this.drawnHandler(e));
@@ -114,6 +115,55 @@ module gogeo {
                 .where(q => q != null)
                 .throttle(400)
                 .subscribeAndApply(this.$scope, (query) => this.queryHandler(query));
+        }
+
+        private getNightMap() {
+            var mapOptions = {
+                // How you would like to style the map. 
+                // This is where you would paste any style found on Snazzy Maps.
+                styles: [{
+                    "stylers": [
+                      {
+                        "visibility": "simplified"
+                      }
+                    ]
+                  },
+                  {
+                    "stylers": [
+                      {
+                        "color": "#131314"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "water",
+                    "stylers": [
+                      {
+                        "color": "#131313"
+                      },
+                      {
+                        "lightness": 7
+                      }
+                    ]
+                  },
+                  {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                      {
+                        "visibility": "on"
+                      },
+                      {
+                        "lightness": 25
+                      }
+                    ]
+                }]
+            };
+
+            return new L.Google("ROADMAP", {mapOptions: mapOptions});
+        }
+
+        private getDayMap() {
+            return new L.Google('ROADMAP');
         }
 
         private blockPopup() {
@@ -318,6 +368,21 @@ module gogeo {
             return tq;
         }
 
+        switchBaseLayer() {
+            this.baseLayers.clearLayers();
+
+            if (this.baseLayerSelected === "day") {
+                this.baseLayerSelected = "night";
+                this.baseLayers.addLayer(this.getNightMap());
+            } else {
+                this.baseLayerSelected = "day";
+                this.baseLayers.addLayer(this.getDayMap());
+            }
+
+            this.metrics.publishSwitchBaseLayer(this.baseLayerSelected);
+            this.baseLayers.bringToBack();
+        }
+
         formatTweetText(text: string) {
             return this.$sce.trustAsHtml(this.linkify.twitter(text));
         }
@@ -449,6 +514,16 @@ module gogeo {
         changeMapType(element: any) {
             this.mapSelected = element.target.id;
             this._selectedMap.onNext(this.mapSelected);
+
+            if ((this.mapSelected === "thematic" || this.mapSelected === "intensity")
+                && this.baseLayerSelected === "day") {
+                this.switchBaseLayer();
+            }
+
+            if (this.mapSelected === "point" && this.baseLayerSelected === "night") {
+                this.switchBaseLayer();
+            }
+
             this.updateLayer();
         }
 

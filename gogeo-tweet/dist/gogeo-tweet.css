@@ -2383,9 +2383,6 @@ a{color:#168fae}
 .dashboard-map{width:100%;height:100%;position:relative}
 .dashboard-map .dashboard-map-container{width:100%;height:100%;cursor:crosshair}
 .dashboard-map .dashboard-map-container .leaflet-map-pane{position:absolute;z-index:3!important;left:0;right:0;top:0;bottom:0}
-.marker-popup .marker-content .mc-weet-thumb{float:left;margin:20px;padding:0}
-.marker-popup .marker-content .mc-tweet-user label{font-weight:400;margin-top:10px;width:100%}
-.marker-popup .marker-content .mc-tweet-msg{background:#FFF;padding:12px;font-weight:400;font-size:14px;color:#868686;display:block;float:left;width:100%;height:127px}
 .search-input-container input{height:45px!important}
 .thematic-legend ul{background-color:transparent}
 .thematic-legend ul li{cursor:pointer;margin:0 3px}
@@ -2404,7 +2401,7 @@ a{color:#168fae}
 .hashtag-marker-button{padding-top:5px!important}
 .map-control li,.map-control li:hover{font-weight:600;font-size:10px;line-height:15px}
 .map-control .draw-item,.map-control .item{display:inline;margin-top:0;margin-bottom:0}
-.map-control{display:block;top:11px;left:25px;position:absolute;z-index:10}
+.map-control{display:block;top:13px;left:30px;position:absolute;z-index:7}
 .map-control .item{padding-left:0;margin-left:30px;list-style:none}
 .map-control li{background:#FFF;border-top:1px solid #979797;border-bottom:1px solid #979797;padding:6px 15px 7px;color:#979797;display:inline}
 .map-control li:first-child{border-radius:2px 0 0 2px;border-left:1px solid #979797}
@@ -2418,15 +2415,17 @@ a{color:#168fae}
 .marker-popup{display:block;width:auto;height:auto;position:absolute}
 .marker-popup .marker-content{background:#F5F5F5;width:455px;height:261px;display:block;position:relative;margin:0;padding:0;box-shadow:0 10px 5px 0 rgba(0,0,0,.3)}
 .marker-popup .marker-content .close{margin-right:14px;margin-top:10px}
-.marker-popup .marker-content .mc-tweet-thumb{float:left;margin:20px;padding:0}
 .marker-popup .marker-content .mc-tweet-user{font-weight:400;font-size:14px;color:#878787;line-height:20px;display:block;position:relative;float:left;width:280px;height:auto;margin:20px 0;padding:0}
 .marker-popup .marker-content .mc-tweet-user p,.marker-popup .marker-content .mc-tweet-user span{padding:0;margin:0;width:100%}
 .marker-popup .marker-content .mc-tweet-user a{color:#6DBFE3;padding:0;margin:0}
+.marker-popup .marker-content .mc-tweet-user label{font-weight:400;margin-top:10px;width:100%}
+.marker-popup .marker-content .mc-tweet-msg{background:#FFF;padding:12px;font-weight:400;font-size:14px;color:#868686;display:block;float:left;width:100%;height:127px}
 .marker-popup .marker-content .mc-tweet-msg label{line-height:21.33px;text-transform:uppercase}
 .marker-popup .marker-content .mc-tweet-msg p{color:grey;line-height:25.2px}
 .marker-popup .marker-content .marker-view{width:37px;height:48px;position:absolute;display:block;left:50%;bottom:-32px;margin-left:-18.5px}
 .leaflet-popup-content{padding:0}
 .loading{color:#1CB4DB}
+.marker-popup .marker-content .mc-weet-thumb{float:left;margin:20px;padding:0}
 @android-color: #F84F40;
 #android[source=~".*Android.*"]{marker-comp-op:lighten;marker-fill-opacity:.9;marker-fill:@android-color;marker-line-color:@android-color}
 @foursquare-color: #229A00;

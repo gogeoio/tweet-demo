@@ -544,6 +544,9 @@ var gogeo;
             }
             this.publishMetric("popup", "popup", labels.join(" | "));
         };
+        MetricsService.prototype.publishSwitchBaseLayer = function (baseLayer) {
+            this.publishMetric("baseLayer", "baseLayer", baseLayer);
+        };
         MetricsService.prototype.publishMetric = function (action, category, label) {
             if (this.$location.host().match("gogeo.io")) {
                 this.angularytics.trackEvent(action, category, label);
@@ -1015,14 +1018,16 @@ var gogeo;
             this.metrics = metrics;
             this.query = { query: { filtered: { filter: {} } } };
             this.selected = "inactive";
-            this.mapSelected = "thematic"; // cluster, point, intensity or thematic
+            this.mapSelected = "point"; // cluster, point, intensity or thematic
             this.drawing = false;
+            this.baseLayers = null;
             this.layerGroup = null;
             this.drawnItems = null;
             this.drawnGeom = null;
             this.restricted = false;
             this.canOpenPopup = true;
             this.thematicMaps = {};
+            this.baseLayerSelected = "day";
             this.thematicSelectedLayers = [
                 "android",
                 "foursquare",
@@ -1042,6 +1047,7 @@ var gogeo;
             this._thematicLayers = new Rx.BehaviorSubject(this.thematicSelectedLayers);
             this._selectedMap = new Rx.BehaviorSubject(null);
             this.layerGroup = L.layerGroup([]);
+            this.baseLayers = L.featureGroup([]);
         }
         Object.defineProperty(DashboardMapController.prototype, "thematicLayers", {
             get: function () {
@@ -1053,10 +1059,8 @@ var gogeo;
         DashboardMapController.prototype.initialize = function (map) {
             var _this = this;
             this.map = map;
-            this.map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-                attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-            }));
-            // this.map.addLayer(new L.Google('ROADMAP'));
+            this.baseLayers.addLayer(this.getDayMap());
+            this.map.addLayer(this.baseLayers);
             this.map.on("moveend", function (e) { return _this.onMapLoaded(); });
             this.map.on("click", function (e) { return _this.openPopup(e); });
             this.map.on("draw:created", function (e) { return _this.drawnHandler(e); });
@@ -1086,6 +1090,49 @@ var gogeo;
                 this.layerGroup.addLayer(layers[i]);
             }
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
+        };
+        DashboardMapController.prototype.getNightMap = function () {
+            var mapOptions = {
+                // How you would like to style the map. 
+                // This is where you would paste any style found on Snazzy Maps.
+                styles: [{
+                    "stylers": [
+                        {
+                            "visibility": "simplified"
+                        }
+                    ]
+                }, {
+                    "stylers": [
+                        {
+                            "color": "#131314"
+                        }
+                    ]
+                }, {
+                    "featureType": "water",
+                    "stylers": [
+                        {
+                            "color": "#131313"
+                        },
+                        {
+                            "lightness": 7
+                        }
+                    ]
+                }, {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "visibility": "on"
+                        },
+                        {
+                            "lightness": 25
+                        }
+                    ]
+                }]
+            };
+            return new L.Google("ROADMAP", { mapOptions: mapOptions });
+        };
+        DashboardMapController.prototype.getDayMap = function () {
+            return new L.Google('ROADMAP');
         };
         DashboardMapController.prototype.blockPopup = function () {
             this.canOpenPopup = false;
@@ -1252,6 +1299,19 @@ var gogeo;
             }
             return tq;
         };
+        DashboardMapController.prototype.switchBaseLayer = function () {
+            this.baseLayers.clearLayers();
+            if (this.baseLayerSelected === "day") {
+                this.baseLayerSelected = "night";
+                this.baseLayers.addLayer(this.getNightMap());
+            }
+            else {
+                this.baseLayerSelected = "day";
+                this.baseLayers.addLayer(this.getDayMap());
+            }
+            this.metrics.publishSwitchBaseLayer(this.baseLayerSelected);
+            this.baseLayers.bringToBack();
+        };
         DashboardMapController.prototype.formatTweetText = function (text) {
             return this.$sce.trustAsHtml(this.linkify.twitter(text));
         };
@@ -1360,6 +1420,12 @@ var gogeo;
         DashboardMapController.prototype.changeMapType = function (element) {
             this.mapSelected = element.target.id;
             this._selectedMap.onNext(this.mapSelected);
+            if ((this.mapSelected === "thematic" || this.mapSelected === "intensity") && this.baseLayerSelected === "day") {
+                this.switchBaseLayer();
+            }
+            if (this.mapSelected === "point" && this.baseLayerSelected === "night") {
+                this.switchBaseLayer();
+            }
             this.updateLayer();
         };
         DashboardMapController.prototype.updateLayer = function () {
