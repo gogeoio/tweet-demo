@@ -6,20 +6,23 @@
 
 module gogeo {
 
+    export interface Query {
+        build(): any;
+    }
+
     export class NeSwPoint {
         constructor(public ne:L.LatLng, public sw:L.LatLng) {
 
         }
     }
 
-    export class TextQueryBuilder {
+    export class TextQueryBuilder implements Query {
         static HashtagText = "entities.hashtags.text";
         static UserScreenName = "user.screen_name";
         static Text = "text";
         static Place = "place.country";
 
-        constructor(public field:string, public term:string) {
-
+        constructor(public field: string, public term: string) {
         }
 
         build() {
@@ -36,7 +39,49 @@ module gogeo {
         }
     }
 
-    export class DateRangeQueryBuilder {
+    export class ThematicQuery implements Query {
+        constructor(public queries: Array<Query>, public prevQuery?: TextQueryBuilder) {
+        }
+
+        build() {
+            var query = {
+                query: {
+                    filtered: {
+                        filter: {
+                            or: {
+                                // filters: []
+                            }
+                        }
+                    }
+                }
+            };
+
+            var filters = [];
+
+            if (this.prevQuery) {
+                query["query"]["filtered"]["query"] = this.prevQuery["query"];
+            }
+
+            for (var index in this.queries) {
+                var stq = this.queries[index];
+
+                if (stq instanceof SourceTermQuery || stq instanceof TextQueryBuilder) {
+                    filters.push(stq.build());
+                } else if (stq["query"]["filtered"]["filter"]["or"]["filters"]) {
+                    var subFilters = stq["query"]["filtered"]["filter"]["or"]["filters"];
+                    for (var k in subFilters) {
+                        filters.push(subFilters[k]);
+                    }
+                }
+            }
+            
+            query["query"]["filtered"]["filter"]["or"]["filters"] = filters;
+
+            return query;
+        }
+    }
+
+    export class DateRangeQueryBuilder implements Query {
         static DateRange = "created_at";
 
         constructor(public field: string, public range: IDateRange) {
@@ -53,19 +98,36 @@ module gogeo {
             var fieldRestriction = query.query.range[this.field] = {};
             var range = this.range;
 
-            console.log("date range", this.format(range.start), this.format(range.end));
-
-            if (range.start)
+            if (range.start) {
                 fieldRestriction["gte"] = this.format(range.start);
+            }
 
-            if (range.end)
+            if (range.end) {
                 fieldRestriction["lte"] = this.format(range.end);
+            }
 
             return query;
         }
 
         format(date: Date) {
             return moment(date).format("YYYY-MM-DD");
+        }
+    }
+
+    export class SourceTermQuery implements Query {
+
+        constructor(public term: string) {
+
+        }
+
+        build() {
+            return {
+                query: {
+                    term: {
+                        source: this.term
+                    }
+                }
+            }
         }
     }
 
@@ -167,7 +229,12 @@ module gogeo {
 
         initialize() {
             Rx.Observable
-                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._somethingTermsObservable, this._placeObservable, this._dateRange)
+                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable)
+                .throttle(400)
+                .subscribe(() => this.search());
+
+            Rx.Observable
+                .merge<any>(this._somethingTermsObservable, this._placeObservable, this._dateRange)
                 .throttle(800)
                 .subscribe(() => this.search());
         }
@@ -243,14 +310,18 @@ module gogeo {
             }
         }
 
-        getTweet(latlng: L.LatLng, zoom: number) {
-            return this.getTweetData(latlng, zoom);
+        getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
+            return this.getTweetData(latlng, zoom, thematicQuery);
         }
 
-        private getTweetData(latlng: L.LatLng, zoom: number) {
+        private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
             var url = Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
-            var query = this.composeQuery().requestData;
+            var query = this.composeQuery().requestData.q;
+
+            if (thematicQuery) {
+                query = thematicQuery.build();
+            }
 
             var data:any = {
                 geom: {
@@ -304,7 +375,7 @@ module gogeo {
                     "lang",
                     "timestamp_ms"
                 ],
-                q: angular.toJson(query.q) // Essa query e passada como string mesmo
+                q: angular.toJson(query) // Essa query e passada como string mesmo
             };
 
             return this.$http.post<ITweet>(url, data);
@@ -414,7 +485,7 @@ module gogeo {
             var filter:any = this.requestData.q.query.filtered.filter;
 
             if (hashtag) {
-                this.requestData["field"] = "place.full_name";
+                this.requestData["field"] = "place.full_name.raw";
                 this.requestData["agg_size"] = 5;
 
                 var and = this.getOrCreateAndRestriction(filter);

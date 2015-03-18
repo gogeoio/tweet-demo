@@ -3,6 +3,7 @@
 
 module gogeo {
 
+
     export var settings;
 
     export class Configuration {
@@ -20,8 +21,7 @@ module gogeo {
         }
     }
 
-
-    var mod = angular.module("gogeo", ["ngRoute", "angularytics"])
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify"])
         .config([
             "$routeProvider",
             "AngularyticsProvider",

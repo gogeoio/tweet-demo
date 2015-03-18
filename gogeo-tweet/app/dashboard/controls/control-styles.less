@@ -46,6 +46,7 @@ a {
   }
 
   .dashboard-right-panel {
+    overflow-y: auto;
     display: block;
     position: relative;
     float: right;
@@ -95,6 +96,71 @@ a {
 
   .nav {
     margin-bottom: 8px;
+  }
+
+  .nav-tabs {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+  }
+
+  .nav-tabs li {
+    float: right;
+  }
+
+  .nav-tabs li.active a {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1CB4DB;
+    line-height: 20px;
+    border-top: none;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    margin-right: 0px;
+  }
+
+  .nav-tabs li.active a:hover {
+    padding-top: 10px;
+    padding-bottom: 16px;
+  }
+
+  .nav-tabs li a {
+    font-weight: 400;
+    font-size: 14px;
+    color: #D7D7D7;
+    line-height: 20px;
+    border-radius: 0px;
+  }
+
+  .nav-tabs li a:hover {
+    padding-top: 10px;
+    padding-bottom: 14px;
+    margin-top: 0px;
+    border-bottom: none;
+  }
+
+  .nav-tabs.search-filter {
+    background-color: #1cb4db;
+  }
+  .nav-tabs.search-filter .filter {
+    float: left;
+    width: 55.8069%;
+    /*margin: 0px;*/
+    margin-right: 0px;
+  }
+  .nav-tabs.search-filter .filter a {
+    width: 100%;
+    color: #fcfcfc;
+    font-weight: 600;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .nav-tabs.search-filter .filter a button {
+    margin-top: -2px;
+  }
+  .nav-tabs.search-filter .filter a:hover {
+    background-color: #106a81;
+    border-color: #106a81;
   }
 
   .hashtag-active {
@@ -154,6 +220,7 @@ a {
   .dashboard-map-container {
     width: 100%;
     height: 100%;
+    cursor: crosshair;
 
     .map(@zindex) {
       position: absolute;
@@ -265,8 +332,8 @@ a {
 
 .map-control {
   display: block;
-  top: 11px;
-  left: 25px;
+  top: 13px;
+  left: 30px;
   position: absolute;
   z-index: 7;
 }
@@ -352,4 +419,77 @@ a {
   input {
     height: 45px !important;
   }
+}
+
+.thematic-legend ul {
+  background-color: transparent;
+}
+
+.thematic-legend ul li {
+  cursor: pointer;
+  margin: 0 3px;
+}
+
+.thematic-legend ul li.android {
+  background-color: white;
+  color: #F84F40;
+}
+
+.thematic-legend ul li.android.disabled {
+  background-color: #F84F40;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.iphone {
+  background-color: white;
+  color: #5CA2D1;
+}
+
+.thematic-legend ul li.iphone.disabled {
+  background-color: #5CA2D1;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.foursquare {
+  background-color: white;
+  color: #229A00;
+}
+
+.thematic-legend ul li.foursquare.disabled {
+  background-color: #229A00;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.web {
+  background-color: white;
+  color: #A53ED5;
+}
+
+.thematic-legend ul li.web.disabled {
+  background-color: #A53ED5;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.instagram {
+  background-color: white;
+  color: #FFB61E;
+}
+
+.thematic-legend ul li.instagram.disabled {
+  background-color: #FFB61E;
+  color: #EEEEEE;
+}
+
+.thematic-legend ul li.others {
+  background-color: white;
+  color: #0036B3;
+}
+
+.thematic-legend ul li.others.disabled {
+  background-color: #0036B3;
+  color: #EEEEEE;
+}
+
+.hashtag-marker-button {
+  padding-top: 5px !important;
 }

@@ -28,6 +28,11 @@ module gogeo {
                 this.selectedHashtag.doc_count = result.doc_total;
             }
         }
+
+        unselect() {
+            this.selectedHashtag = null;
+            this.service.updateHashtagBucket(null);
+        }
     }
 
     registerDirective("dashboardDetails", () => {

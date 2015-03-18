@@ -13,6 +13,8 @@ module gogeo {
         static $inject = [
             "$scope",
             "$rootScope",
+            "linkify",
+            "$sce",
             DashboardService.$named
         ];
 
@@ -21,16 +23,27 @@ module gogeo {
         popup: L.Popup;
         query: any = { query: { filtered: { filter: { } } } };
         selected: string = "inactive";
-        mapSelected: string = "point";
+        mapSelected: string = "thematic"; // cluster, point, intensity or thematic
         drawing: boolean = false;
         layerGroup: L.LayerGroup<L.ILayer> = null;
         drawnItems: L.FeatureGroup<L.ILayer> = null;
         drawnGeom: IGeomSpace = null;
         restricted: boolean = false;
         canOpenPopup: boolean = true;
+        thematicMaps: any = {};
+        queries: any = {
+            android: '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
+            iphone: '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>',
+            web: '<a href="http://twitter.com" rel="nofollow">Twitter Web Client</a>',
+            instagram: '<a href="http://instagram.com" rel="nofollow">Instagram</a>',
+            foursquare: '<a href="http://foursquare.com" rel="nofollow">Foursquare</a>',
+            others: ''
+        }
 
         constructor(private $scope:ng.IScope,
                     private $rootScope:ng.IScope,
+                    private linkify: any,
+                    private $sce: ng.ISCEService,
                     private service:DashboardService) {
             this.layerGroup = L.layerGroup([]);
         }
@@ -38,7 +51,11 @@ module gogeo {
         initialize(map: L.Map) {
             this.map = map;
 
-            this.map.addLayer(new L.Google('ROADMAP'));
+            this.map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
+              attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+            }));
+
+            // this.map.addLayer(new L.Google('ROADMAP'));
             this.map.on("moveend", (e) => this.onMapLoaded());
             this.map.on("click", (e) => this.openPopup(e));
             this.map.on("draw:created", (e) => this.drawnHandler(e));
@@ -59,11 +76,12 @@ module gogeo {
         }
 
         initializeLayer() {
-            this.map.setView(new L.LatLng(34.717232, -92.353034), 5);
             this.map.addLayer(this.layerGroup);
 
-            var layer = this.createLayer();
-            this.layerGroup.addLayer(layer);
+            var layers = this.createLayers();
+            for (var i in layers) {
+                this.layerGroup.addLayer(layers[i]);
+            }
 
             this.service.queryObservable
                 .where(q => q != null)
@@ -142,15 +160,16 @@ module gogeo {
             }
         }
 
-        private createLayer(): L.ILayer {
+        private createLayers(): Array<L.ILayer> {
             var url = this.configureUrl();
+            var options = { subdomains: ["m1", "m2", "m3", "m4"] };
 
-            if (["point", "thematic", "intensity"].indexOf(this.mapSelected) != (-1)) {
-                return L.tileLayer(url, {
-                    subdomains: ["m1", "m2", "m3", "m4"]
-                });
+            if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
+                return [L.tileLayer(url, options)];
+            } else if (this.mapSelected === "thematic") {
+                return this.createThematicLayers(url, options);
             } else if (this.mapSelected === 'cluster') {
-                return this.createClusterLayer(url);
+                return [this.createClusterLayer(url)];
             }
         }
 
@@ -166,7 +185,7 @@ module gogeo {
             }
 
             if (this.mapSelected === "thematic") {
-                stylename = "gogeo_heatmap";
+                stylename = "android_1";
             }
 
             if (this.mapSelected === "intensity") {
@@ -180,7 +199,7 @@ module gogeo {
                 "&stylename=" + stylename + "&mapkey=123";
 
             if (this.query) {
-                url = `${url}&q=${angular.toJson(this.query)}`;
+                url = `${url}&q=${encodeURIComponent(angular.toJson(this.query))}`;
             }
 
             if (this.drawnGeom) {
@@ -188,6 +207,97 @@ module gogeo {
             }
 
             return Configuration.makeUrl(url);
+        }
+
+        private createThematicLayers(url: string, options: any) {
+            var array = [];
+            var layer = null;
+
+            url = this.configureThematicUrl("iphone", "iphone_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["iphone"] = layer;
+            array.push(layer);
+
+            url = this.configureThematicUrl("android", "android_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["android"] = layer;
+            array.push(layer);
+
+            url = this.configureThematicUrl("others", "others_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["others"] = layer;
+            array.push(layer);
+
+            url = this.configureThematicUrl("web", "web_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["web"] = layer;
+            array.push(layer);
+
+            url = this.configureThematicUrl("instagram", "instagram_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["instagram"] = layer;
+            array.push(layer);
+
+            url = this.configureThematicUrl("foursquare", "foursquare_1");
+            layer = L.tileLayer(url, options);
+            this.thematicMaps["foursquare"] = layer;
+            array.push(layer);
+
+            return array;
+        }
+
+        private configureThematicUrl(term: string, stylename: string): string {
+            var originalQuery = this.query;
+
+            if (term === 'others') {
+                var thematicQuery = this.createThematicOthersQuery(this.query);
+                this.query = thematicQuery.build();
+            } else {
+                var sourceTermQuery = new SourceTermQuery(this.queries[term]);
+                var thematicQuery = new ThematicQuery([sourceTermQuery], this.query);
+                this.query = thematicQuery.build();
+            };
+
+            var url = this.configureUrl();
+            url = url.replace("android_1", stylename);
+
+            this.query = originalQuery;
+
+            return url;
+        }
+
+        private createThematicOthersQuery(query?: TextQueryBuilder): ThematicQuery {
+            var q1 = new TextQueryBuilder("source", "*ipad*");
+            var q2 = new TextQueryBuilder("source", "*windows*");
+            var q3 = new TextQueryBuilder("source", "*jobs*");
+            var q4 = new TextQueryBuilder("source", "*mac*");
+
+            var tq = null;
+
+            if (query) {
+                tq = new ThematicQuery([ q1, q2, q3, q4 ], query);
+            } else {
+                tq = new ThematicQuery([ q1, q2, q3, q4 ]);
+            }
+
+            return tq;
+        }
+
+        formatTweetText(text: string) {
+            return this.$sce.trustAsHtml(this.linkify.twitter(text));
+        }
+
+        formatDate(dateString: string) {
+            var date = new Date(dateString);
+            return moment(date).utc().format("LLLL");
+        }
+
+        toggle(layer: L.ILayer) {
+            if (this.layerGroup.hasLayer(layer)) {
+                this.layerGroup.removeLayer(layer);
+            } else {
+                this.layerGroup.addLayer(layer);
+            }
         }
 
         onMapLoaded(geom?: IGeomSpace) {
@@ -246,8 +356,33 @@ module gogeo {
                 intersects = bounds.contains(point);
             }
 
-            if (this.mapSelected === "point" && intersects) {
-                this.service.getTweet(levent.latlng, zoom)
+            if ((this.mapSelected === "point" || this.mapSelected === "thematic" ) && intersects) {
+                var queries = [];
+
+                for (var index in this.thematicMaps) {
+                    var thematicLayer = this.thematicMaps[index];
+
+                    if (this.layerGroup.hasLayer(thematicLayer)) {
+                        var query = null;
+
+                        if (index === 'others') {
+                            query = this.createThematicOthersQuery().build();
+
+                            // var q1 = new TextQueryBuilder("source", "*ipad*");
+                            // var q2 = new TextQueryBuilder("source", "*windows*");
+                            // var q3 = new TextQueryBuilder("source", "*jobs*");
+                            // var q4 = new TextQueryBuilder("source", "*mac*");
+                            // query = new ThematicQuery([ q1, q2, q3, q4 ]).build();
+                        } else {
+                            query = new SourceTermQuery(this.queries[index]);
+                        }
+
+                        queries.push(query);
+                    }
+                }
+
+                var thematicQuery = new ThematicQuery(queries, this.query);
+                this.service.getTweet(levent.latlng, zoom, thematicQuery)
                     .success(result => this.handlePopupResult(result, levent));
             }
         }
@@ -263,7 +398,7 @@ module gogeo {
                 var options = {
                     closeButton: false,
                     className: "marker-popup",
-                    offset: new L.Point(-195, -265)
+                    offset: new L.Point(-200, -272)
                 };
                 this.popup = L.popup(options);
                 this.popup.setContent($("#tweet-popup")[0]);
@@ -284,8 +419,11 @@ module gogeo {
 
         private updateLayer() {
             this.layerGroup.clearLayers();
-            var layer = this.createLayer();
-            this.layerGroup.addLayer(layer);
+            var layers = this.createLayers();
+
+            for (var i in layers) {
+                this.layerGroup.addLayer(layers[i]);
+            }
         }
 
         private createClusterLayer(url): L.ILayer {
@@ -316,8 +454,8 @@ module gogeo {
                         attributionControl: false,
                         minZoom: 4,
                         maxZoom: 18,
-                        center: new L.LatLng(51.51, -0.11),
-                        zoom: 12
+                        center: new L.LatLng(34.717232, -92.353034),
+                        zoom: 6
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];

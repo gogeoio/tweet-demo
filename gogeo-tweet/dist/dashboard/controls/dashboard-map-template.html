@@ -33,7 +33,7 @@
               <!-- <label>Favs</label> -->
               <span>
                 <strong>
-                  {{ map.tweetResult["created_at"] | date: 'medium' }}
+                  {{ map.formatDate(map.tweetResult["created_at"]) }}
                 </strong>
               </span>
             </div>
@@ -47,7 +47,8 @@
             Message
           </a>
         </label>
-        <p>{{ map.tweetResult["text"] }}</p>
+        <p ng-bind-html="map.formatTweetText(map.tweetResult['text'])">
+        </p>
       </div>
     </div>
   </div>
@@ -62,11 +63,11 @@
       <li id="point" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'point' ? 'active' : 'inactive' }}">
         POINT
       </li>
-      <!-- <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
-        THEMATIC
-      </li> -->
       <li id="intensity" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
         INTENSITY
+      </li>
+      <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
+        THEMATIC
       </li>
     </ul>
 
@@ -75,4 +76,14 @@
       </li>
     </ul>
   </div>
+</div>
+
+<div class="thematic-legend" ng-show="map.mapSelected === 'thematic'" style="display: block; float: right; left: 10px; bottom: 10px; position: absolute; color: white; z-index: 10;">
+  <ul class="list-inline">
+    <li class="{{ id }} {{ map.layerGroup.hasLayer(layer) ? 'disabled' : '' }}" ng-repeat="(id, layer) in map.thematicMaps" ng-click="map.toggle(layer, id)">
+      <strong>
+        {{ id }}
+      </strong>
+    </li>
+  </ul>
 </div>

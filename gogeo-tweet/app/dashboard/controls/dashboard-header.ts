@@ -48,11 +48,13 @@ module gogeo {
                     var startDate: Date = null;
                     var endDate: Date = null;
 
-                    if (this.startDate)
+                    if (this.startDate) {
                         startDate = new Date(Date.parse(this.startDate));
+                    }
 
-                    if (this.endDate)
+                    if (this.endDate) {
                         endDate = new Date(Date.parse(this.endDate));
+                    }
 
                     this.dashboardService.updateDateRange(startDate, endDate);
                 });

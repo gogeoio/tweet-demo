@@ -22,7 +22,14 @@ module gogeo {
             private $scope: ng.IScope,
             private service: DashboardService) {
 
-            this.message = "Top 10 most used hashtags";
+            this.message = "Top 10 hashtags";
+
+            this.service.hashtagResultObservable
+                .subscribeAndApply(this.$scope, (result) => {
+                    if (result && result["buckets_qtd"] == 10) {
+                        this.message = "Top 10 hashtags";
+                    }
+                });
         }
 
         hasSelected() {
@@ -30,15 +37,9 @@ module gogeo {
         }
 
         selectHashtag(bucket: IBucket) {
-            this.message = "Top 5 where is most used";
+            this.message = "Top 5 places for this hashtag";
             this.selectedHashtag = bucket;
             this.service.updateHashtagBucket(bucket);
-        }
-
-        unselect() {
-            this.message = "Top 10 most used hashtags";
-            this.selectedHashtag = null;
-            this.service.updateHashtagBucket(null);
         }
     }
 
