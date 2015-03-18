@@ -1,6 +1,7 @@
 /// <reference path="../../shell.ts" />
 /// <reference path="../services/dashboard-events.ts" />
 /// <reference path="../services/dashboard-service.ts" />
+/// <reference path="../services/metrics.ts" />
 
 /**
  * Created by danfma on 07/03/15.
@@ -15,7 +16,8 @@ module gogeo {
             "$rootScope",
             "linkify",
             "$sce",
-            DashboardService.$named
+            DashboardService.$named,
+            MetricsService.$named
         ];
 
         map: L.Map;
@@ -31,6 +33,9 @@ module gogeo {
         restricted: boolean = false;
         canOpenPopup: boolean = true;
         thematicMaps: any = {};
+        thematicSelectedLayers: Array<string> = [
+            "android", "foursquare", "instagram", "iphone", "others", "web"
+        ];
         queries: any = {
             android: '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
             iphone: '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>',
@@ -40,12 +45,20 @@ module gogeo {
             others: ''
         }
 
-        constructor(private $scope:ng.IScope,
-                    private $rootScope:ng.IScope,
-                    private linkify: any,
-                    private $sce: ng.ISCEService,
-                    private service:DashboardService) {
+        _thematicLayers = new Rx.BehaviorSubject<Array<string>>(this.thematicSelectedLayers);
+        _selectedMap = new Rx.BehaviorSubject<string>(null);
+
+        constructor(private $scope:     ng.IScope,
+                    private $rootScope: ng.IScope,
+                    private linkify:    any,
+                    private $sce:       ng.ISCEService,
+                    private service:    DashboardService,
+                    private metrics:    MetricsService) {
             this.layerGroup = L.layerGroup([]);
+        }
+
+        get thematicLayers():Rx.BehaviorSubject<Array<string>> {
+            return this._thematicLayers;
         }
 
         initialize(map: L.Map) {
@@ -73,6 +86,20 @@ module gogeo {
 
             this.service.geomSpaceObservable
                 .subscribeAndApply(this.$scope, geom => this.handleGeom(geom));
+
+            Rx.Observable
+                .merge<any>(this._thematicLayers)
+                .throttle(800)
+                .subscribe(() => {
+                    this.metrics.publishThematicMetric(this.thematicSelectedLayers);
+                });
+
+            Rx.Observable
+                .merge<any>(this._selectedMap)
+                .throttle(800)
+                .subscribe(() => {
+                    this.metrics.publishMapTypeMetric(this.mapSelected);
+                });
         }
 
         initializeLayer() {
@@ -149,7 +176,7 @@ module gogeo {
                 this.restricted = false;
                 var geojson = layer.toGeoJSON();
                 this.drawnItems.addLayer(layer);
-                this.onMapLoaded(geojson["geometry"]);
+                this.onMapLoaded(this.getDrawGeomSpace(geojson["geometry"]));
 
                 layer.on("click", (e) => this.openPopup(e))
             } else {
@@ -157,6 +184,14 @@ module gogeo {
                 this.drawnGeom = null;
                 this.updateLayer();
                 this.onMapLoaded();
+            }
+        }
+
+        private getDrawGeomSpace(geojson: any): IGeomSpace {
+            return {
+                source: "draw",
+                type: geojson["type"],
+                coordinates: geojson["coordinates"]
             }
         }
 
@@ -292,12 +327,18 @@ module gogeo {
             return moment(date).utc().format("LLLL");
         }
 
-        toggle(layer: L.ILayer) {
+        toggleThematicMap(id: string, layer: L.ILayer) {
             if (this.layerGroup.hasLayer(layer)) {
                 this.layerGroup.removeLayer(layer);
+
+                this.thematicSelectedLayers.splice(this.thematicSelectedLayers.indexOf(id), 1);
             } else {
                 this.layerGroup.addLayer(layer);
+
+                this.thematicSelectedLayers.splice(0, 0, id);
             }
+
+            this._thematicLayers.onNext(this.thematicSelectedLayers);
         }
 
         onMapLoaded(geom?: IGeomSpace) {
@@ -367,12 +408,6 @@ module gogeo {
 
                         if (index === 'others') {
                             query = this.createThematicOthersQuery().build();
-
-                            // var q1 = new TextQueryBuilder("source", "*ipad*");
-                            // var q2 = new TextQueryBuilder("source", "*windows*");
-                            // var q3 = new TextQueryBuilder("source", "*jobs*");
-                            // var q4 = new TextQueryBuilder("source", "*mac*");
-                            // query = new ThematicQuery([ q1, q2, q3, q4 ]).build();
                         } else {
                             query = new SourceTermQuery(this.queries[index]);
                         }
@@ -409,11 +444,11 @@ module gogeo {
 
             this.popup.setLatLng(levent.latlng);
             this.map.openPopup(this.popup);
-                    
         }
 
         changeMapType(element: any) {
             this.mapSelected = element.target.id;
+            this._selectedMap.onNext(this.mapSelected);
             this.updateLayer();
         }
 

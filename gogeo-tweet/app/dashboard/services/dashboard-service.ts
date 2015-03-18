@@ -1,4 +1,7 @@
-/// <reference path="../../shell.ts" />
+///<reference path="../../shell.ts" />
+///<reference path="../../shared/controls/queries.ts"/>
+///<reference path="../../shared/controls/dashboard-query.ts"/>
+///<reference path="./metrics.ts"/>
 
 /**
  * Created by danfma on 07/03/15.
@@ -6,178 +9,11 @@
 
 module gogeo {
 
-    export interface Query {
-        build(): any;
-    }
-
-    export class NeSwPoint {
-        constructor(public ne:L.LatLng, public sw:L.LatLng) {
-
-        }
-    }
-
-    export class TextQueryBuilder implements Query {
-        static HashtagText = "entities.hashtags.text";
-        static UserScreenName = "user.screen_name";
-        static Text = "text";
-        static Place = "place.country";
-
-        constructor(public field: string, public term: string) {
-        }
-
-        build() {
-            return {
-                query: {
-                    query_string: {
-                        query: this.term,
-                        fields: [
-                            this.field
-                        ]
-                    }
-                }
-            };
-        }
-    }
-
-    export class ThematicQuery implements Query {
-        constructor(public queries: Array<Query>, public prevQuery?: TextQueryBuilder) {
-        }
-
-        build() {
-            var query = {
-                query: {
-                    filtered: {
-                        filter: {
-                            or: {
-                                // filters: []
-                            }
-                        }
-                    }
-                }
-            };
-
-            var filters = [];
-
-            if (this.prevQuery) {
-                query["query"]["filtered"]["query"] = this.prevQuery["query"];
-            }
-
-            for (var index in this.queries) {
-                var stq = this.queries[index];
-
-                if (stq instanceof SourceTermQuery || stq instanceof TextQueryBuilder) {
-                    filters.push(stq.build());
-                } else if (stq["query"]["filtered"]["filter"]["or"]["filters"]) {
-                    var subFilters = stq["query"]["filtered"]["filter"]["or"]["filters"];
-                    for (var k in subFilters) {
-                        filters.push(subFilters[k]);
-                    }
-                }
-            }
-            
-            query["query"]["filtered"]["filter"]["or"]["filters"] = filters;
-
-            return query;
-        }
-    }
-
-    export class DateRangeQueryBuilder implements Query {
-        static DateRange = "created_at";
-
-        constructor(public field: string, public range: IDateRange) {
-
-        }
-
-        build() {
-            var query = {
-                query: {
-                    range : {}
-                }
-            };
-
-            var fieldRestriction = query.query.range[this.field] = {};
-            var range = this.range;
-
-            if (range.start) {
-                fieldRestriction["gte"] = this.format(range.start);
-            }
-
-            if (range.end) {
-                fieldRestriction["lte"] = this.format(range.end);
-            }
-
-            return query;
-        }
-
-        format(date: Date) {
-            return moment(date).format("YYYY-MM-DD");
-        }
-    }
-
-    export class SourceTermQuery implements Query {
-
-        constructor(public term: string) {
-
-        }
-
-        build() {
-            return {
-                query: {
-                    term: {
-                        source: this.term
-                    }
-                }
-            }
-        }
-    }
-
-    export interface IGeomSpace {
-        type: string;
-        coordinates: Array<Array<Array<number>>>;
-    }
-
-    export interface IBucket {
-        key: string;
-        doc_count: number;
-    }
-
-    export interface IHashtagResult {
-        doc_total: number;
-        buckets: Array<IBucket>;
-    }
-
-    export interface ITweet {
-        created_at: string;
-        id: string;
-        text: string;
-        source: string;
-        truncated: boolean;
-        in_reply_to_status_id: number;
-        in_reply_to_user_id: number;
-        in_reply_to_screen_name: string;
-        retweet_count: number;
-        favorite_count: number;
-        favorited: boolean;
-        retweeted: boolean;
-        lang: string;
-        timestamp_ms: number;
-        "user.name": string;
-        "user.screen_name": string;
-        "user.profile_image_url": string;
-    }
-
-    export interface IDateRange {
-        start: Date;
-        end: Date;
-    }
-
     export class DashboardService {
         static $named = "dashboardService";
         static $inject = [
             "$q",
-            "$http",
-            "$location",
-            "Angularytics"
+            "$http"
         ];
 
         private _lastGeomSpace:IGeomSpace = null;
@@ -192,19 +28,14 @@ module gogeo {
         _somethingTermsObservable = new Rx.BehaviorSubject<string[]>([]);
         _placeObservable = new Rx.BehaviorSubject<string>(null);
         _hashtagResultObservable = new Rx.BehaviorSubject<IHashtagResult>(null);
-        _dateRange = new Rx.BehaviorSubject<IDateRange>(null);
+        _dateRangeObsersable = new Rx.BehaviorSubject<IDateRange>(null);
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
+        _tweetObservable = new Rx.BehaviorSubject<ITweet>(null);
 
         constructor(private $q:ng.IQService,
-                    private $http:ng.IHttpService,
-                    private $location: ng.ILocationService,
-                    private angularytics: angularytics.Angularytics) {
+                    private $http:ng.IHttpService) {
 
             this.initialize();
-
-            if (this.$location.host().match("gogeo.io")) {
-                this.angularytics.trackPageView("/");
-            }
         }
 
         get loading(): boolean {
@@ -223,18 +54,38 @@ module gogeo {
             return this._hashtagResultObservable;
         }
 
+        get hashtagFilterObservable():Rx.Observable<IBucket> {
+            return this._hashtagFilterObservable;
+        }
+
         get queryObservable():Rx.Observable<any> {
             return this._lastQueryObservable;
         }
 
+        get dateRangeObsersable():Rx.Observable<IDateRange> {
+            return this._dateRangeObsersable;
+        }
+
+        get somethingTermsObservable():Rx.BehaviorSubject<string[]> {
+            return this._somethingTermsObservable;
+        }
+
+        get placeObservable():Rx.BehaviorSubject<string> {
+            return this._placeObservable;
+        }
+
+        get tweetObservable():Rx.BehaviorSubject<ITweet> {
+            return this._tweetObservable;
+        }
+
         initialize() {
             Rx.Observable
-                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable)
+                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObsersable)
                 .throttle(400)
                 .subscribe(() => this.search());
 
             Rx.Observable
-                .merge<any>(this._somethingTermsObservable, this._placeObservable, this._dateRange)
+                .merge<any>(this._somethingTermsObservable, this._placeObservable)
                 .throttle(800)
                 .subscribe(() => this.search());
         }
@@ -246,7 +97,7 @@ module gogeo {
             return new NeSwPoint(ne, sw);
         }
 
-        private pointToGeoJson(point: NeSwPoint):IGeomSpace {
+        private pointToGeoJson(point: NeSwPoint): IGeomSpace {
             var ne = [point.ne.lat, point.ne.lng];
             var sw = [point.sw.lat, point.sw.lng];
 
@@ -260,6 +111,7 @@ module gogeo {
             ];
 
             return {
+                source: "mapBounds",
                 type: "Polygon",
                 coordinates: coordinates
             }
@@ -274,7 +126,10 @@ module gogeo {
         updateGeomSpaceByBounds(bounds: L.LatLngBounds) {
             var point = this.calculateNeSW(bounds);
             var geomSpace = this.pointToGeoJson(point);
-            this.updateGeomSpace(geomSpace);
+
+            if (geomSpace) {
+                this.updateGeomSpace(geomSpace);
+            }
         }
 
         updateHashtagBucket(bucket: IBucket) {
@@ -297,17 +152,12 @@ module gogeo {
         updateDateRange(startDate: Date, endDate: Date) {
             var dateRange: IDateRange = null;
 
-            if (startDate || endDate)
+            if (startDate || endDate) {
                 dateRange = { start: startDate, end: endDate };
+            }
 
             this._lastDateRange = dateRange;
-            this._dateRange.onNext(dateRange);
-        }
-
-        publishMetrics(action: string, category: string, label: string) {
-            if (this.$location.host().match("gogeo.io")) {
-                this.angularytics.trackEvent(action, category, label);
-            }
+            this._dateRangeObsersable.onNext(dateRange);
         }
 
         getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
@@ -378,7 +228,11 @@ module gogeo {
                 q: angular.toJson(query) // Essa query e passada como string mesmo
             };
 
-            return this.$http.post<ITweet>(url, data);
+            var tweet = this.$http.post<ITweet>(url, data);
+            tweet.then((result) => {
+                this._tweetObservable.onNext(result.data);
+            });
+            return tweet;
         }
 
         search() {
@@ -400,12 +254,10 @@ module gogeo {
             var query = new DashboardQuery(this.$http, this._lastGeomSpace);
 
             if (this._lastHashtagFilter) {
-                this.publishMetrics("click", "hashtags", this._lastHashtagFilter.key);
                 query.filterByHashtag(this._lastHashtagFilter);
             }
 
             if (this._lastSomethingTerms.length > 0) {
-                //this.publishMetrics("search", "search", this._lastSearchTerm);
                 query.filterBySearchTerms(this._lastSomethingTerms);
             }
 
@@ -420,122 +272,6 @@ module gogeo {
             return query;
         }
     }
-
-    class DashboardQuery {
-        requestData: any = {};
-
-        constructor(private $http: ng.IHttpService, geomSpace: IGeomSpace) {
-            this.requestData = {
-                agg_size: 10,
-                field: "entities.hashtags.text",
-                geom: geomSpace,
-                q: {
-                    query: {
-                        filtered: {
-                            filter: {}
-                        }
-                    }
-                }
-            };
-        }
-
-        getOrCreateAndRestriction(filter:any) {
-            var and = filter["and"];
-
-            if (!and) {
-                and = filter.and = {
-                    filters: []
-                };
-            }
-
-            return and;
-        }
-
-        filterBySearchTerms(terms: string[]) {
-            for (var i = 0; i < terms.length; i++) {
-                this.filterBySearchTerm(terms[i]);
-            }
-        }
-
-        filterBySearchTerm(term: string) {
-            Enumerable.from(term.split(' '))
-                .select(entry => entry.trim())
-                .where(entry => entry != null && entry.length > 0)
-                .forEach(entry => {
-                    switch (entry.charAt(0)) {
-                        case "@":
-                            this.filterByUsername(entry.substring(1));
-                            break;
-
-                        case "#":
-                            this.filterByHashtag({
-                                key: entry.substring(1),
-                                doc_count: 0
-                            });
-                            break;
-
-                        default:
-                            this.filterByText(term);
-                            break;
-                    }
-                });
-        }
-
-        filterByHashtag(hashtag: IBucket) {
-            var filter:any = this.requestData.q.query.filtered.filter;
-
-            if (hashtag) {
-                this.requestData["field"] = "place.full_name.raw";
-                this.requestData["agg_size"] = 5;
-
-                var and = this.getOrCreateAndRestriction(filter);
-                var queryString = new TextQueryBuilder(TextQueryBuilder.HashtagText, hashtag.key);
-
-                and.filters.push(queryString.build());
-            }
-        }
-
-        filterByUsername(username: string) {
-            var filter:any = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.UserScreenName, username + "*");
-
-            and.filters.push(queryString.build());
-        }
-
-        filterByText(text: string) {
-            var filter:any = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.Text, text);
-
-            and.filters.push(queryString.build());
-        }
-
-        filterByPlace(text: string) {
-            var filter:any = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new TextQueryBuilder(TextQueryBuilder.Place, text + "*");
-
-            and.filters.push(queryString.build());
-        }
-
-        filterByDateRange(range: IDateRange) {
-            var filter:any = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new DateRangeQueryBuilder(DateRangeQueryBuilder.DateRange, range);
-
-            and.filters.push(queryString.build());
-        }
-
-        execute(resultHandler:(IHashtagResult) => void) {
-            var url = Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
-
-            return this.$http
-                .post(url, this.requestData)
-                .success(resultHandler);
-        }
-    }
-
 
     registerService(DashboardService);
 

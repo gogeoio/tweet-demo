@@ -11,8 +11,8 @@ module gogeo {
             DashboardService.$named
         ];
 
-        somethingTerm:string;
-        place:string;
+        somethingTerm: string;
+        place: string;
         startDate: string;
         endDate: string;
 
@@ -27,7 +27,7 @@ module gogeo {
 
             this.watchAsObservable<string>("somethingTerm")
                 .skip(1)
-                .throttle(400)
+                .throttle(800)
                 .select(term => {
                     return Enumerable
                         .from(term.split(" "))
@@ -38,7 +38,7 @@ module gogeo {
 
             this.watchAsObservable<string>("place")
                 .skip(1)
-                .throttle(400)
+                .throttle(800)
                 .subscribe(place => this.dashboardService.updatePlace(place));
 
             Rx.Observable.merge(this.watchAsObservable<string>("startDate"), this.watchAsObservable<string>("endDate"))
