@@ -13,9 +13,9 @@ module gogeo {
     class DashboardMapController {
         static $inject = [
             "$scope",
-            "$rootScope",
             "linkify",
             "$sce",
+            "$geolocation",
             DashboardService.$named,
             MetricsService.$named
         ];
@@ -51,9 +51,9 @@ module gogeo {
         _selectedMap = new Rx.BehaviorSubject<string>(null);
 
         constructor(private $scope:     ng.IScope,
-                    private $rootScope: ng.IScope,
                     private linkify:    any,
                     private $sce:       ng.ISCEService,
+                    private $geo:       any,
                     private service:    DashboardService,
                     private metrics:    MetricsService) {
             this.layerGroup = L.layerGroup([]);
@@ -101,6 +101,8 @@ module gogeo {
                 .subscribe(() => {
                     this.metrics.publishMapTypeMetric(this.mapSelected);
                 });
+
+            this.setGeoLocation();
         }
 
         initializeLayer() {
@@ -115,6 +117,14 @@ module gogeo {
                 .where(q => q != null)
                 .throttle(400)
                 .subscribeAndApply(this.$scope, (query) => this.queryHandler(query));
+        }
+
+        private setGeoLocation() {
+            this.$geo.getCurrentPosition().then((location) => {
+                var coords = location.coords;
+                var center = new L.LatLng(coords.latitude, coords.longitude);
+                this.map.setView(center, 15);
+            });
         }
 
         private getNightMap() {
@@ -564,8 +574,8 @@ module gogeo {
                         attributionControl: false,
                         minZoom: 4,
                         maxZoom: 18,
-                        center: new L.LatLng(34.717232, -92.353034),
-                        zoom: 6
+                        center: new L.LatLng(40.773289, -73.960455),
+                        zoom: 13
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];

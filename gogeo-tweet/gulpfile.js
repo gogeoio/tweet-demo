@@ -105,6 +105,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("numeral/min/languages.min.js"),
         fromBower("angular-linkify/angular-linkify.min.js"),
         fromBower("momentjs/min/moment-with-locales.min.js"),
+        fromBower("ngGeolocation/ngGeolocation.min.js"),
         "app/shared/support/rx-angular.js",
         "./lib/js/leaflet.tilecluster.js",
         "./config/" + environment + ".js"

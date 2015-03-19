@@ -24,7 +24,7 @@ var gogeo;
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
-    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"]).config([
         "$routeProvider",
         "AngularyticsProvider",
         function ($routeProvider, angularyticsProvider) {
@@ -1009,11 +1009,11 @@ var gogeo;
 var gogeo;
 (function (gogeo) {
     var DashboardMapController = (function () {
-        function DashboardMapController($scope, $rootScope, linkify, $sce, service, metrics) {
+        function DashboardMapController($scope, linkify, $sce, $geo, service, metrics) {
             this.$scope = $scope;
-            this.$rootScope = $rootScope;
             this.linkify = linkify;
             this.$sce = $sce;
+            this.$geo = $geo;
             this.service = service;
             this.metrics = metrics;
             this.query = { query: { filtered: { filter: {} } } };
@@ -1081,6 +1081,7 @@ var gogeo;
             Rx.Observable.merge(this._selectedMap).throttle(800).subscribe(function () {
                 _this.metrics.publishMapTypeMetric(_this.mapSelected);
             });
+            this.setGeoLocation();
         };
         DashboardMapController.prototype.initializeLayer = function () {
             var _this = this;
@@ -1090,6 +1091,14 @@ var gogeo;
                 this.layerGroup.addLayer(layers[i]);
             }
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
+        };
+        DashboardMapController.prototype.setGeoLocation = function () {
+            var _this = this;
+            this.$geo.getCurrentPosition().then(function (location) {
+                var coords = location.coords;
+                var center = new L.LatLng(coords.latitude, coords.longitude);
+                _this.map.setView(center, 15);
+            });
         };
         DashboardMapController.prototype.getNightMap = function () {
             var mapOptions = {
@@ -1447,9 +1456,9 @@ var gogeo;
         };
         DashboardMapController.$inject = [
             "$scope",
-            "$rootScope",
             "linkify",
             "$sce",
+            "$geolocation",
             gogeo.DashboardService.$named,
             gogeo.MetricsService.$named
         ];
@@ -1469,8 +1478,8 @@ var gogeo;
                         attributionControl: false,
                         minZoom: 4,
                         maxZoom: 18,
-                        center: new L.LatLng(34.717232, -92.353034),
-                        zoom: 6
+                        center: new L.LatLng(40.773289, -73.960455),
+                        zoom: 13
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
