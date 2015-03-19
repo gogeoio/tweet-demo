@@ -20,7 +20,7 @@ module gogeo {
         }
     }
 
-    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify"])
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"])
         .config([
             "$routeProvider",
             "AngularyticsProvider",
