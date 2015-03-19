@@ -27,7 +27,7 @@ var gogeo;
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
-    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation", "ngNumeraljs"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"]).config([
         "$routeProvider",
         "AngularyticsProvider",
         function ($routeProvider, angularyticsProvider) {
@@ -186,21 +186,118 @@ var gogeo;
     gogeo.WelcomeController = WelcomeController;
     gogeo.registerController(WelcomeController);
 })(gogeo || (gogeo = {}));
+var gogeo;
+(function (gogeo) {
+    var DashboardQuery = (function () {
+        function DashboardQuery($http, geomSpace) {
+            this.$http = $http;
+            this.requestData = {};
+            this.requestData = {
+                agg_size: 10,
+                field: "entities.hashtags.text",
+                geom: geomSpace,
+                q: {
+                    query: {
+                        filtered: {
+                            filter: {}
+                        }
+                    }
+                }
+            };
+        }
+        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
+            var and = filter["and"];
+            if (!and) {
+                and = filter.and = {
+                    filters: []
+                };
+            }
+            return and;
+        };
+        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
+            for (var i = 0; i < terms.length; i++) {
+                this.filterBySearchTerm(terms[i]);
+            }
+        };
+        DashboardQuery.prototype.filterBySearchTerm = function (term) {
+            var _this = this;
+            Enumerable.from(term.split(' ')).select(function (entry) { return entry.trim(); }).where(function (entry) { return entry != null && entry.length > 0; }).forEach(function (entry) {
+                switch (entry.charAt(0)) {
+                    case "@":
+                        _this.filterByUsername(entry.substring(1));
+                        break;
+                    case "#":
+                        _this.filterByHashtag({
+                            key: entry.substring(1),
+                            doc_count: 0
+                        });
+                        break;
+                    default:
+                        _this.filterByText(term);
+                        break;
+                }
+            });
+        };
+        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
+            var filter = this.requestData.q.query.filtered.filter;
+            if (hashtag) {
+                this.requestData["field"] = "place.full_name.raw";
+                this.requestData["agg_size"] = 5;
+                var and = this.getOrCreateAndRestriction(filter);
+                var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.HashtagText, hashtag.key);
+                and.filters.push(queryString.build());
+            }
+        };
+        DashboardQuery.prototype.filterByUsername = function (username) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.UserScreenName, username + "*");
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByText = function (text) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Text, text);
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByPlace = function (text) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text + "*");
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.filterByDateRange = function (range) {
+            var filter = this.requestData.q.query.filtered.filter;
+            var and = this.getOrCreateAndRestriction(filter);
+            var queryString = new gogeo.DateRangeQueryBuilder(gogeo.DateRangeQueryBuilder.DateRange, range);
+            and.filters.push(queryString.build());
+        };
+        DashboardQuery.prototype.execute = function (resultHandler) {
+            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+            return this.$http.post(url, this.requestData).success(resultHandler);
+        };
+        return DashboardQuery;
+    })();
+    gogeo.DashboardQuery = DashboardQuery;
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
 /**
- * Created by danfma on 07/03/15.
+ * Created by danfma on 06/03/15.
  */
 var gogeo;
 (function (gogeo) {
-    function prefix(eventName) {
-        return "gogeo:" + eventName;
-    }
-    var DashboardEvent = (function () {
-        function DashboardEvent() {
-        }
-        DashboardEvent.mapLoaded = prefix("dashboard:mapLoaded");
-        return DashboardEvent;
-    })();
-    gogeo.DashboardEvent = DashboardEvent;
+    gogeo.registerDirective("daterange", function () {
+        return {
+            restrict: "E",
+            template: "<div class=\"input-group daterange\">\n                    <input class=\"form-control\" type=\"text\" data-provide=\"datepicker\" data-date-clear-btn=\"true\" ng-model=\"startDate\"/>\n                    <span class=\"input-group-addon\">\n                        <i class=\"glyphicon glyphicon-calendar\"></i>\n                    </span>\n                    <input class=\"form-control\" type=\"text\" data-provide=\"datepicker\" data-date-clear-btn=\"true\" ng-model=\"endDate\"/>\n                 </div>",
+            scope: {
+                startDate: "=",
+                endDate: "="
+            },
+            link: function (scope, element, attrs) {
+            }
+        };
+    });
 })(gogeo || (gogeo = {}));
 ///<reference path="./interfaces.ts" />
 var gogeo;
@@ -319,99 +416,47 @@ var gogeo;
     })();
     gogeo.SourceTermQuery = SourceTermQuery;
 })(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/**
+ * Created by danfma on 05/03/15.
+ */
 var gogeo;
 (function (gogeo) {
-    var DashboardQuery = (function () {
-        function DashboardQuery($http, geomSpace) {
-            this.$http = $http;
-            this.requestData = {};
-            this.requestData = {
-                agg_size: 10,
-                field: "entities.hashtags.text",
-                geom: geomSpace,
-                q: {
-                    query: {
-                        filtered: {
-                            filter: {}
-                        }
-                    }
+    angular.module("gogeo").directive("welcomeMap", [
+        function () {
+            return {
+                restrict: "C",
+                // template: "<div></div>",
+                link: function (scope, element, attrs) {
+                    var rawElement = element[0];
+                    var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
+                    var initialPos = L.latLng(43.717232, -92.353034);
+                    var map = L.map("welcome-map").setView(initialPos, 5);
+                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
+                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+                    }));
+                    L.tileLayer(url).addTo(map);
+                    scope.$on("destroy", function () { return map.remove(); });
                 }
             };
         }
-        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
-            var and = filter["and"];
-            if (!and) {
-                and = filter.and = {
-                    filters: []
-                };
-            }
-            return and;
-        };
-        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
-            for (var i = 0; i < terms.length; i++) {
-                this.filterBySearchTerm(terms[i]);
-            }
-        };
-        DashboardQuery.prototype.filterBySearchTerm = function (term) {
-            var _this = this;
-            Enumerable.from(term.split(' ')).select(function (entry) { return entry.trim(); }).where(function (entry) { return entry != null && entry.length > 0; }).forEach(function (entry) {
-                switch (entry.charAt(0)) {
-                    case "@":
-                        _this.filterByUsername(entry.substring(1));
-                        break;
-                    case "#":
-                        _this.filterByHashtag({
-                            key: entry.substring(1),
-                            doc_count: 0
-                        });
-                        break;
-                    default:
-                        _this.filterByText(term);
-                        break;
-                }
-            });
-        };
-        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
-            var filter = this.requestData.q.query.filtered.filter;
-            if (hashtag) {
-                this.requestData["field"] = "place.full_name.raw";
-                this.requestData["agg_size"] = 5;
-                var and = this.getOrCreateAndRestriction(filter);
-                var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.HashtagText, hashtag.key);
-                and.filters.push(queryString.build());
-            }
-        };
-        DashboardQuery.prototype.filterByUsername = function (username) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.UserScreenName, username + "*");
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByText = function (text) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Text, text);
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByPlace = function (text) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text + "*");
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.filterByDateRange = function (range) {
-            var filter = this.requestData.q.query.filtered.filter;
-            var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new gogeo.DateRangeQueryBuilder(gogeo.DateRangeQueryBuilder.DateRange, range);
-            and.filters.push(queryString.build());
-        };
-        DashboardQuery.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
-            return this.$http.post(url, this.requestData).success(resultHandler);
-        };
-        return DashboardQuery;
+    ]);
+})(gogeo || (gogeo = {}));
+/**
+ * Created by danfma on 07/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    function prefix(eventName) {
+        return "gogeo:" + eventName;
+    }
+    var DashboardEvent = (function () {
+        function DashboardEvent() {
+        }
+        DashboardEvent.mapLoaded = prefix("dashboard:mapLoaded");
+        return DashboardEvent;
     })();
-    gogeo.DashboardQuery = DashboardQuery;
+    gogeo.DashboardEvent = DashboardEvent;
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 /// <reference path="../services/dashboard-service.ts" />
@@ -1485,7 +1530,8 @@ var gogeo;
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(40.773289, -73.960455),
-                        zoom: 13
+                        zoom: 13,
+                        maptiks_id: "leaflet-map"
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
@@ -1549,49 +1595,4 @@ var gogeo;
             templateUrl: "dashboard/controls/dashboard-tweet-list-template.html"
         };
     });
-})(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/**
- * Created by danfma on 06/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    gogeo.registerDirective("daterange", function () {
-        return {
-            restrict: "E",
-            template: "<div class=\"input-group daterange\">\n                    <input class=\"form-control\" type=\"text\" data-provide=\"datepicker\" data-date-clear-btn=\"true\" ng-model=\"startDate\"/>\n                    <span class=\"input-group-addon\">\n                        <i class=\"glyphicon glyphicon-calendar\"></i>\n                    </span>\n                    <input class=\"form-control\" type=\"text\" data-provide=\"datepicker\" data-date-clear-btn=\"true\" ng-model=\"endDate\"/>\n                 </div>",
-            scope: {
-                startDate: "=",
-                endDate: "="
-            },
-            link: function (scope, element, attrs) {
-            }
-        };
-    });
-})(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/**
- * Created by danfma on 05/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    angular.module("gogeo").directive("welcomeMap", [
-        function () {
-            return {
-                restrict: "C",
-                // template: "<div></div>",
-                link: function (scope, element, attrs) {
-                    var rawElement = element[0];
-                    var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
-                    var initialPos = L.latLng(43.717232, -92.353034);
-                    var map = L.map("welcome-map").setView(initialPos, 5);
-                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-                    }));
-                    L.tileLayer(url).addTo(map);
-                    scope.$on("destroy", function () { return map.remove(); });
-                }
-            };
-        }
-    ]);
 })(gogeo || (gogeo = {}));
