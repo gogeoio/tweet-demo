@@ -7,7 +7,7 @@
 declare module L {
 
     export class Google implements L.ILayer {
-        constructor(name : string);
+        constructor(name: string, options?: any);
         onAdd(map:L.Map):void;
         onRemove(map:L.Map):void;
     }

@@ -132,6 +132,10 @@ module gogeo {
       this.publishMetric("popup", "popup", labels.join(" | "));
     }
 
+    publishSwitchBaseLayer(baseLayer: string) {
+      this.publishMetric("baseLayer", "baseLayer", baseLayer);
+    }
+
     private publishMetric(action: string, category?: string, label?: string) {
       if (this.$location.host().match("gogeo.io")) {
         this.angularytics.trackEvent(action, category, label);

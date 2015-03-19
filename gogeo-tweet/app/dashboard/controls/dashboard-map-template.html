@@ -1,4 +1,29 @@
-<div id="map-container" class="dashboard-map-container"></div>
+<div id="map-container" class="dashboard-map-container">
+  <div class="leaflet-control" style="top: 175px; left: 10px; position: absolute;">
+    <div class="data-type-button-section">
+      <div class="leaflet-draw leaflet-bar">
+        <a ng-show="map.baseLayerSelected == 'day'"
+           class="leaflet"
+           role="button"
+           title="Click to see a night map"
+           href="javascript:"
+           style="padding-top: 3px;"
+           ng-click="map.switchBaseLayer()">
+          <i class="fa fa-moon-o fa-lg"></i>
+        </a>
+        <a ng-show="map.baseLayerSelected == 'night'"
+           class="leaflet-disabled"
+           role="button"
+           title="Click to see a day map"
+           href="javascript:"
+           style="padding-top: 3px;"
+           ng-click="map.switchBaseLayer()">
+          <i class="fa fa-sun-o fa-lg"></i>
+        </a>
+      </div>
+    </div>
+  </div>  
+</div>
 
 <div id="tweet-popup" ng-show="map.tweetResult">
   <div class="marker-popup">
@@ -20,7 +45,6 @@
         <div style="padding-top: 15px; padding-right: 5px; font-size: 12px;">
           <div class="row">
             <div class="col-md-12">
-              <!-- <label>Place</label> -->
               <span>
                 <strong>
                   {{ map.tweetResult["place.full_name"] }}
