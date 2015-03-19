@@ -470,6 +470,13 @@ var gogeo;
             this._lastTerms = null;
             this._lastDateRange = null;
             this._lastPlace = null;
+            this.firstGeom = false;
+            this.firstBucket = false;
+            this.firstTerms = false;
+            this.firstDate = false;
+            this.firstPlace = false;
+            this.firstThematic = false;
+            this.firstMapType = false;
             this.initialize();
             if (this.$location.host().match("gogeo.io")) {
                 this.angularytics.trackPageView("/");
@@ -488,12 +495,20 @@ var gogeo;
         };
         MetricsService.prototype.publishGeomMetric = function (geom) {
             this._lastGeom = geom;
+            if (!this.firstGeom) {
+                this.firstGeom = true;
+                return;
+            }
             if (geom && geom.source === "draw") {
                 this.publishMetric("geom", "geom", "geom");
             }
         };
         MetricsService.prototype.publishHashtagMetric = function (bucketResult) {
             this._lastBucketResult = bucketResult;
+            if (!this.firstBucket) {
+                this.firstBucket = true;
+                return;
+            }
             if (!bucketResult) {
                 return;
             }
@@ -501,18 +516,30 @@ var gogeo;
         };
         MetricsService.prototype.publishWhereMetric = function (place) {
             this._lastPlace = place;
+            if (!this.firstPlace) {
+                this.firstPlace = true;
+                return;
+            }
             if (this.validateParam(place)) {
                 this.publishMetric("where", "where", place);
             }
         };
         MetricsService.prototype.publishWhatMetric = function (terms) {
             this._lastTerms = terms;
+            if (!this.firstTerms) {
+                this.firstTerms = true;
+                return;
+            }
             if (this.validateParam(terms)) {
                 this.publishMetric("query", "query", terms.join(" "));
             }
         };
         MetricsService.prototype.publishWhenMetric = function (dateRange) {
             this._lastDateRange = dateRange;
+            if (!this.firstDate) {
+                this.firstDate = true;
+                return;
+            }
             if (!dateRange) {
                 return;
             }
@@ -520,9 +547,17 @@ var gogeo;
             this.publishMetric("when", "when", label);
         };
         MetricsService.prototype.publishThematicMetric = function (selectedLayers) {
+            if (!this.firstThematic) {
+                this.firstThematic = true;
+                return;
+            }
             this.publishMetric("thematic", "thematic", selectedLayers.join(" "));
         };
         MetricsService.prototype.publishMapTypeMetric = function (type) {
+            if (!this.firstMapType) {
+                this.firstMapType = true;
+                return;
+            }
             this.publishMetric("mapType", "mapType", type);
         };
         MetricsService.prototype.publishPopupMetric = function (tweet) {
@@ -961,6 +996,11 @@ var gogeo;
         function DashboardController($scope, dashboardService) {
             _super.call(this, $scope);
             this.dashboardService = dashboardService;
+            this.startDate = null;
+            this.endDate = null;
+            this.dateFormat = "MM/DD/YYYY";
+            this.startDate = moment().subtract(7, "days").format(this.dateFormat);
+            this.endDate = moment().format(this.dateFormat);
             this.initialize();
         }
         DashboardController.prototype.initialize = function () {

@@ -13,12 +13,17 @@ module gogeo {
 
         somethingTerm: string;
         place: string;
-        startDate: string;
-        endDate: string;
+        startDate: string = null;
+        endDate: string = null;
+        dateFormat: string = "MM/DD/YYYY";
 
         constructor($scope:ng.IScope,
                     private dashboardService:DashboardService) {
             super($scope);
+
+            this.startDate = moment().subtract(7, "days").format(this.dateFormat);
+            this.endDate = moment().format(this.dateFormat);
+
             this.initialize();
         }
 

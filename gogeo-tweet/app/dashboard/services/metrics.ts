@@ -19,6 +19,14 @@ module gogeo {
     private _lastDateRange: IDateRange = null;
     private _lastPlace: string = null;
 
+    private firstGeom: boolean = false;
+    private firstBucket: boolean = false;
+    private firstTerms: boolean = false;
+    private firstDate: boolean = false;
+    private firstPlace: boolean = false;
+    private firstThematic: boolean = false;
+    private firstMapType: boolean = false;
+
     constructor(private $scope: ng.IScope,
                 private $location: ng.ILocationService,
                 private angularytics: angularytics.Angularytics,
@@ -57,6 +65,11 @@ module gogeo {
     publishGeomMetric(geom: IGeomSpace) {
       this._lastGeom = geom;
 
+      if (!this.firstGeom) {
+        this.firstGeom = true;
+        return;
+      }
+
       if (geom && geom.source === "draw") {
         this.publishMetric("geom", "geom", "geom");
       }
@@ -64,6 +77,11 @@ module gogeo {
 
     publishHashtagMetric(bucketResult: IBucket) {
       this._lastBucketResult = bucketResult;
+
+      if (!this.firstBucket) {
+        this.firstBucket = true;
+        return;
+      }
 
       if (!bucketResult) {
         return;
@@ -74,6 +92,11 @@ module gogeo {
     publishWhereMetric(place: string) {
       this._lastPlace = place;
 
+      if (!this.firstPlace) {
+        this.firstPlace = true;
+        return;
+      }
+
       if (this.validateParam(place)) {
         this.publishMetric("where", "where", place);
       }
@@ -82,6 +105,11 @@ module gogeo {
     publishWhatMetric(terms: Array<string>) {
       this._lastTerms = terms;
 
+      if (!this.firstTerms) {
+        this.firstTerms = true;
+        return;
+      }
+
       if (this.validateParam(terms)) {
         this.publishMetric("query", "query", terms.join(" "));
       }
@@ -89,6 +117,11 @@ module gogeo {
 
     publishWhenMetric(dateRange: IDateRange) {
       this._lastDateRange = dateRange;
+
+      if (!this.firstDate) {
+        this.firstDate = true;
+        return;
+      }
 
       if (!dateRange) {
         return;
@@ -99,10 +132,20 @@ module gogeo {
     }
 
     publishThematicMetric(selectedLayers: Array<String>) {
+      if (!this.firstThematic) {
+        this.firstThematic = true;
+        return;
+      }
+
       this.publishMetric("thematic", "thematic", selectedLayers.join(" "));
     }
 
     publishMapTypeMetric(type: string) {
+      if (!this.firstMapType) {
+        this.firstMapType = true;
+        return;
+      }
+
       this.publishMetric("mapType", "mapType", type);
     }
 
