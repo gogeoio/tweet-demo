@@ -12,6 +12,7 @@ module gogeo {
 
         hashtagResult: IHashtagResult = null;
         selectedHashtag: IBucket = null;
+        totalTweets: string = "";
 
         constructor(private $scope: ng.IScope,
                     private service: DashboardService) {
@@ -20,6 +21,10 @@ module gogeo {
         initialize() {
             this.service.hashtagResultObservable
                 .subscribeAndApply(this.$scope, result => this.handleResult(result));
+
+            this.service.totalTweets().then((result: any) => {
+                this.totalTweets = result["data"];
+            })
         }
 
         handleResult(result : IHashtagResult) {

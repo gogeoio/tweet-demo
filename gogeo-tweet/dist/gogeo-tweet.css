@@ -2384,20 +2384,6 @@ a{color:#168fae}
 .dashboard-map .dashboard-map-container{width:100%;height:100%;cursor:crosshair}
 .dashboard-map .dashboard-map-container .leaflet-map-pane{position:absolute;z-index:3!important;left:0;right:0;top:0;bottom:0}
 .search-input-container input{height:45px!important}
-.thematic-legend ul{background-color:transparent}
-.thematic-legend ul li{cursor:pointer;margin:0 3px}
-.thematic-legend ul li.android{background-color:#fff;color:#F84F40}
-.thematic-legend ul li.android.disabled{background-color:#F84F40;color:#EEE}
-.thematic-legend ul li.iphone{background-color:#fff;color:#5CA2D1}
-.thematic-legend ul li.iphone.disabled{background-color:#5CA2D1;color:#EEE}
-.thematic-legend ul li.foursquare{background-color:#fff;color:#229A00}
-.thematic-legend ul li.foursquare.disabled{background-color:#229A00;color:#EEE}
-.thematic-legend ul li.web{background-color:#fff;color:#A53ED5}
-.thematic-legend ul li.web.disabled{background-color:#A53ED5;color:#EEE}
-.thematic-legend ul li.instagram{background-color:#fff;color:#FFB61E}
-.thematic-legend ul li.instagram.disabled{background-color:#FFB61E;color:#EEE}
-.thematic-legend ul li.others{background-color:#fff;color:#0036B3}
-.thematic-legend ul li.others.disabled{background-color:#0036B3;color:#EEE}
 .hashtag-marker-button{padding-top:5px!important}
 .map-control li,.map-control li:hover{font-weight:600;font-size:10px;line-height:15px}
 .map-control .draw-item,.map-control .item{display:inline;margin-top:0;margin-bottom:0}
@@ -2440,3 +2426,17 @@ a{color:#168fae}
 [zoom>=7][zoom<=7]{marker-width:3.5}
 [zoom>=8][zoom<=12]{marker-width:4.5}
 [zoom>=13][zoom<=22]{marker-width:5.5}
+.thematic-legend ul{background-color:transparent}
+.thematic-legend ul li{cursor:pointer;margin:0 3px}
+.thematic-legend ul li.android{background-color:#fff;color:#F84F40}
+.thematic-legend ul li.android.disabled{background-color:#F84F40;color:#EEE}
+.thematic-legend ul li.iphone{background-color:#fff;color:#5CA2D1}
+.thematic-legend ul li.iphone.disabled{background-color:#5CA2D1;color:#EEE}
+.thematic-legend ul li.foursquare{background-color:#fff;color:#229A00}
+.thematic-legend ul li.foursquare.disabled{background-color:#229A00;color:#EEE}
+.thematic-legend ul li.web{background-color:#fff;color:#A53ED5}
+.thematic-legend ul li.web.disabled{background-color:#A53ED5;color:#EEE}
+.thematic-legend ul li.instagram{background-color:#fff;color:#FFB61E}
+.thematic-legend ul li.instagram.disabled{background-color:#FFB61E;color:#EEE}
+.thematic-legend ul li.others{background-color:#fff;color:#0036B3}
+.thematic-legend ul li.others.disabled{background-color:#0036B3;color:#EEE}

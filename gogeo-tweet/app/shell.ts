@@ -18,6 +18,10 @@ module gogeo {
 
             return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         }
+
+        static getTotalTweetsUrl(): string {
+            return "http://api.gogeo.io:5454/total";
+        }
     }
 
     var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"])

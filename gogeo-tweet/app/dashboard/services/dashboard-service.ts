@@ -8,6 +8,9 @@
  */
 
 module gogeo {
+    export interface TotalTweets {
+        count: number;
+    }
 
     export class DashboardService {
         static $named = "dashboardService";
@@ -233,6 +236,11 @@ module gogeo {
                 this._tweetObservable.onNext(result.data);
             });
             return tweet;
+        }
+
+        totalTweets() {
+            var url = Configuration.getTotalTweetsUrl();
+            return this.$http.get(url);
         }
 
         search() {
