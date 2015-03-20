@@ -46,6 +46,14 @@
     <script type="text/javascript" src="gogeo-core.js"></script>
     <script type="text/javascript" src="gogeo-tweet.js"></script>
 
+    <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
+    <script>
+        if (!window.location.hostname.match("gogeo.io")) {
+            maptiks.debug = true;
+        }
+        maptiks.trackcode = "a6da9937-5d9f-46b6-a7a6-719c8d1f6be2";
+    </script>
+
     <div id="fb-root"></div>
     <script>
         window.fbAsyncInit = function() {

@@ -169,11 +169,16 @@ module gogeo {
                 }]
             };
 
-            return new L.Google("ROADMAP", {mapOptions: mapOptions});
+            var options = {
+                mapOptions: mapOptions,
+                maptiks_id: "night-map"
+            };
+
+            return new L.Google("ROADMAP", options);
         }
 
         private getDayMap() {
-            return new L.Google('ROADMAP');
+            return new L.Google('ROADMAP', { maptiks_id: "day-map" });
         }
 
         private blockPopup() {
@@ -257,7 +262,10 @@ module gogeo {
 
         private createLayers(): Array<L.ILayer> {
             var url = this.configureUrl();
-            var options = { subdomains: ["m1", "m2", "m3", "m4"] };
+            var options = {
+                subdomains: ["m1", "m2", "m3", "m4"],
+                maptiks_id: this.mapSelected
+            };
 
             if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
                 return [L.tileLayer(url, options)];
@@ -575,7 +583,8 @@ module gogeo {
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(40.773289, -73.960455),
-                        zoom: 13
+                        zoom: 13,
+                        maptiks_id: "leaflet-map"
                     };
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
