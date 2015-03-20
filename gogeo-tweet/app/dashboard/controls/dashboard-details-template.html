@@ -1,7 +1,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-7 tweets-amounts-plus">
-            <label>Total of tweets</label>
+            <label>
+                Total collected tweets worldwide
+                <i class="fa fa-question-circle"
+                   title="Collected from Twitter's public stream. Only geolocated Tweets. There is no guarantee that all tweets will be collected.">
+                </i>
+            </label>
             <span>{{ details.totalTweets | number:0 }}</span>
         </div>
     </div>

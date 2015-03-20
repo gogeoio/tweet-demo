@@ -2353,8 +2353,8 @@ a{color:#168fae}
 .numberpad{font-family:"Titillium Web";font-size:18pt;color:#1cb4db}
 .numberpad-big{font-size:28pt}
 .dashboard-panel .dashboard-top-panel .navbar .navbar-brand{margin-right:16px}
-.dashboard-panel .dashboard-map-panel{width:70%;height:100%;position:relative;float:left}
-.dashboard-panel .dashboard-right-panel{overflow-y:auto;display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:30%;height:100%;border-left:solid 2px #1cb4db}
+.dashboard-panel .dashboard-map-panel{width:75%;height:100%;position:relative;float:left}
+.dashboard-panel .dashboard-right-panel{overflow-y:auto;display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:25%;height:100%;border-left:solid 2px #1cb4db}
 .dashboard-header .navbar{padding-top:5px}
 .dashboard-header .navbar-dashboard{background-color:transparent;border:none}
 .dashboard-header .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0 10px 0 0}

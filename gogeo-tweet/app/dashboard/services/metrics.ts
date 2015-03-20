@@ -149,8 +149,8 @@ module gogeo {
       this.publishMetric("mapType", "mapType", type);
     }
 
-    publishPopupMetric(tweet: ITweet) {
-      if (!tweet) {
+    publishPopupMetric(tweet: Array<ITweet>) {
+      if (!tweet || tweet.length == 0) {
         return;
       }
 

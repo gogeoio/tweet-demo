@@ -3,9 +3,16 @@ module gogeo {
     build(): any;
   }
 
-  export interface IGeomSpace {
-    source: string;
+  export interface IGeom {
     type: string;
+  }
+
+  export interface IPoint extends IGeom {
+    coordinates: Array<number>;
+  }
+
+  export interface IGeomSpace extends IGeom {
+    source: string;
     coordinates: Array<Array<Array<number>>>;
   }
 
@@ -37,6 +44,9 @@ module gogeo {
     "user.name": string;
     "user.screen_name": string;
     "user.profile_image_url": string;
+    "place.country": string;
+    "place.full_name": string;
+    "place.bounding_box.coordinates": string;
   }
 
   export interface IDateRange {

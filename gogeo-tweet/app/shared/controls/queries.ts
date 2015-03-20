@@ -9,22 +9,19 @@ module gogeo {
   }
 
   export class TextQueryBuilder implements Query {
-    static HashtagText = "entities.hashtags.text";
-    static UserScreenName = "user.screen_name";
-    static Text = "text";
-    static Place = "place.country";
+    static HashtagText = ["entities.hashtags.text"];
+    static UserScreenName = ["user.screen_name"];
+    static Text = ["text"];
+    static Place = ["place.country"];
 
-    constructor(public field: string, public term: string) {
-    }
+    constructor(public fields: Array<string>, public term: string) {}
 
     build() {
       return {
         query: {
           query_string: {
             query: this.term,
-            fields: [
-              this.field
-            ]
+            fields: this.fields
           }
         }
       };
@@ -32,8 +29,7 @@ module gogeo {
   }
 
   export class ThematicQuery implements Query {
-    constructor(public queries: Array<Query>, public prevQuery?: Query) {
-    }
+    constructor(public queries: Array<Query>, public prevQuery?: Query) {}
 
     build() {
       var query = {
@@ -74,8 +70,7 @@ module gogeo {
   export class DateRangeQueryBuilder implements Query {
     static DateRange = "created_at";
 
-    constructor(public field: string, public range: IDateRange) {
-    }
+    constructor(public field: string, public range: IDateRange) {}
 
     build() {
       var query = {
@@ -105,8 +100,7 @@ module gogeo {
 
   export class SourceTermQuery implements Query {
 
-    constructor(public term: string) {
-    }
+    constructor(public term: string) {}
 
     build() {
       return {

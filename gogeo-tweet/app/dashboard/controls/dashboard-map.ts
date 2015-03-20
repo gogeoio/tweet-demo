@@ -35,6 +35,7 @@ module gogeo {
         canOpenPopup: boolean = true;
         thematicMaps: any = {};
         baseLayerSelected: string = "day";
+        levent: any = null;
         thematicSelectedLayers: Array<string> = [
             "android", "foursquare", "instagram", "iphone", "others", "web"
         ];
@@ -117,6 +118,9 @@ module gogeo {
                 .where(q => q != null)
                 .throttle(400)
                 .subscribeAndApply(this.$scope, (query) => this.queryHandler(query));
+
+            this.service.tweetObservable
+                .subscribeAndApply(this.$scope, (tweet) => this.handlePopupResult(tweet));
         }
 
         private setGeoLocation() {
@@ -370,10 +374,10 @@ module gogeo {
         }
 
         private createThematicOthersQuery(query?: TextQueryBuilder): ThematicQuery {
-            var q1 = new TextQueryBuilder("source", "*ipad*");
-            var q2 = new TextQueryBuilder("source", "*windows*");
-            var q3 = new TextQueryBuilder("source", "*jobs*");
-            var q4 = new TextQueryBuilder("source", "*mac*");
+            var q1 = new TextQueryBuilder(["source"], "*ipad*");
+            var q2 = new TextQueryBuilder(["source"], "*windows*");
+            var q3 = new TextQueryBuilder(["source"], "*jobs*");
+            var q4 = new TextQueryBuilder(["source"], "*mac*");
 
             var tq = null;
 
@@ -500,12 +504,16 @@ module gogeo {
                 }
 
                 var thematicQuery = new ThematicQuery(queries, this.query);
-                this.service.getTweet(levent.latlng, zoom, thematicQuery)
-                    .success(result => this.handlePopupResult(result, levent));
+                this.service.getTweet(levent.latlng, zoom, thematicQuery);
+                this.levent = levent;
             }
         }
 
-        private handlePopupResult(result: ITweet, levent: any) {
+        private handlePopupResult(result: Array<ITweet>) {
+            if (!result || result.length == 0) {
+                return;
+            }
+
             this.tweetResult = result[0];
 
             if (!this.tweetResult) {
@@ -525,7 +533,7 @@ module gogeo {
                 this.popup.update();
             }
 
-            this.popup.setLatLng(levent.latlng);
+            this.popup.setLatLng(this.levent.latlng);
             this.map.openPopup(this.popup);
         }
 
@@ -589,6 +597,11 @@ module gogeo {
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
+
+                    var point1 = L.latLng(5.27192, -73.991482);
+                    var point2 = L.latLng(-33.7510506, -32.378186);
+                    var bounds = L.latLngBounds(point1, point2);
+                    // L.rectangle(bounds, { color: "green" }).addTo(map);
 
                     controller.initialize(map);
                     $timeout(() => map.invalidateSize(false), 1);

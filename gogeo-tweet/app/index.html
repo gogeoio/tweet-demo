@@ -48,22 +48,14 @@
 
     <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
     <script>
-        if (!window.location.hostname.match("gogeo.io")) {
-            maptiks.debug = true;
+        if (window.location.hostname.match("gogeo.io")) {
+            // maptiks.debug = true;
+            maptiks.trackcode = "a6da9937-5d9f-46b6-a7a6-719c8d1f6be2";
         }
-        maptiks.trackcode = "a6da9937-5d9f-46b6-a7a6-719c8d1f6be2";
     </script>
 
     <div id="fb-root"></div>
     <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-              appId      : '873202776080901',
-              xfbml      : true,
-              version    : 'v2.2'
-            });
-        };
-
         (function(d, s, id){
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {return;}
@@ -71,10 +63,17 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
+        window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '873202776080901',
+              xfbml      : true,
+              version    : 'v2.2'
+            });
+        };
     </script>
 
     <script type="text/javascript">
-
         var _gaq = _gaq || [];
 
         (function() {

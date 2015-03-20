@@ -13,7 +13,7 @@ module gogeo {
         static makeUrl(path: string) {
             var serverUrl: string = Configuration.serverRootUrl;
 
-            if (!serverUrl.endsWith("/"))
+            if (serverUrl && !serverUrl.endsWith("/"))
                 serverUrl = "/";
 
             return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
@@ -49,9 +49,11 @@ module gogeo {
                     angularyticsProvider.setEventHandlers(["Console"]);
                 }
             }
-        ]).run(function(Angularytics) {
-            Angularytics.init();
-          });
+        ]).run(
+            function(Angularytics) {
+                Angularytics.init();
+            }
+        );
 
     export interface INamed {
         $named: string;
