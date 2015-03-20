@@ -17,7 +17,7 @@ var gogeo;
         });
         Configuration.makeUrl = function (path) {
             var serverUrl = Configuration.serverRootUrl;
-            if (!serverUrl.endsWith("/"))
+            if (serverUrl && !serverUrl.endsWith("/"))
                 serverUrl = "/";
             return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         };
@@ -299,6 +299,41 @@ var gogeo;
         };
     });
 })(gogeo || (gogeo = {}));
+var gogeo;
+(function (gogeo) {
+    var GogeoGeosearch = (function () {
+        function GogeoGeosearch($http, geom, buffer, buffer_measure, fields, limit, query) {
+            this.$http = $http;
+            this.requestData = {};
+            this.geom = null;
+            this.buffer = 0;
+            this.buffer_measure = null;
+            this.q = {};
+            this.limit = 0;
+            this.fields = [];
+            this.geom = geom;
+            this.buffer = buffer;
+            this.buffer_measure = buffer_measure;
+            this.fields = fields;
+            this.limit = limit;
+            this.q = angular.toJson(query);
+        }
+        GogeoGeosearch.prototype.execute = function (resultHandler) {
+            var url = gogeo.Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
+            this.requestData = {
+                geom: this.geom,
+                limit: this.limit,
+                buffer: this.buffer,
+                buffer_measure: this.buffer_measure,
+                fields: this.fields,
+                q: this.q
+            };
+            return this.$http.post(url, this.requestData).success(resultHandler);
+        };
+        return GogeoGeosearch;
+    })();
+    gogeo.GogeoGeosearch = GogeoGeosearch;
+})(gogeo || (gogeo = {}));
 ///<reference path="./interfaces.ts" />
 var gogeo;
 (function (gogeo) {
@@ -311,8 +346,8 @@ var gogeo;
     })();
     gogeo.NeSwPoint = NeSwPoint;
     var TextQueryBuilder = (function () {
-        function TextQueryBuilder(field, term) {
-            this.field = field;
+        function TextQueryBuilder(fields, term) {
+            this.fields = fields;
             this.term = term;
         }
         TextQueryBuilder.prototype.build = function () {
@@ -320,17 +355,15 @@ var gogeo;
                 query: {
                     query_string: {
                         query: this.term,
-                        fields: [
-                            this.field
-                        ]
+                        fields: this.fields
                     }
                 }
             };
         };
-        TextQueryBuilder.HashtagText = "entities.hashtags.text";
-        TextQueryBuilder.UserScreenName = "user.screen_name";
-        TextQueryBuilder.Text = "text";
-        TextQueryBuilder.Place = "place.country";
+        TextQueryBuilder.HashtagText = ["entities.hashtags.text"];
+        TextQueryBuilder.UserScreenName = ["user.screen_name"];
+        TextQueryBuilder.Text = ["text"];
+        TextQueryBuilder.Place = ["place.country"];
         return TextQueryBuilder;
     })();
     gogeo.TextQueryBuilder = TextQueryBuilder;
@@ -564,7 +597,7 @@ var gogeo;
             this.publishMetric("mapType", "mapType", type);
         };
         MetricsService.prototype.publishPopupMetric = function (tweet) {
-            if (!tweet) {
+            if (!tweet || tweet.length == 0) {
                 return;
             }
             var labels = [];
@@ -621,6 +654,7 @@ var gogeo;
 ///<reference path="../../shell.ts" />
 ///<reference path="../../shared/controls/queries.ts"/>
 ///<reference path="../../shared/controls/dashboard-query.ts"/>
+///<reference path="../../shared/controls/gogeo-geosearch.ts"/>
 ///<reference path="./metrics.ts"/>
 /**
  * Created by danfma on 07/03/15.
@@ -637,6 +671,43 @@ var gogeo;
             this._lastPlace = null;
             this._lastDateRange = null;
             this._loading = true;
+            this.tweetFields = [
+                "user.id",
+                "user.name",
+                "user.screen_name",
+                "user.profile_image_url",
+                "place.full_name",
+                "created_at",
+                "text",
+                "source"
+            ];
+            this.worldBound = {
+                type: "Polygon",
+                coordinates: [
+                    [
+                        [
+                            -201.09375,
+                            -81.97243132048264
+                        ],
+                        [
+                            -201.09375,
+                            84.86578186731522
+                        ],
+                        [
+                            201.09375,
+                            84.86578186731522
+                        ],
+                        [
+                            201.09375,
+                            -81.97243132048264
+                        ],
+                        [
+                            -201.09375,
+                            -81.97243132048264
+                        ]
+                    ]
+                ]
+            };
             this._geomSpaceObservable = new Rx.BehaviorSubject(null);
             this._hashtagFilterObservable = new Rx.BehaviorSubject(null);
             this._somethingTermsObservable = new Rx.BehaviorSubject([]);
@@ -717,6 +788,18 @@ var gogeo;
             var _this = this;
             Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObsersable).throttle(400).subscribe(function () { return _this.search(); });
             Rx.Observable.merge(this._somethingTermsObservable, this._placeObservable).throttle(800).subscribe(function () { return _this.search(); });
+            Rx.Observable.merge(this._placeObservable).throttle(800).subscribe(function () { return _this.getBoundOfPlace(); });
+        };
+        DashboardService.prototype.getBoundOfPlace = function () {
+            if (this._lastPlace) {
+                var fields = [
+                    "place.full_name",
+                    "place.country",
+                    "place.bounding_box.coordinates"
+                ];
+                var query = new gogeo.TextQueryBuilder(["place.country"], this._lastPlace);
+                var geosearch = new gogeo.GogeoGeosearch(this.$http, this.worldBound, 0, null, fields, 1, query.build());
+            }
         };
         DashboardService.prototype.calculateNeSW = function (bounds) {
             var ne = new L.LatLng(bounds.getNorthEast().lng, bounds.getNorthEast().lat);
@@ -788,63 +871,17 @@ var gogeo;
             if (thematicQuery) {
                 query = thematicQuery.build();
             }
-            var data = {
-                geom: {
-                    type: "Point",
-                    coordinates: [
-                        latlng.lng,
-                        latlng.lat
-                    ]
-                },
-                limit: 1,
-                buffer: pixelDist,
-                buffer_measure: "degree",
-                fields: [
-                    "user.id",
-                    "user.name",
-                    "user.screen_name",
-                    "user.location",
-                    "user.url",
-                    "user.description",
-                    "user.followers_count",
-                    "user.friends_count",
-                    "user.listed_count",
-                    "user.favourites_count",
-                    "user.statuses_count",
-                    "user.created_at",
-                    "user.time_zone",
-                    "user.geo_enabled",
-                    "user.lang",
-                    "user.profile_image_url",
-                    "place.id",
-                    "place.url",
-                    "place.place_type",
-                    "place.full_name",
-                    "place.country_code",
-                    "place.country",
-                    "created_at",
-                    "id",
-                    "text",
-                    "source",
-                    "truncated",
-                    "in_reply_to_status_id",
-                    "in_reply_to_user_id",
-                    "in_reply_to_screen_name",
-                    "retweet_count",
-                    "favorite_count",
-                    "favorited",
-                    "retweeted",
-                    "possibly_sensitive",
-                    "lang",
-                    "timestamp_ms"
-                ],
-                q: angular.toJson(query) // Essa query e passada como string mesmo
+            var geom = {
+                type: "Point",
+                coordinates: [
+                    latlng.lng,
+                    latlng.lat
+                ]
             };
-            var tweet = this.$http.post(url, data);
-            tweet.then(function (result) {
-                _this._tweetObservable.onNext(result.data);
+            var geosearch = new gogeo.GogeoGeosearch(this.$http, geom, pixelDist, "degree", this.tweetFields, 1, query);
+            geosearch.execute(function (result) {
+                _this._tweetObservable.onNext(result);
             });
-            return tweet;
         };
         DashboardService.prototype.totalTweets = function () {
             var url = gogeo.Configuration.getTotalTweetsUrl();
@@ -852,6 +889,9 @@ var gogeo;
         };
         DashboardService.prototype.search = function () {
             var _this = this;
+            if (!this._lastGeomSpace) {
+                return;
+            }
             this._loading = true;
             var query = this.composeQuery();
             query.execute(function (result) {
@@ -1079,6 +1119,7 @@ var gogeo;
             this.canOpenPopup = true;
             this.thematicMaps = {};
             this.baseLayerSelected = "day";
+            this.levent = null;
             this.thematicSelectedLayers = [
                 "android",
                 "foursquare",
@@ -1142,6 +1183,7 @@ var gogeo;
                 this.layerGroup.addLayer(layers[i]);
             }
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
+            this.service.tweetObservable.subscribeAndApply(this.$scope, function (tweet) { return _this.handlePopupResult(tweet); });
         };
         DashboardMapController.prototype.setGeoLocation = function () {
             var _this = this;
@@ -1353,10 +1395,10 @@ var gogeo;
             return url;
         };
         DashboardMapController.prototype.createThematicOthersQuery = function (query) {
-            var q1 = new gogeo.TextQueryBuilder("source", "*ipad*");
-            var q2 = new gogeo.TextQueryBuilder("source", "*windows*");
-            var q3 = new gogeo.TextQueryBuilder("source", "*jobs*");
-            var q4 = new gogeo.TextQueryBuilder("source", "*mac*");
+            var q1 = new gogeo.TextQueryBuilder(["source"], "*ipad*");
+            var q2 = new gogeo.TextQueryBuilder(["source"], "*windows*");
+            var q3 = new gogeo.TextQueryBuilder(["source"], "*jobs*");
+            var q4 = new gogeo.TextQueryBuilder(["source"], "*mac*");
             var tq = null;
             if (query) {
                 tq = new gogeo.ThematicQuery([q1, q2, q3, q4], query);
@@ -1432,7 +1474,6 @@ var gogeo;
             }
         };
         DashboardMapController.prototype.openPopup = function (levent) {
-            var _this = this;
             var zoom = this.map.getZoom();
             var intersects = true;
             if (!this.canOpenPopup) {
@@ -1460,10 +1501,14 @@ var gogeo;
                     }
                 }
                 var thematicQuery = new gogeo.ThematicQuery(queries, this.query);
-                this.service.getTweet(levent.latlng, zoom, thematicQuery).success(function (result) { return _this.handlePopupResult(result, levent); });
+                this.service.getTweet(levent.latlng, zoom, thematicQuery);
+                this.levent = levent;
             }
         };
-        DashboardMapController.prototype.handlePopupResult = function (result, levent) {
+        DashboardMapController.prototype.handlePopupResult = function (result) {
+            if (!result || result.length == 0) {
+                return;
+            }
             this.tweetResult = result[0];
             if (!this.tweetResult) {
                 return;
@@ -1481,7 +1526,7 @@ var gogeo;
                 this.popup.setContent($("#tweet-popup")[0]);
                 this.popup.update();
             }
-            this.popup.setLatLng(levent.latlng);
+            this.popup.setLatLng(this.levent.latlng);
             this.map.openPopup(this.popup);
         };
         DashboardMapController.prototype.changeMapType = function (element) {
@@ -1542,6 +1587,10 @@ var gogeo;
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
+                    var point1 = L.latLng(5.27192, -73.991482);
+                    var point2 = L.latLng(-33.7510506, -32.378186);
+                    var bounds = L.latLngBounds(point1, point2);
+                    // L.rectangle(bounds, { color: "green" }).addTo(map);
                     controller.initialize(map);
                     $timeout(function () { return map.invalidateSize(false); }, 1);
                     scope.$on("$destroy", function () {

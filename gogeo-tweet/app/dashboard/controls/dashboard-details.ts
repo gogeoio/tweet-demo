@@ -24,7 +24,7 @@ module gogeo {
 
             this.service.totalTweets().then((result: any) => {
                 this.totalTweets = result["data"];
-            })
+            });
         }
 
         handleResult(result : IHashtagResult) {

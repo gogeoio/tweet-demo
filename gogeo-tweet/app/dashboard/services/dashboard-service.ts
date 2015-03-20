@@ -1,6 +1,7 @@
 ///<reference path="../../shell.ts" />
 ///<reference path="../../shared/controls/queries.ts"/>
 ///<reference path="../../shared/controls/dashboard-query.ts"/>
+///<reference path="../../shared/controls/gogeo-geosearch.ts"/>
 ///<reference path="./metrics.ts"/>
 
 /**
@@ -26,6 +27,48 @@ module gogeo {
         private _lastDateRange: IDateRange = null;
         private _loading: boolean = true;
 
+        private tweetFields: Array<string> = [
+            // user
+            "user.id",
+            "user.name",
+            "user.screen_name",
+            "user.profile_image_url",
+            // place
+            "place.full_name",
+            // tweet
+            "created_at",
+            "text",
+            "source"
+        ];
+
+        private worldBound: IGeom = {
+            type: "Polygon",
+            coordinates: [
+              [
+                [
+                  -201.09375,
+                  -81.97243132048264
+                ],
+                [
+                  -201.09375,
+                  84.86578186731522
+                ],
+                [
+                  201.09375,
+                  84.86578186731522
+                ],
+                [
+                  201.09375,
+                  -81.97243132048264
+                ],
+                [
+                  -201.09375,
+                  -81.97243132048264
+                ]
+              ]
+            ]
+        };
+
         _geomSpaceObservable = new Rx.BehaviorSubject<IGeomSpace>(null);
         _hashtagFilterObservable = new Rx.BehaviorSubject<IBucket>(null);
         _somethingTermsObservable = new Rx.BehaviorSubject<string[]>([]);
@@ -33,7 +76,7 @@ module gogeo {
         _hashtagResultObservable = new Rx.BehaviorSubject<IHashtagResult>(null);
         _dateRangeObsersable = new Rx.BehaviorSubject<IDateRange>(null);
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
-        _tweetObservable = new Rx.BehaviorSubject<ITweet>(null);
+        _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
 
         constructor(private $q:ng.IQService,
                     private $http:ng.IHttpService) {
@@ -77,7 +120,7 @@ module gogeo {
             return this._placeObservable;
         }
 
-        get tweetObservable():Rx.BehaviorSubject<ITweet> {
+        get tweetObservable():Rx.BehaviorSubject<Array<ITweet>> {
             return this._tweetObservable;
         }
 
@@ -91,6 +134,28 @@ module gogeo {
                 .merge<any>(this._somethingTermsObservable, this._placeObservable)
                 .throttle(800)
                 .subscribe(() => this.search());
+
+            Rx.Observable
+                .merge<any>(this._placeObservable)
+                .throttle(800)
+                .subscribe(() => this.getBoundOfPlace());
+        }
+
+        private getBoundOfPlace() {
+            if (this._lastPlace) {
+                var fields = [
+                    "place.full_name",
+                    "place.country",
+                    "place.bounding_box.coordinates"
+                ];
+
+                var query = new TextQueryBuilder(["place.country"], this._lastPlace);
+                var geosearch = new GogeoGeosearch(this.$http, this.worldBound, 0, null, fields, 1, query.build());
+
+                // geosearch.execute((result: Array<ITweet>) => {
+                //     console.log("result", result);
+                // });
+            }
         }
 
         private calculateNeSW(bounds: L.LatLngBounds) {
@@ -176,66 +241,17 @@ module gogeo {
                 query = thematicQuery.build();
             }
 
-            var data:any = {
-                geom: {
-                    type: "Point",
-                    coordinates: [
-                        latlng.lng, latlng.lat
-                    ]
-                },
-                limit: 1,
-                buffer: pixelDist,
-                buffer_measure: "degree",
-                fields: [
-                    // user
-                    "user.id",
-                    "user.name",
-                    "user.screen_name",
-                    "user.location",
-                    "user.url",
-                    "user.description",
-                    "user.followers_count",
-                    "user.friends_count",
-                    "user.listed_count",
-                    "user.favourites_count",
-                    "user.statuses_count",
-                    "user.created_at",
-                    "user.time_zone",
-                    "user.geo_enabled",
-                    "user.lang",
-                    "user.profile_image_url",
-                    // place
-                    "place.id",
-                    "place.url",
-                    "place.place_type",
-                    "place.full_name",
-                    "place.country_code",
-                    "place.country",
-                    // tweet
-                    "created_at",
-                    "id",
-                    "text",
-                    "source",
-                    "truncated",
-                    "in_reply_to_status_id",
-                    "in_reply_to_user_id",
-                    "in_reply_to_screen_name",
-                    "retweet_count",
-                    "favorite_count",
-                    "favorited",
-                    "retweeted",
-                    "possibly_sensitive",
-                    "lang",
-                    "timestamp_ms"
-                ],
-                q: angular.toJson(query) // Essa query e passada como string mesmo
+            var geom = <IGeom>{
+                type: "Point",
+                coordinates: [
+                    latlng.lng, latlng.lat
+                ]
             };
 
-            var tweet = this.$http.post<ITweet>(url, data);
-            tweet.then((result) => {
-                this._tweetObservable.onNext(result.data);
+            var geosearch = new GogeoGeosearch(this.$http, geom, pixelDist, "degree", this.tweetFields, 1, query);
+            geosearch.execute((result: Array<ITweet>) => {
+                this._tweetObservable.onNext(result);
             });
-            return tweet;
         }
 
         totalTweets() {
@@ -244,6 +260,10 @@ module gogeo {
         }
 
         search() {
+            if (!this._lastGeomSpace) {
+                return;
+            }
+
             this._loading = true;
 
             var query = this.composeQuery();
