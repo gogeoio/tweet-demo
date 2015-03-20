@@ -7,21 +7,14 @@ if (!String.prototype.startsWith) {
         if (!prefix)
             return false;
 
-        if (prefix.length > this.length)
-            return false;
+        var cond = this.substring(0, prefix.length);
 
-        return this.substring(0, prefix.length) == prefix;
+        return cond == prefix;
     };
 }
 
-if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function (suffix) {
-        if (!suffix)
-            return false;
-
-        return suffix.length > this.length
-            return false;
-
-        return this.substr(-suffix.length, suffix.length) == suffix;
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
