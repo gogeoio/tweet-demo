@@ -13,8 +13,9 @@ module gogeo {
         static makeUrl(path: string) {
             var serverUrl: string = Configuration.serverRootUrl;
 
-            if (serverUrl && !serverUrl.endsWith("/"))
-                serverUrl = "/";
+            if (serverUrl && !serverUrl.endsWith("/")) {
+                serverUrl = serverUrl + "/";
+            }
 
             return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         }
