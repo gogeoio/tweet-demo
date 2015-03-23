@@ -34,7 +34,7 @@ module gogeo {
     }
 
     execute(resultHandler: (IGogeoAgg) => void) {
-      var url = Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+      var url = Configuration.makeUrl("geoagg/db1/" + Configuration.getCollectionName() + "?mapkey=123");
 
       var requestData = {
         q: this.q

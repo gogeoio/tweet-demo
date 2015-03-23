@@ -8,8 +8,9 @@ module gogeo {
     // Configurações para DESENVOLVIMENTO LOCAL
     //
 
-    export var settings = {
-        "server.url": "http://172.16.2.106:9090/"
+    export var settings = <any>{
+        "server.url": "http://172.16.2.106:9090/",
+        "collection": "tweets"
     };
 
 }

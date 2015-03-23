@@ -106,7 +106,7 @@ module gogeo {
     }
 
     execute(resultHandler:(IHashtagResult) => void) {
-      var url = Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+      var url = Configuration.makeUrl("geoagg/db1/" + Configuration.getCollectionName() + "?mapkey=123");
 
       return this.$http
         .post(url, this.requestData)

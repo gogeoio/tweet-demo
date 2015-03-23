@@ -282,7 +282,7 @@ module gogeo {
 
         private configureUrl(): string {
             var database = "db1";
-            var collection = "tweets";
+            var collection = Configuration.getCollectionName();
             var buffer = 8;
             var stylename = "gogeo_many_points";
             var serviceName = "tile.png";
