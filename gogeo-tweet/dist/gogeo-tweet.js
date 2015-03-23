@@ -281,7 +281,7 @@ var gogeo;
             and.filters.push(queryString.build());
         };
         DashboardQuery.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geoagg/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
         return DashboardQuery;
@@ -423,7 +423,7 @@ var gogeo;
             this.q = angular.toJson(query);
         }
         GogeoGeosearch.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geosearch/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
             this.requestData = {
                 geom: this.geom,
                 limit: this.limit,
@@ -461,7 +461,7 @@ var gogeo;
             };
         };
         GogeoGeoagg.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/tweets?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geoagg/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
             var requestData = {
                 q: this.q
             };
