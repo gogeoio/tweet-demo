@@ -28,6 +28,10 @@ var gogeo;
         Configuration.getDateRangeUrl = function () {
             return "http://api.gogeo.io:5454/dateRange";
         };
+        Configuration.getCollectionName = function () {
+            console.log("settings", gogeo.settings);
+            return gogeo.settings["collection"];
+        };
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
@@ -857,7 +861,7 @@ var gogeo;
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom, thematicQuery) {
             var _this = this;
-            var url = gogeo.Configuration.makeUrl("geosearch/db1/tweets?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geosearch/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData.q;
             if (thematicQuery) {
@@ -1410,7 +1414,7 @@ var gogeo;
         };
         DashboardMapController.prototype.configureUrl = function () {
             var database = "db1";
-            var collection = "tweets";
+            var collection = gogeo.Configuration.getCollectionName();
             var buffer = 8;
             var stylename = "gogeo_many_points";
             var serviceName = "tile.png";
