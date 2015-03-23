@@ -565,10 +565,7 @@ module gogeo {
         private createClusterLayer(url): L.ILayer {
             var options = {
                 subdomains: [ "m1", "m2", "m3", "m4" ],
-                useJsonP: false,
-                formatCount: function(count) {
-                    return count;
-                }
+                useJsonP: false
             };
 
             return new L.TileCluster(url, options);
@@ -577,7 +574,7 @@ module gogeo {
 
     registerDirective("dashboardMap", [
         "$timeout",
-        ($timeout:ng.ITimeoutService) => {
+        ($timeout: ng.ITimeoutService) => {
             return {
                 restrict: "C",
                 templateUrl: "dashboard/controls/dashboard-map-template.html",
@@ -597,11 +594,6 @@ module gogeo {
 
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
-
-                    var point1 = L.latLng(5.27192, -73.991482);
-                    var point2 = L.latLng(-33.7510506, -32.378186);
-                    var bounds = L.latLngBounds(point1, point2);
-                    // L.rectangle(bounds, { color: "green" }).addTo(map);
 
                     controller.initialize(map);
                     $timeout(() => map.invalidateSize(false), 1);

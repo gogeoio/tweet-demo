@@ -2,6 +2,7 @@
 ///<reference path="../../shared/controls/queries.ts"/>
 ///<reference path="../../shared/controls/dashboard-query.ts"/>
 ///<reference path="../../shared/controls/gogeo-geosearch.ts"/>
+///<reference path="../../shared/controls/gogeo-geoagg.ts"/>
 ///<reference path="./metrics.ts"/>
 
 /**
@@ -74,14 +75,16 @@ module gogeo {
         _somethingTermsObservable = new Rx.BehaviorSubject<string[]>([]);
         _placeObservable = new Rx.BehaviorSubject<string>(null);
         _hashtagResultObservable = new Rx.BehaviorSubject<IHashtagResult>(null);
-        _dateRangeObsersable = new Rx.BehaviorSubject<IDateRange>(null);
+        _dateRangeObservable = new Rx.BehaviorSubject<IDateRange>(null);
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
         _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
+        _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
 
         constructor(private $q:ng.IQService,
                     private $http:ng.IHttpService) {
 
             this.initialize();
+            this.getDateRange();
         }
 
         get loading(): boolean {
@@ -109,7 +112,7 @@ module gogeo {
         }
 
         get dateRangeObsersable():Rx.Observable<IDateRange> {
-            return this._dateRangeObsersable;
+            return this._dateRangeObservable;
         }
 
         get somethingTermsObservable():Rx.BehaviorSubject<string[]> {
@@ -124,9 +127,13 @@ module gogeo {
             return this._tweetObservable;
         }
 
+        get dateLimitObservable():Rx.BehaviorSubject<any> {
+            return this._dateLimitObservable;
+        }
+
         initialize() {
             Rx.Observable
-                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObsersable)
+                .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable)
                 .throttle(400)
                 .subscribe(() => this.search());
 
@@ -225,11 +232,17 @@ module gogeo {
             }
 
             this._lastDateRange = dateRange;
-            this._dateRangeObsersable.onNext(dateRange);
+            this._dateRangeObservable.onNext(dateRange);
         }
 
         getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
             return this.getTweetData(latlng, zoom, thematicQuery);
+        }
+
+        getDateRange() {
+            this.$http.get(Configuration.getDateRangeUrl()).then((result: any) => {
+                this._dateLimitObservable.onNext(result.data);
+            });
         }
 
         private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {

@@ -23,6 +23,10 @@ module gogeo {
         static getTotalTweetsUrl(): string {
             return "http://api.gogeo.io:5454/total";
         }
+
+        static getDateRangeUrl(): string {
+            return "http://api.gogeo.io:5454/dateRange";
+        }
     }
 
     var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"])

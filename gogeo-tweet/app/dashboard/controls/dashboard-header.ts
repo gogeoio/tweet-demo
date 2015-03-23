@@ -18,13 +18,17 @@ module gogeo {
         dateFormat: string = "MM/DD/YYYY";
 
         constructor($scope:ng.IScope,
-                    private dashboardService:DashboardService) {
+                    private service: DashboardService) {
             super($scope);
-
-            this.startDate = moment().subtract(7, "days").format(this.dateFormat);
-            this.endDate = moment().format(this.dateFormat);
-
             this.initialize();
+
+            this.service.dateLimitObservable
+                .subscribeAndApply(this.$scope, (result: any) => {
+                    if (result) {
+                        this.startDate = moment(new Date(result["max"])).subtract(2, "days").format("MM/DD/YYYY");
+                        this.endDate = moment(new Date(result["max"])).format("MM/DD/YYYY");
+                    }
+            });
         }
 
         initialize() {
@@ -39,12 +43,12 @@ module gogeo {
                         .select(part => part.trim())
                         .toArray();
                 })
-                .subscribe(terms => this.dashboardService.updateSomethingTerms(terms));
+                .subscribe(terms => this.service.updateSomethingTerms(terms));
 
             this.watchAsObservable<string>("place")
                 .skip(1)
                 .throttle(800)
-                .subscribe(place => this.dashboardService.updatePlace(place));
+                .subscribe(place => this.service.updatePlace(place));
 
             Rx.Observable.merge(this.watchAsObservable<string>("startDate"), this.watchAsObservable<string>("endDate"))
                 .skip(1)
@@ -61,7 +65,7 @@ module gogeo {
                         endDate = new Date(Date.parse(this.endDate));
                     }
 
-                    this.dashboardService.updateDateRange(startDate, endDate);
+                    this.service.updateDateRange(startDate, endDate);
                 });
         }
     }
