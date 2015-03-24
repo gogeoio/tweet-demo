@@ -12,7 +12,7 @@ module gogeo {
     static HashtagText = ["entities.hashtags.text"];
     static UserScreenName = ["user.screen_name"];
     static Text = ["text"];
-    static Place = ["place.country", "place.full_name", "place.name"];
+    static Place = ["place.country_code"];
 
     constructor(public fields: Array<string>, public term: string) {}
 

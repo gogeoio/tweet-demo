@@ -273,7 +273,7 @@ var gogeo;
         DashboardQuery.prototype.filterByPlace = function (text) {
             var filter = this.requestData.q.query.filtered.filter;
             var and = this.getOrCreateAndRestriction(filter);
-            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text + "*");
+            var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text);
             var boolQuery = new gogeo.BoolQuery();
             boolQuery.addMustQuery(queryString);
             and.filters.push(boolQuery.build());
@@ -321,7 +321,7 @@ var gogeo;
         TextQueryBuilder.HashtagText = ["entities.hashtags.text"];
         TextQueryBuilder.UserScreenName = ["user.screen_name"];
         TextQueryBuilder.Text = ["text"];
-        TextQueryBuilder.Place = ["place.country", "place.full_name", "place.name"];
+        TextQueryBuilder.Place = ["place.country_code"];
         return TextQueryBuilder;
     })();
     gogeo.TextQueryBuilder = TextQueryBuilder;
@@ -813,21 +813,24 @@ var gogeo;
         DashboardService.prototype.getBoundOfPlace = function (place) {
             var _this = this;
             if (place) {
-                console.log("place", place);
                 var url = gogeo.Configuration.getPlaceUrl(place);
                 this.$http.get(url).then(function (result) {
                     var place = result.data["place"];
                     var bb = place["bounding_box"];
                     var p1 = bb["coordinates"][0];
                     var p2 = bb["coordinates"][1];
-                    var country = place["country"];
+                    var country_code = place["country_code"];
                     var point1 = L.latLng(p1[1], p1[0]);
                     var point2 = L.latLng(p2[1], p2[0]);
                     var bounds = L.latLngBounds(point1, point2);
                     _this._placeBoundObservable.onNext(bounds);
-                    _this._lastPlace = country;
-                    _this._placeObservable.onNext(country);
+                    _this._lastPlace = country_code;
+                    _this._placeObservable.onNext(country_code);
                 });
+            }
+            else {
+                this._lastPlace = null;
+                this._placeObservable.onNext(this._lastPlace);
             }
         };
         DashboardService.prototype.calculateNeSW = function (bounds) {
@@ -932,7 +935,6 @@ var gogeo;
                 _this._loading = false;
                 _this._hashtagResultObservable.onNext(result);
             });
-            console.log("requestData.q", JSON.stringify(query.requestData.q, null, 2));
             this._lastQueryObservable.onNext(query.requestData.q);
         };
         DashboardService.prototype.composeQuery = function () {

@@ -150,8 +150,6 @@ module gogeo {
 
         private getBoundOfPlace(place: string) {
             if (place) {
-                console.log("place", place);
-
                 var url = Configuration.getPlaceUrl(place);
 
                 this.$http.get(url).then((result: any) => {
@@ -160,16 +158,19 @@ module gogeo {
                     var p1 = bb["coordinates"][0];
                     var p2 = bb["coordinates"][1];
 
-                    var country = place["country"];
+                    var country_code = place["country_code"];
 
                     var point1 = L.latLng(p1[1], p1[0]);
                     var point2 = L.latLng(p2[1], p2[0]);
                     var bounds = L.latLngBounds(point1, point2);
                     this._placeBoundObservable.onNext(bounds);
 
-                    this._lastPlace = country;
-                    this._placeObservable.onNext(country);
+                    this._lastPlace = country_code;
+                    this._placeObservable.onNext(country_code);
                 });
+            } else {
+                this._lastPlace = null;
+                this._placeObservable.onNext(this._lastPlace);
             }
         }
 
