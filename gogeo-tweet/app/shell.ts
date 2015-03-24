@@ -28,13 +28,16 @@ module gogeo {
             return "http://api.gogeo.io:5454/dateRange";
         }
 
+        static getPlaceUrl(place: string): string {
+            return "http://api.gogeo.io:5454/where/" + place;
+        }
+
         static getCollectionName(): string {
-            console.log("settings", settings);
             return <string> settings["collection"];
         }
     }
 
-    var mod = angular.module("gogeo", ["ngRoute", "angularytics", "linkify", "ngGeolocation"])
+    var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation"])
         .config([
             "$routeProvider",
             "AngularyticsProvider",

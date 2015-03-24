@@ -79,6 +79,7 @@ module gogeo {
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
         _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
         _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
+        _placeBoundObservable = new Rx.BehaviorSubject<L.LatLngBounds>(null);
 
         constructor(private $q:ng.IQService,
                     private $http:ng.IHttpService) {
@@ -131,6 +132,10 @@ module gogeo {
             return this._dateLimitObservable;
         }
 
+        get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
+            return this._placeBoundObservable;
+        }
+
         initialize() {
             Rx.Observable
                 .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable)
@@ -141,27 +146,31 @@ module gogeo {
                 .merge<any>(this._somethingTermsObservable, this._placeObservable)
                 .throttle(800)
                 .subscribe(() => this.search());
-
-            Rx.Observable
-                .merge<any>(this._placeObservable)
-                .throttle(800)
-                .subscribe(() => this.getBoundOfPlace());
         }
 
-        private getBoundOfPlace() {
-            if (this._lastPlace) {
-                var fields = [
-                    "place.full_name",
-                    "place.country",
-                    "place.bounding_box.coordinates"
-                ];
+        private getBoundOfPlace(place: string) {
+            if (place) {
+                var url = Configuration.getPlaceUrl(place);
 
-                var query = new TextQueryBuilder(["place.country"], this._lastPlace);
-                var geosearch = new GogeoGeosearch(this.$http, this.worldBound, 0, null, fields, 1, query.build());
+                this.$http.get(url).then((result: any) => {
+                    var place = result.data["place"];
+                    var bb = place["bounding_box"];
+                    var p1 = bb["coordinates"][0];
+                    var p2 = bb["coordinates"][1];
 
-                // geosearch.execute((result: Array<ITweet>) => {
-                //     console.log("result", result);
-                // });
+                    var country_code = place["country_code"];
+
+                    var point1 = L.latLng(p1[1], p1[0]);
+                    var point2 = L.latLng(p2[1], p2[0]);
+                    var bounds = L.latLngBounds(point1, point2);
+                    this._placeBoundObservable.onNext(bounds);
+
+                    this._lastPlace = country_code;
+                    this._placeObservable.onNext(country_code);
+                });
+            } else {
+                this._lastPlace = null;
+                this._placeObservable.onNext(this._lastPlace);
             }
         }
 
@@ -220,8 +229,7 @@ module gogeo {
         }
 
         updatePlace(place: string) {
-            this._lastPlace = place;
-            this._placeObservable.onNext(place);
+            this.getBoundOfPlace(place);
         }
 
         updateDateRange(startDate: Date, endDate: Date) {

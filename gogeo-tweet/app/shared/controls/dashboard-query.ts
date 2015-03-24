@@ -92,9 +92,11 @@ module gogeo {
     filterByPlace(text: string) {
       var filter:any = this.requestData.q.query.filtered.filter;
       var and = this.getOrCreateAndRestriction(filter);
-      var queryString = new TextQueryBuilder(TextQueryBuilder.Place, text + "*");
+      var queryString = new TextQueryBuilder(TextQueryBuilder.Place, text);
+      var boolQuery = new BoolQuery();
+      boolQuery.addMustQuery(queryString);
 
-      and.filters.push(queryString.build());
+      and.filters.push(boolQuery.build());
     }
 
     filterByDateRange(range: IDateRange) {
