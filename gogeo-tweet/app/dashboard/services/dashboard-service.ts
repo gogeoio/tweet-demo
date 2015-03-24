@@ -79,6 +79,7 @@ module gogeo {
         _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
         _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
         _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
+        _placeBoundObservable = new Rx.BehaviorSubject<L.LatLngBounds>(null);
 
         constructor(private $q:ng.IQService,
                     private $http:ng.IHttpService) {
@@ -131,6 +132,10 @@ module gogeo {
             return this._dateLimitObservable;
         }
 
+        get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
+            return this._placeBoundObservable;
+        }
+
         initialize() {
             Rx.Observable
                 .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable)
@@ -150,18 +155,20 @@ module gogeo {
 
         private getBoundOfPlace() {
             if (this._lastPlace) {
-                var fields = [
-                    "place.full_name",
-                    "place.country",
-                    "place.bounding_box.coordinates"
-                ];
+                
+                var url = Configuration.getPlaceUrl(this._lastPlace);
 
-                var query = new TextQueryBuilder(["place.country"], this._lastPlace);
-                var geosearch = new GogeoGeosearch(this.$http, this.worldBound, 0, null, fields, 1, query.build());
+                this.$http.get(url).then((result: any) => {
+                    var place = result.data["place"];
+                    var bb = place["bounding_box"];
+                    var p1 = bb["coordinates"][0];
+                    var p2 = bb["coordinates"][1];
 
-                // geosearch.execute((result: Array<ITweet>) => {
-                //     console.log("result", result);
-                // });
+                    var point1 = L.latLng(p1[1], p1[0]);
+                    var point2 = L.latLng(p2[1], p2[0]);
+                    var bounds = L.latLngBounds(point1, point2);
+                    this._placeBoundObservable.onNext(bounds);
+                });
             }
         }
 

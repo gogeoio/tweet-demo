@@ -13,6 +13,8 @@ module gogeo {
     class DashboardMapController {
         static $inject = [
             "$scope",
+            "$cookies",
+            "$timeout",
             "linkify",
             "$sce",
             "$geolocation",
@@ -52,6 +54,8 @@ module gogeo {
         _selectedMap = new Rx.BehaviorSubject<string>(null);
 
         constructor(private $scope:     ng.IScope,
+                    private $cookies:   ng.cookies.ICookiesService,
+                    private $timeout:   ng.ITimeoutService,
                     private linkify:    any,
                     private $sce:       ng.ISCEService,
                     private $geo:       any,
@@ -89,6 +93,10 @@ module gogeo {
             this.service.geomSpaceObservable
                 .subscribeAndApply(this.$scope, geom => this.handleGeom(geom));
 
+            this.service.placeBoundObservable
+                 .where(bound => bound != null)
+                .subscribeAndApply(this.$scope, bound => this.fitMap(bound));
+
             Rx.Observable
                 .merge<any>(this._thematicLayers)
                 .throttle(800)
@@ -103,7 +111,19 @@ module gogeo {
                     this.metrics.publishMapTypeMetric(this.mapSelected);
                 });
 
-            this.setGeoLocation();
+            var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
+
+            if (this.$cookies["gogeo.firstLoad"] == undefined || shareLocation) {
+                this.$cookies["gogeo.firstLoad"] = false;
+                if (!shareLocation) {
+                    this.$cookies["gogeo.shareLocation"] = false;
+                }
+                this.setGeoLocation();
+            }
+        }
+
+        private fitMap(bound: L.LatLngBounds) {
+            this.map.fitBounds(bound, { reset: true });
         }
 
         initializeLayer() {
@@ -124,53 +144,45 @@ module gogeo {
         }
 
         private setGeoLocation() {
-            this.$geo.getCurrentPosition().then((location) => {
-                var coords = location.coords;
-                var center = new L.LatLng(coords.latitude, coords.longitude);
-                this.map.setView(center, 15);
-            });
+            var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
+            if (shareLocation) {
+                var latitude = this.$cookies["gogeo.location.lat"];
+                var longitude = this.$cookies["gogeo.location.lng"];
+                this.centerMap(latitude, longitude);
+            } else {
+                this.$geo.getCurrentPosition().then((location) => {
+                    var coords = location.coords;
+                    this.centerMap(coords.latitude, coords.longitude);
+                    this.$cookies["gogeo.shareLocation"] = "true";
+                    this.$cookies["gogeo.location.lat"] = coords.latitude;
+                    this.$cookies["gogeo.location.lng"] = coords.longitude;
+                });
+            }
+        }
+
+        private centerMap(lat: number, lng: number) {
+            if (lat && lng) {
+                var center = new L.LatLng(lat, lng);
+                this.map.setView(center, 12);
+            }
         }
 
         private getNightMap() {
             var mapOptions = {
                 // How you would like to style the map. 
                 // This is where you would paste any style found on Snazzy Maps.
-                styles: [{
-                    "stylers": [
-                      {
-                        "visibility": "simplified"
-                      }
-                    ]
-                  },
-                  {
-                    "stylers": [
-                      {
-                        "color": "#131314"
-                      }
-                    ]
-                  },
+                styles: [
+                  { "stylers": [ { "visibility": "simplified" } ] },
+                  { "stylers": [ { "color": "#131314" } ] },
                   {
                     "featureType": "water",
-                    "stylers": [
-                      {
-                        "color": "#131313"
-                      },
-                      {
-                        "lightness": 7
-                      }
-                    ]
+                    "stylers": [ { "color": "#131313" }, { "lightness": 7 } ]
                   },
                   {
                     "elementType": "labels.text.fill",
-                    "stylers": [
-                      {
-                        "visibility": "on"
-                      },
-                      {
-                        "lightness": 25
-                      }
-                    ]
-                }]
+                    "stylers": [ { "visibility": "on" }, { "lightness": 25 } ]
+                  }
+                ]
             };
 
             var options = {
@@ -587,8 +599,8 @@ module gogeo {
                         attributionControl: false,
                         minZoom: 4,
                         maxZoom: 18,
-                        center: new L.LatLng(40.773289, -73.960455),
-                        zoom: 13,
+                        center: new L.LatLng(37.757836, -122.447041), // San Francisco, CA
+                        zoom: 6,
                         maptiks_id: "leaflet-map"
                     };
 

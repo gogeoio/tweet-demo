@@ -94,6 +94,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("bootstrap-tagsinput/dist/bootstrap-tagsinput.js"),
         fromBower("angular/angular.js"),
         fromBower("angular-route/angular-route.js"),
+        fromBower("angular-cookies/angular-cookies.min.js"),
         fromBower("angularytics/dist/angularytics.min.js"),
         fromBower("mapbox.js/mapbox.js"),
         fromBower("leaflet-draw/dist/leaflet.draw.js"),
