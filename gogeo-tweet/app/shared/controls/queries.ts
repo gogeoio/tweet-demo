@@ -12,7 +12,7 @@ module gogeo {
     static HashtagText = ["entities.hashtags.text"];
     static UserScreenName = ["user.screen_name"];
     static Text = ["text"];
-    static Place = ["place.country"];
+    static Place = ["place.country", "place.full_name", "place.name"];
 
     constructor(public fields: Array<string>, public term: string) {}
 
@@ -25,6 +25,26 @@ module gogeo {
           }
         }
       };
+    }
+  }
+
+  export class BoolQuery implements Query {
+    private requestData: any = {
+      must: []
+    };
+
+    constructor() {}
+
+    addMustQuery(q: Query) {
+      this.requestData["must"].push(q.build()["query"]);
+    }
+
+    build() {
+      return {
+        query: {
+          bool: this.requestData
+        }
+      }
     }
   }
 

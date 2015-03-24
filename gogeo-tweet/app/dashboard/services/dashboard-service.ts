@@ -146,17 +146,13 @@ module gogeo {
                 .merge<any>(this._somethingTermsObservable, this._placeObservable)
                 .throttle(800)
                 .subscribe(() => this.search());
-
-            Rx.Observable
-                .merge<any>(this._placeObservable)
-                .throttle(800)
-                .subscribe(() => this.getBoundOfPlace());
         }
 
-        private getBoundOfPlace() {
-            if (this._lastPlace) {
-                
-                var url = Configuration.getPlaceUrl(this._lastPlace);
+        private getBoundOfPlace(place: string) {
+            if (place) {
+                console.log("place", place);
+
+                var url = Configuration.getPlaceUrl(place);
 
                 this.$http.get(url).then((result: any) => {
                     var place = result.data["place"];
@@ -164,10 +160,15 @@ module gogeo {
                     var p1 = bb["coordinates"][0];
                     var p2 = bb["coordinates"][1];
 
+                    var country = place["country"];
+
                     var point1 = L.latLng(p1[1], p1[0]);
                     var point2 = L.latLng(p2[1], p2[0]);
                     var bounds = L.latLngBounds(point1, point2);
                     this._placeBoundObservable.onNext(bounds);
+
+                    this._lastPlace = country;
+                    this._placeObservable.onNext(country);
                 });
             }
         }
@@ -227,8 +228,7 @@ module gogeo {
         }
 
         updatePlace(place: string) {
-            this._lastPlace = place;
-            this._placeObservable.onNext(place);
+            this.getBoundOfPlace(place);
         }
 
         updateDateRange(startDate: Date, endDate: Date) {

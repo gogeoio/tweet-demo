@@ -274,7 +274,9 @@ var gogeo;
             var filter = this.requestData.q.query.filtered.filter;
             var and = this.getOrCreateAndRestriction(filter);
             var queryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text + "*");
-            and.filters.push(queryString.build());
+            var boolQuery = new gogeo.BoolQuery();
+            boolQuery.addMustQuery(queryString);
+            and.filters.push(boolQuery.build());
         };
         DashboardQuery.prototype.filterByDateRange = function (range) {
             var filter = this.requestData.q.query.filtered.filter;
@@ -319,10 +321,29 @@ var gogeo;
         TextQueryBuilder.HashtagText = ["entities.hashtags.text"];
         TextQueryBuilder.UserScreenName = ["user.screen_name"];
         TextQueryBuilder.Text = ["text"];
-        TextQueryBuilder.Place = ["place.country"];
+        TextQueryBuilder.Place = ["place.country", "place.full_name", "place.name"];
         return TextQueryBuilder;
     })();
     gogeo.TextQueryBuilder = TextQueryBuilder;
+    var BoolQuery = (function () {
+        function BoolQuery() {
+            this.requestData = {
+                must: []
+            };
+        }
+        BoolQuery.prototype.addMustQuery = function (q) {
+            this.requestData["must"].push(q.build()["query"]);
+        };
+        BoolQuery.prototype.build = function () {
+            return {
+                query: {
+                    bool: this.requestData
+                }
+            };
+        };
+        return BoolQuery;
+    })();
+    gogeo.BoolQuery = BoolQuery;
     var ThematicQuery = (function () {
         function ThematicQuery(queries, prevQuery) {
             this.queries = queries;
@@ -788,21 +809,24 @@ var gogeo;
             var _this = this;
             Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable).throttle(400).subscribe(function () { return _this.search(); });
             Rx.Observable.merge(this._somethingTermsObservable, this._placeObservable).throttle(800).subscribe(function () { return _this.search(); });
-            Rx.Observable.merge(this._placeObservable).throttle(800).subscribe(function () { return _this.getBoundOfPlace(); });
         };
-        DashboardService.prototype.getBoundOfPlace = function () {
+        DashboardService.prototype.getBoundOfPlace = function (place) {
             var _this = this;
-            if (this._lastPlace) {
-                var url = gogeo.Configuration.getPlaceUrl(this._lastPlace);
+            if (place) {
+                console.log("place", place);
+                var url = gogeo.Configuration.getPlaceUrl(place);
                 this.$http.get(url).then(function (result) {
                     var place = result.data["place"];
                     var bb = place["bounding_box"];
                     var p1 = bb["coordinates"][0];
                     var p2 = bb["coordinates"][1];
+                    var country = place["country"];
                     var point1 = L.latLng(p1[1], p1[0]);
                     var point2 = L.latLng(p2[1], p2[0]);
                     var bounds = L.latLngBounds(point1, point2);
                     _this._placeBoundObservable.onNext(bounds);
+                    _this._lastPlace = country;
+                    _this._placeObservable.onNext(country);
                 });
             }
         };
@@ -854,8 +878,7 @@ var gogeo;
             this._somethingTermsObservable.onNext(terms);
         };
         DashboardService.prototype.updatePlace = function (place) {
-            this._lastPlace = place;
-            this._placeObservable.onNext(place);
+            this.getBoundOfPlace(place);
         };
         DashboardService.prototype.updateDateRange = function (startDate, endDate) {
             var dateRange = null;
@@ -909,6 +932,7 @@ var gogeo;
                 _this._loading = false;
                 _this._hashtagResultObservable.onNext(result);
             });
+            console.log("requestData.q", JSON.stringify(query.requestData.q, null, 2));
             this._lastQueryObservable.onNext(query.requestData.q);
         };
         DashboardService.prototype.composeQuery = function () {
