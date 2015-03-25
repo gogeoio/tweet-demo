@@ -10,3 +10,5 @@ mv $APP_FOLDER/dist $APP_FOLDER/dist-old
 cd $APP_FOLDER
 gulp deploy
 cd ..
+
+mv $APP_FOLDER/dist $APP_FOLDER/dist-prod
