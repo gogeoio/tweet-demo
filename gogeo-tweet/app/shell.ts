@@ -46,15 +46,18 @@ module gogeo {
                     .when("/welcome", {
                         controller: "WelcomeController",
                         controllerAs: "welcome",
-                        templateUrl: "welcome/page.html"
+                        templateUrl: "welcome/page.html",
+                        reloadOnSearch: false
                     })
                     .when("/dashboard", {
                         controller: "DashboardController",
                         controllerAs: "dashboard",
-                        templateUrl: "dashboard/page.html"
+                        templateUrl: "dashboard/page.html",
+                        reloadOnSearch: false
                     })
                     .otherwise({
-                        redirectTo: "/welcome"
+                        redirectTo: "/welcome",
+                        reloadOnSearch: false
                     });
                 if (window.location.hostname.match("gogeo.io")) {
                     angularyticsProvider.setEventHandlers(["Google"]);

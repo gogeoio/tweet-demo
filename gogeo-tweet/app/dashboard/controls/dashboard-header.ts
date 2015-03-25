@@ -17,8 +17,8 @@ module gogeo {
         endDate: string = null;
         dateFormat: string = "MM/DD/YYYY";
 
-        constructor($scope:ng.IScope,
-                    private service: DashboardService) {
+        constructor($scope:                 ng.IScope,
+                    private service:        DashboardService) {
             super($scope);
             this.initialize();
 
@@ -28,7 +28,46 @@ module gogeo {
                         this.startDate = moment(new Date(result["max"])).subtract(2, "days").format("MM/DD/YYYY");
                         this.endDate = moment(new Date(result["max"])).format("MM/DD/YYYY");
                     }
-            });
+                });
+
+            this.service.loadParamsObservable
+                .subscribeAndApply(this.$scope, (result: any) => {
+                    this.loadParams(result);
+                });
+        }
+
+        private loadParams(result: any) {
+            if (!result || JSON.stringify(result) === JSON.stringify({})) {
+                return;
+            }
+
+            console.log("result", JSON.stringify(result, null, 2));
+
+            var what = result["what"];
+            if (what) {
+                this.somethingTerm = what;
+                this.service.updateSomethingTerms([this.somethingTerm]);
+            }
+
+            var where = result["where"];
+            if (where) {
+                this.place = where;
+                this.service.updatePlace(this.place);
+            }
+
+            var startDate = result["startDate"];
+            var endDate = result["endDate"];
+            if (startDate || endDate) {
+                if (startDate) {
+                    this.startDate = startDate;
+                }
+
+                if (endDate) {
+                    this.endDate = endDate;
+                }
+
+                this.service.updateDateRange(new Date(Date.parse(this.startDate)), new Date(Date.parse(this.endDate)));
+            }
         }
 
         initialize() {

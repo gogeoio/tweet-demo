@@ -53,14 +53,14 @@ module gogeo {
         _thematicLayers = new Rx.BehaviorSubject<Array<string>>(this.thematicSelectedLayers);
         _selectedMap = new Rx.BehaviorSubject<string>(null);
 
-        constructor(private $scope:     ng.IScope,
-                    private $cookies:   ng.cookies.ICookiesService,
-                    private $timeout:   ng.ITimeoutService,
-                    private linkify:    any,
-                    private $sce:       ng.ISCEService,
-                    private $geo:       any,
-                    private service:    DashboardService,
-                    private metrics:    MetricsService) {
+        constructor(private $scope:         ng.IScope,
+                    private $cookies:       ng.cookies.ICookiesService,
+                    private $timeout:       ng.ITimeoutService,
+                    private linkify:        any,
+                    private $sce:           ng.ISCEService,
+                    private $geo:           any,
+                    private service:        DashboardService,
+                    private metrics:        MetricsService) {
             this.layerGroup = L.layerGroup([]);
             this.baseLayers = L.featureGroup([]);
         }
@@ -97,6 +97,11 @@ module gogeo {
                  .where(bound => bound != null)
                 .subscribeAndApply(this.$scope, bound => this.fitMap(bound));
 
+            this.service.loadParamsObservable
+                .subscribeAndApply(this.$scope, (result: any) => {
+                    this.loadParams(result);
+                });
+
             Rx.Observable
                 .merge<any>(this._thematicLayers)
                 .throttle(800)
@@ -120,6 +125,10 @@ module gogeo {
                 }
                 this.setGeoLocation();
             }
+        }
+
+        private loadParams(result: any) {
+
         }
 
         private fitMap(bound: L.LatLngBounds) {

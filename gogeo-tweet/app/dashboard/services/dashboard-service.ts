@@ -18,7 +18,10 @@ module gogeo {
         static $named = "dashboardService";
         static $inject = [
             "$q",
-            "$http"
+            "$http",
+            "$location",
+            "$timeout",
+            "$routeParams"
         ];
 
         private _lastGeomSpace:IGeomSpace = null;
@@ -80,12 +83,25 @@ module gogeo {
         _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
         _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
         _placeBoundObservable = new Rx.BehaviorSubject<L.LatLngBounds>(null);
+        _loadParamsObservable = new Rx.BehaviorSubject<any>(null);
 
-        constructor(private $q:ng.IQService,
-                    private $http:ng.IHttpService) {
+        constructor(private $q:             ng.IQService,
+                    private $http:          ng.IHttpService,
+                    private $location:      ng.ILocationService,
+                    private $timeout:       ng.ITimeoutService,
+                    private $routeParams:   ng.route.IRouteParamsService) {
 
             this.initialize();
             this.getDateRange();
+            this.loadParams();
+        }
+
+        private loadParams() {
+            this._loadParamsObservable.onNext(this.$routeParams);
+
+            this.$timeout(() => {
+                this.$location.search({});
+            }, 200);
         }
 
         get loading(): boolean {
@@ -134,6 +150,10 @@ module gogeo {
 
         get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
             return this._placeBoundObservable;
+        }
+
+        get loadParamsObservable():Rx.BehaviorSubject<any> {
+            return this._loadParamsObservable;
         }
 
         initialize() {
@@ -248,9 +268,11 @@ module gogeo {
         }
 
         getDateRange() {
-            this.$http.get(Configuration.getDateRangeUrl()).then((result: any) => {
-                this._dateLimitObservable.onNext(result.data);
-            });
+            if (!this.$location.search()["startDate"] && !this.$location.search()["endDate"]) {
+                this.$http.get(Configuration.getDateRangeUrl()).then((result: any) => {
+                    this._dateLimitObservable.onNext(result.data);
+                });
+            }
         }
 
         private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
