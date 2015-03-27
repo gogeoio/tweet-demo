@@ -8,28 +8,45 @@ var gogeo;
     var Configuration = (function () {
         function Configuration() {
         }
-        Object.defineProperty(Configuration, "serverRootUrl", {
+        Object.defineProperty(Configuration, "apiUrl", {
             get: function () {
-                return gogeo.settings["server.url"];
+                return gogeo.settings["api.url"];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Configuration, "tileUrl", {
+            get: function () {
+                return gogeo.settings["tile.url"];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Configuration, "subdomains", {
+            get: function () {
+                return gogeo.settings["subdomains"];
             },
             enumerable: true,
             configurable: true
         });
         Configuration.makeUrl = function (path) {
-            var serverUrl = Configuration.serverRootUrl;
+            var serverUrl = Configuration.apiUrl;
+            if (path.match(".*tile.png.*") || path.match(".*cluster.json.*")) {
+                serverUrl = Configuration.tileUrl;
+            }
             if (serverUrl && !serverUrl.endsWith("/")) {
                 serverUrl = serverUrl + "/";
             }
-            return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+            return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         };
         Configuration.getTotalTweetsUrl = function () {
-            return "http://api.gogeo.io:5454/total";
+            return "http://api.gogeo.io/1.0/tools/total";
         };
         Configuration.getDateRangeUrl = function () {
-            return "http://api.gogeo.io:5454/dateRange";
+            return "http://api.gogeo.io/1.0/tools/daterange";
         };
         Configuration.getPlaceUrl = function (place) {
-            return "http://api.gogeo.io:5454/where/" + place;
+            return "http://api.gogeo.io/1.0/tools/where/" + place;
         };
         Configuration.getCollectionName = function () {
             return gogeo.settings["collection"];
@@ -1448,7 +1465,7 @@ var gogeo;
         DashboardMapController.prototype.createLayers = function () {
             var url = this.configureUrl();
             var options = {
-                subdomains: ["m1", "m2", "m3", "m4"],
+                subdomains: gogeo.Configuration.subdomains,
                 maptiks_id: this.mapSelected
             };
             if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
@@ -1686,7 +1703,7 @@ var gogeo;
         };
         DashboardMapController.prototype.createClusterLayer = function (url) {
             var options = {
-                subdomains: ["m1", "m2", "m3", "m4"],
+                subdomains: gogeo.Configuration.subdomains,
                 useJsonP: false
             };
             return new L.TileCluster(url, options);

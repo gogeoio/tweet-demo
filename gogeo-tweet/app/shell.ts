@@ -6,30 +6,42 @@ module gogeo {
     export var settings;
 
     export class Configuration {
-        static get serverRootUrl() {
-            return <string> settings["server.url"];
+        static get apiUrl() {
+            return <string> settings["api.url"];
+        }
+
+        static get tileUrl() {
+            return <string> settings["tile.url"];
+        }
+
+        static get subdomains() {
+            return <string[]> settings["subdomains"];
         }
 
         static makeUrl(path: string) {
-            var serverUrl: string = Configuration.serverRootUrl;
+            var serverUrl: string = Configuration.apiUrl;
+
+            if (path.match(".*tile.png.*") || path.match(".*cluster.json.*")) {
+                serverUrl = Configuration.tileUrl;
+            }
 
             if (serverUrl && !serverUrl.endsWith("/")) {
                 serverUrl = serverUrl + "/";
             }
 
-            return serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+            return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         }
 
         static getTotalTweetsUrl(): string {
-            return "http://api.gogeo.io:5454/total";
+            return "http://api.gogeo.io/1.0/tools/total";
         }
 
         static getDateRangeUrl(): string {
-            return "http://api.gogeo.io:5454/dateRange";
+            return "http://api.gogeo.io/1.0/tools/daterange";
         }
 
         static getPlaceUrl(place: string): string {
-            return "http://api.gogeo.io:5454/where/" + place;
+            return "http://api.gogeo.io/1.0/tools/where/" + place;
         }
 
         static getCollectionName(): string {
