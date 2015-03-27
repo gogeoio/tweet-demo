@@ -279,7 +279,7 @@ module gogeo {
         private createLayers(): Array<L.ILayer> {
             var url = this.configureUrl();
             var options = {
-                subdomains: ["m1", "m2", "m3", "m4"],
+                subdomains: Configuration.subdomains,
                 maptiks_id: this.mapSelected
             };
 
@@ -576,7 +576,7 @@ module gogeo {
 
         private createClusterLayer(url): L.ILayer {
             var options = {
-                subdomains: [ "m1", "m2", "m3", "m4" ],
+                subdomains: Configuration.subdomains,
                 useJsonP: false
             };
 
