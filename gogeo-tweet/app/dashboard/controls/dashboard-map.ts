@@ -15,6 +15,7 @@ module gogeo {
             "$scope",
             "$cookies",
             "$timeout",
+            "$location",
             "linkify",
             "$sce",
             "$geolocation",
@@ -27,7 +28,8 @@ module gogeo {
         popup: L.Popup;
         query: any = { query: { filtered: { filter: { } } } };
         selected: string = "inactive";
-        mapSelected: string = "point"; // cluster, point, intensity or thematic
+        mapTypes: Array<string> = [ "point", "cluster", "intensity", "thematic" ];
+        mapSelected: string = "point";
         drawing: boolean = false;
         baseLayers: L.FeatureGroup<L.ILayer> = null;
         layerGroup: L.LayerGroup<L.ILayer> = null;
@@ -53,14 +55,15 @@ module gogeo {
         _thematicLayers = new Rx.BehaviorSubject<Array<string>>(this.thematicSelectedLayers);
         _selectedMap = new Rx.BehaviorSubject<string>(null);
 
-        constructor(private $scope:     ng.IScope,
-                    private $cookies:   ng.cookies.ICookiesService,
-                    private $timeout:   ng.ITimeoutService,
-                    private linkify:    any,
-                    private $sce:       ng.ISCEService,
-                    private $geo:       any,
-                    private service:    DashboardService,
-                    private metrics:    MetricsService) {
+        constructor(private $scope:         ng.IScope,
+                    private $cookies:       ng.cookies.ICookiesService,
+                    private $timeout:       ng.ITimeoutService,
+                    private $location:      ng.ILocationService,
+                    private linkify:        any,
+                    private $sce:           ng.ISCEService,
+                    private $geo:           any,
+                    private service:        DashboardService,
+                    private metrics:        MetricsService) {
             this.layerGroup = L.layerGroup([]);
             this.baseLayers = L.featureGroup([]);
         }
@@ -97,6 +100,11 @@ module gogeo {
                  .where(bound => bound != null)
                 .subscribeAndApply(this.$scope, bound => this.fitMap(bound));
 
+            this.service.loadParamsObservable
+                .subscribeAndApply(this.$scope, (result: any) => {
+                    this.loadParams(result);
+                });
+
             Rx.Observable
                 .merge<any>(this._thematicLayers)
                 .throttle(800)
@@ -108,17 +116,55 @@ module gogeo {
                 .merge<any>(this._selectedMap)
                 .throttle(800)
                 .subscribe(() => {
+                    this.service.updateMapType(this.mapSelected);
                     this.metrics.publishMapTypeMetric(this.mapSelected);
                 });
 
-            var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
+            if (!this.$location.search()["center"] && !this.$location.search()["zoom"]) {
+                var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
 
-            if (this.$cookies["gogeo.firstLoad"] == undefined || shareLocation) {
-                this.$cookies["gogeo.firstLoad"] = false;
-                if (!shareLocation) {
-                    this.$cookies["gogeo.shareLocation"] = false;
+                if (this.$cookies["gogeo.firstLoad"] == undefined || shareLocation) {
+                    this.$cookies["gogeo.firstLoad"] = false;
+                    if (!shareLocation) {
+                        this.$cookies["gogeo.shareLocation"] = false;
+                    }
+                    this.setGeoLocation();
                 }
-                this.setGeoLocation();
+            }
+        }
+
+        private loadParams(result: any) {
+            if (!result || JSON.stringify(result) === JSON.stringify({})) {
+                return;
+            }
+
+            var zoom = parseInt(result["zoom"]);
+
+            if (zoom) {
+                this.map.setZoom(zoom);
+            }
+
+            var centerString = result["center"];
+
+            if (centerString) {
+                centerString = centerString.split(";");
+                var lat = parseFloat(centerString[0]);
+                var lng = parseFloat(centerString[1]);
+
+                var center = new L.LatLng(lat, lng);
+                this.map.setView(center);
+            }
+
+            var mapType = result["type"];
+
+            if (mapType && this.mapTypes.indexOf(mapType) != (-1)) {
+                this.mapSelected = mapType;
+            }
+
+            var baseLayer = result["baseLayer"];
+
+            if (baseLayer === "night") {
+                this.switchBaseLayer();
             }
         }
 
@@ -413,6 +459,7 @@ module gogeo {
                 this.baseLayers.addLayer(this.getDayMap());
             }
 
+            this.service.updateMapBase(this.baseLayerSelected);
             this.metrics.publishSwitchBaseLayer(this.baseLayerSelected);
             this.baseLayers.bringToBack();
         }
@@ -441,6 +488,9 @@ module gogeo {
         }
 
         onMapLoaded(geom?: IGeomSpace) {
+            this.service.updateMapZoom(this.map.getZoom());
+            this.service.updateMapCenter(this.map.getCenter());
+
             if (this.restricted) {
                 return;
             }
