@@ -9,7 +9,9 @@ module gogeo {
     //
 
     export var settings = <any>{
-        "server.url": "http://172.16.2.106:9090/",
+        "api.url": "local.test.io:9090/",
+        "tile.url": "local.test.io:9090/",
+        "subdomains": [],
         "collection": "tweets"
     };
 
