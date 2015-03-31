@@ -695,8 +695,13 @@ var gogeo;
             this._lastGeomSpace = null;
             this._lastHashtagFilter = null;
             this._lastSomethingTerms = [];
-            this._lastPlace = null;
+            this._lastPlaceCode = null;
+            this._lastPlaceString = null;
             this._lastDateRange = null;
+            this._lastMapCenter = null;
+            this._lastMapZoom = 0;
+            this._lastMapType = null;
+            this._lastMapBase = null;
             this._loading = true;
             this.tweetFields = [
                 "user.id",
@@ -849,10 +854,10 @@ var gogeo;
             Rx.Observable.merge(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable).throttle(400).subscribe(function () { return _this.search(); });
             Rx.Observable.merge(this._somethingTermsObservable, this._placeObservable).throttle(800).subscribe(function () { return _this.search(); });
         };
-        DashboardService.prototype.getBoundOfPlace = function (place) {
+        DashboardService.prototype.getBoundOfPlace = function (placeString) {
             var _this = this;
-            if (place) {
-                var url = gogeo.Configuration.getPlaceUrl(place);
+            if (placeString) {
+                var url = gogeo.Configuration.getPlaceUrl(placeString);
                 this.$http.get(url).then(function (result) {
                     var place = result.data["place"];
                     var bb = place["bounding_box"];
@@ -863,13 +868,15 @@ var gogeo;
                     var point2 = L.latLng(p2[1], p2[0]);
                     var bounds = L.latLngBounds(point1, point2);
                     _this._placeBoundObservable.onNext(bounds);
-                    _this._lastPlace = country_code;
+                    _this._lastPlaceCode = country_code;
+                    _this._lastPlaceString = placeString;
                     _this._placeObservable.onNext(country_code);
                 });
             }
             else {
-                this._lastPlace = null;
-                this._placeObservable.onNext(this._lastPlace);
+                this._lastPlaceCode = null;
+                this._lastPlaceString = null;
+                this._placeObservable.onNext(this._lastPlaceCode);
             }
         };
         DashboardService.prototype.calculateNeSW = function (bounds) {
@@ -896,6 +903,47 @@ var gogeo;
                 type: "Polygon",
                 coordinates: coordinates
             };
+        };
+        DashboardService.prototype.createShareLink = function () {
+            var url = "?share";
+            if (this._lastPlaceString && this._lastPlaceCode) {
+                url = url + "&where=" + this._lastPlaceString;
+            }
+            else {
+                if (this._lastMapCenter) {
+                    var point = this._lastMapCenter;
+                    var lat = point.lat.toFixed(2);
+                    var lng = point.lng.toFixed(2);
+                    url = url + "&center=" + lat + ";" + lng;
+                }
+                if (this._lastMapZoom) {
+                    url = url + "&zoom=" + this._lastMapZoom;
+                }
+            }
+            if (this._lastDateRange.start) {
+                var dateFormatted = moment(this._lastDateRange.start).format("MM/DD/YYYY");
+                url = url + "&startDate=" + dateFormatted;
+            }
+            if (this._lastDateRange.end) {
+                var dateFormatted = moment(this._lastDateRange.end).format("MM/DD/YYYY");
+                url = url + "&endDate=" + dateFormatted;
+            }
+            if (this._lastSomethingTerms) {
+                var terms = [];
+                for (var index in this._lastSomethingTerms) {
+                    var term = this._lastSomethingTerms[index];
+                    term = term.replace("#", "%23");
+                    terms.push(term);
+                }
+                url = url + "&what=" + terms.join(" ");
+            }
+            if (this._lastMapType) {
+                url = url + "&type=" + this._lastMapType;
+            }
+            if (this._lastMapBase) {
+                url = url + "&baseLayer=" + this._lastMapBase;
+            }
+            return url;
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
             this._loading = true;
@@ -929,6 +977,18 @@ var gogeo;
             }
             this._lastDateRange = dateRange;
             this._dateRangeObservable.onNext(dateRange);
+        };
+        DashboardService.prototype.updateMapCenter = function (mapCenter) {
+            this._lastMapCenter = mapCenter;
+        };
+        DashboardService.prototype.updateMapZoom = function (mapZoom) {
+            this._lastMapZoom = mapZoom;
+        };
+        DashboardService.prototype.updateMapType = function (mapType) {
+            this._lastMapType = mapType;
+        };
+        DashboardService.prototype.updateMapBase = function (mapBase) {
+            this._lastMapBase = mapBase;
         };
         DashboardService.prototype.getTweet = function (latlng, zoom, thematicQuery) {
             return this.getTweetData(latlng, zoom, thematicQuery);
@@ -986,8 +1046,8 @@ var gogeo;
             if (this._lastSomethingTerms.length > 0) {
                 query.filterBySearchTerms(this._lastSomethingTerms);
             }
-            if (this._lastPlace) {
-                query.filterByPlace(this._lastPlace);
+            if (this._lastPlaceCode) {
+                query.filterByPlace(this._lastPlaceCode);
             }
             if (this._lastDateRange) {
                 query.filterByDateRange(this._lastDateRange);
@@ -1234,7 +1294,6 @@ var gogeo;
             if (!result || JSON.stringify(result) === JSON.stringify({})) {
                 return;
             }
-            console.log("result", JSON.stringify(result, null, 2));
             var what = result["what"];
             if (what) {
                 this.somethingTerm = what;
@@ -1303,10 +1362,11 @@ var gogeo;
 var gogeo;
 (function (gogeo) {
     var DashboardMapController = (function () {
-        function DashboardMapController($scope, $cookies, $timeout, linkify, $sce, $geo, service, metrics) {
+        function DashboardMapController($scope, $cookies, $timeout, $location, linkify, $sce, $geo, service, metrics) {
             this.$scope = $scope;
             this.$cookies = $cookies;
             this.$timeout = $timeout;
+            this.$location = $location;
             this.linkify = linkify;
             this.$sce = $sce;
             this.$geo = $geo;
@@ -1314,7 +1374,8 @@ var gogeo;
             this.metrics = metrics;
             this.query = { query: { filtered: { filter: {} } } };
             this.selected = "inactive";
-            this.mapSelected = "point"; // cluster, point, intensity or thematic
+            this.mapTypes = ["point", "cluster", "intensity", "thematic"];
+            this.mapSelected = "point";
             this.drawing = false;
             this.baseLayers = null;
             this.layerGroup = null;
@@ -1380,18 +1441,44 @@ var gogeo;
                 _this.metrics.publishThematicMetric(_this.thematicSelectedLayers);
             });
             Rx.Observable.merge(this._selectedMap).throttle(800).subscribe(function () {
+                _this.service.updateMapType(_this.mapSelected);
                 _this.metrics.publishMapTypeMetric(_this.mapSelected);
             });
-            var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
-            if (this.$cookies["gogeo.firstLoad"] == undefined || shareLocation) {
-                this.$cookies["gogeo.firstLoad"] = false;
-                if (!shareLocation) {
-                    this.$cookies["gogeo.shareLocation"] = false;
+            if (!this.$location.search()["center"] && !this.$location.search()["zoom"]) {
+                var shareLocation = (this.$cookies["gogeo.shareLocation"] === "true");
+                if (this.$cookies["gogeo.firstLoad"] == undefined || shareLocation) {
+                    this.$cookies["gogeo.firstLoad"] = false;
+                    if (!shareLocation) {
+                        this.$cookies["gogeo.shareLocation"] = false;
+                    }
+                    this.setGeoLocation();
                 }
-                this.setGeoLocation();
             }
         };
         DashboardMapController.prototype.loadParams = function (result) {
+            if (!result || JSON.stringify(result) === JSON.stringify({})) {
+                return;
+            }
+            var zoom = parseInt(result["zoom"]);
+            if (zoom) {
+                this.map.setZoom(zoom);
+            }
+            var centerString = result["center"];
+            if (centerString) {
+                centerString = centerString.split(";");
+                var lat = parseFloat(centerString[0]);
+                var lng = parseFloat(centerString[1]);
+                var center = new L.LatLng(lat, lng);
+                this.map.setView(center);
+            }
+            var mapType = result["type"];
+            if (mapType && this.mapTypes.indexOf(mapType) != (-1)) {
+                this.mapSelected = mapType;
+            }
+            var baseLayer = result["baseLayer"];
+            if (baseLayer === "night") {
+                this.switchBaseLayer();
+            }
         };
         DashboardMapController.prototype.fitMap = function (bound) {
             this.map.fitBounds(bound, { reset: true });
@@ -1634,6 +1721,7 @@ var gogeo;
                 this.baseLayerSelected = "day";
                 this.baseLayers.addLayer(this.getDayMap());
             }
+            this.service.updateMapBase(this.baseLayerSelected);
             this.metrics.publishSwitchBaseLayer(this.baseLayerSelected);
             this.baseLayers.bringToBack();
         };
@@ -1656,6 +1744,8 @@ var gogeo;
             this._thematicLayers.onNext(this.thematicSelectedLayers);
         };
         DashboardMapController.prototype.onMapLoaded = function (geom) {
+            this.service.updateMapZoom(this.map.getZoom());
+            this.service.updateMapCenter(this.map.getCenter());
             if (this.restricted) {
                 return;
             }
@@ -1774,6 +1864,7 @@ var gogeo;
             "$scope",
             "$cookies",
             "$timeout",
+            "$location",
             "linkify",
             "$sce",
             "$geolocation",

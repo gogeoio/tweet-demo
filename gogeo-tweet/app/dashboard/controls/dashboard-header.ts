@@ -17,9 +17,10 @@ module gogeo {
         endDate: string = null;
         dateFormat: string = "MM/DD/YYYY";
 
-        constructor($scope:                 ng.IScope,
-                    private service:        DashboardService) {
+        constructor($scope:         ng.IScope,
+                    public service: DashboardService) {
             super($scope);
+
             this.initialize();
 
             this.service.dateLimitObservable
@@ -40,8 +41,6 @@ module gogeo {
             if (!result || JSON.stringify(result) === JSON.stringify({})) {
                 return;
             }
-
-            console.log("result", JSON.stringify(result, null, 2));
 
             var what = result["what"];
             if (what) {

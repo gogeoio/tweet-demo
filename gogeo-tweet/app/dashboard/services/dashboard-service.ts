@@ -27,8 +27,13 @@ module gogeo {
         private _lastGeomSpace:IGeomSpace = null;
         private _lastHashtagFilter:IBucket = null;
         private _lastSomethingTerms:string[] = [];
-        private _lastPlace: string = null;
+        private _lastPlaceCode: string = null;
+        private _lastPlaceString: string = null;
         private _lastDateRange: IDateRange = null;
+        private _lastMapCenter: L.LatLng = null;
+        private _lastMapZoom: number = 0;
+        private _lastMapType: string = null;
+        private _lastMapBase: string = null;
         private _loading: boolean = true;
 
         private tweetFields: Array<string> = [
@@ -168,9 +173,9 @@ module gogeo {
                 .subscribe(() => this.search());
         }
 
-        private getBoundOfPlace(place: string) {
-            if (place) {
-                var url = Configuration.getPlaceUrl(place);
+        private getBoundOfPlace(placeString: string) {
+            if (placeString) {
+                var url = Configuration.getPlaceUrl(placeString);
 
                 this.$http.get(url).then((result: any) => {
                     var place = result.data["place"];
@@ -185,12 +190,14 @@ module gogeo {
                     var bounds = L.latLngBounds(point1, point2);
                     this._placeBoundObservable.onNext(bounds);
 
-                    this._lastPlace = country_code;
+                    this._lastPlaceCode = country_code;
+                    this._lastPlaceString = placeString;
                     this._placeObservable.onNext(country_code);
                 });
             } else {
-                this._lastPlace = null;
-                this._placeObservable.onNext(this._lastPlace);
+                this._lastPlaceCode = null;
+                this._lastPlaceString = null;
+                this._placeObservable.onNext(this._lastPlaceCode);
             }
         }
 
@@ -219,6 +226,55 @@ module gogeo {
                 type: "Polygon",
                 coordinates: coordinates
             }
+        }
+
+        createShareLink(): string {
+            var url = "?share";
+
+            if (this._lastPlaceString && this._lastPlaceCode) {
+                url = url + "&where=" + this._lastPlaceString;
+            } else {
+                if (this._lastMapCenter) {
+                    var point = this._lastMapCenter;
+                    var lat = point.lat.toFixed(2);
+                    var lng = point.lng.toFixed(2);
+                    url = url + "&center=" + lat + ";" + lng;
+                }
+
+                if (this._lastMapZoom) {
+                    url = url + "&zoom=" + this._lastMapZoom;
+                }
+            }
+
+            if (this._lastDateRange.start) {
+                var dateFormatted = moment(this._lastDateRange.start).format("MM/DD/YYYY");
+                url = url + "&startDate=" + dateFormatted;
+            }
+
+            if (this._lastDateRange.end) {
+                var dateFormatted = moment(this._lastDateRange.end).format("MM/DD/YYYY");
+                url = url + "&endDate=" + dateFormatted;
+            }
+
+            if (this._lastSomethingTerms) {
+                var terms = [];
+                for (var index in this._lastSomethingTerms) {
+                    var term = this._lastSomethingTerms[index];
+                    term = term.replace("#", "%23");
+                    terms.push(term);
+                }
+                url = url + "&what=" + terms.join(" ");
+            }
+
+            if (this._lastMapType) {
+                url = url + "&type=" + this._lastMapType;
+            }
+
+            if (this._lastMapBase) {
+                url = url + "&baseLayer=" + this._lastMapBase;
+            }
+
+            return url;
         }
 
         updateGeomSpace(geom: IGeomSpace) {
@@ -262,6 +318,23 @@ module gogeo {
             this._lastDateRange = dateRange;
             this._dateRangeObservable.onNext(dateRange);
         }
+
+        updateMapCenter(mapCenter: L.LatLng) {
+            this._lastMapCenter = mapCenter;
+        }
+
+        updateMapZoom(mapZoom: number) {
+            this._lastMapZoom = mapZoom;
+        }
+
+        updateMapType(mapType: string) {
+            this._lastMapType = mapType;
+        }
+
+        updateMapBase(mapBase: string) {
+            this._lastMapBase = mapBase;
+        }
+
 
         getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
             return this.getTweetData(latlng, zoom, thematicQuery);
@@ -332,8 +405,8 @@ module gogeo {
                 query.filterBySearchTerms(this._lastSomethingTerms);
             }
 
-            if (this._lastPlace) {
-                query.filterByPlace(this._lastPlace);
+            if (this._lastPlaceCode) {
+                query.filterByPlace(this._lastPlaceCode);
             }
 
             if (this._lastDateRange) {
