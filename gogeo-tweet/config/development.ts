@@ -9,8 +9,8 @@ module gogeo {
     //
 
     export var settings = <any>{
-        "api.url": "local.test.io:9090/",
-        "tile.url": "local.test.io:9090/",
+        "api.url": "cluster.local.io:9090/",
+        "tile.url": "cluster.local.io:9090/",
         "subdomains": [],
         "collection": "tweets"
     };
