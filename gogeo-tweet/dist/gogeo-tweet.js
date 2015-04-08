@@ -51,6 +51,9 @@ var gogeo;
         Configuration.getCollectionName = function () {
             return gogeo.settings["collection"];
         };
+        Configuration.getShortenUrl = function () {
+            return "http://api.gogeo.io/1.0/tools/short";
+        };
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
@@ -904,7 +907,8 @@ var gogeo;
                 coordinates: coordinates
             };
         };
-        DashboardService.prototype.createShareLink = function () {
+        DashboardService.prototype.createShareLink = function (type) {
+            var _this = this;
             var url = "?share";
             if (this._lastPlaceString && this._lastPlaceCode) {
                 url = url + "&where=" + this._lastPlaceString;
@@ -914,7 +918,7 @@ var gogeo;
                     var point = this._lastMapCenter;
                     var lat = point.lat.toFixed(2);
                     var lng = point.lng.toFixed(2);
-                    url = url + "&center=" + lat + ";" + lng;
+                    url = url + "&center=" + lat + "," + lng;
                 }
                 if (this._lastMapZoom) {
                     url = url + "&zoom=" + this._lastMapZoom;
@@ -943,7 +947,47 @@ var gogeo;
             if (this._lastMapBase) {
                 url = url + "&baseLayer=" + this._lastMapBase;
             }
+            url = "http://twittermap.gogeo.io/app/#/dashboard" + url;
+            var shortenUrl = gogeo.Configuration.getShortenUrl() + "?url=" + encodeURIComponent(url);
+            this.$http.get(shortenUrl).then(function (result) {
+                var tweetUrl = result.data["data"]["url"];
+                _this.openShare(type, tweetUrl);
+            }, function (data) {
+                _this.openShare(type, url);
+            });
             return url;
+        };
+        DashboardService.prototype.openShare = function (type, url) {
+            if (type === "twitter") {
+                this.twitterShare(url);
+            }
+            else if (type === "facebook") {
+                this.facebookShare(url);
+            }
+        };
+        DashboardService.prototype.twitterShare = function (url) {
+            var params = [
+                "url=" + encodeURIComponent(url),
+                "via=gogeo_io",
+                "hashtags=gogeo,gogeo_io,twittermap",
+                "text=" + encodeURIComponent("Check out the live tweets on the map")
+            ];
+            var url = 'http://twitter.com/share?' + params.join("&");
+            var sharePopOptions = 'height=450, width=550, top=' + ($(window).height() / 2 - 225) + ', left=' + $(window).width() / 2 + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0';
+            window.open(url, 'twitterwindow', sharePopOptions);
+        };
+        DashboardService.prototype.facebookShare = function (url) {
+            var params = [
+                "app_id=873202776080901",
+                "sdk=joey",
+                "u=" + encodeURIComponent(url),
+                "display=popup",
+                "ref=plugin",
+                "src=share_button"
+            ];
+            var url = 'https://www.facebook.com/sharer/sharer.php?' + params.join("&");
+            var sharePopOptions = 'height=450, width=650, top=' + ($(window).height() / 2 - 225) + ', left=' + $(window).width() / 2 + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0';
+            window.open(url, 'facebookwindow', sharePopOptions);
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
             this._loading = true;
@@ -1160,8 +1204,9 @@ var gogeo;
 var gogeo;
 (function (gogeo) {
     var DashboardDetailsController = (function () {
-        function DashboardDetailsController($scope, service) {
+        function DashboardDetailsController($scope, $interval, service) {
             this.$scope = $scope;
+            this.$interval = $interval;
             this.service = service;
             this.hashtagResult = null;
             this.selectedHashtag = null;
@@ -1170,6 +1215,13 @@ var gogeo;
         DashboardDetailsController.prototype.initialize = function () {
             var _this = this;
             this.service.hashtagResultObservable.subscribeAndApply(this.$scope, function (result) { return _this.handleResult(result); });
+            this.updateTotal();
+            this.$interval(function () {
+                _this.updateTotal();
+            }, 10000);
+        };
+        DashboardDetailsController.prototype.updateTotal = function () {
+            var _this = this;
             this.service.totalTweets().then(function (result) {
                 _this.totalTweets = result["data"];
             });
@@ -1186,6 +1238,7 @@ var gogeo;
         };
         DashboardDetailsController.$inject = [
             "$scope",
+            "$interval",
             gogeo.DashboardService.$named
         ];
         return DashboardDetailsController;
@@ -1465,7 +1518,11 @@ var gogeo;
             }
             var centerString = result["center"];
             if (centerString) {
-                centerString = centerString.split(";");
+                centerString = centerString.split(",");
+                if (centerString.length != 2) {
+                    // Compatibility with previous version
+                    centerString = centerString.split(";");
+                }
                 var lat = parseFloat(centerString[0]);
                 var lng = parseFloat(centerString[1]);
                 var center = new L.LatLng(lat, lng);

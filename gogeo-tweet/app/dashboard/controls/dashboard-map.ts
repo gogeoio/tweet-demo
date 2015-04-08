@@ -147,7 +147,13 @@ module gogeo {
             var centerString = result["center"];
 
             if (centerString) {
-                centerString = centerString.split(";");
+                centerString = centerString.split(",");
+
+                if (centerString.length != 2) {
+                    // Compatibility with previous version
+                    centerString = centerString.split(";");
+                }
+
                 var lat = parseFloat(centerString[0]);
                 var lng = parseFloat(centerString[1]);
 

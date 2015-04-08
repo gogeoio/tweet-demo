@@ -7,9 +7,10 @@
 body,figure{margin:0}
 .navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse,.pre-scrollable{max-height:340px}
 .popover>.arrow,.popover>.arrow:after,.tooltip-arrow{width:0;height:0;border-color:transparent;border-style:solid}
-.btn,.datepicker table{-webkit-user-select:none}
 .fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
-.btn,.datepicker table,.leaflet-overlay-pane svg{-moz-user-select:none}
+.btn,.datepicker table,.icon-button{-ms-user-select:none}
+.btn,.datepicker table,.icon-button,.leaflet-overlay-pane svg{-moz-user-select:none}
+.btn,.datepicker table,.icon-button{-webkit-user-select:none}
 #foursquare,#instagram,#iphone,#web{marker-fill-opacity:.9;marker-comp-op:lighten}
 html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:transparent}
 article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
@@ -756,7 +757,7 @@ select[multiple].form-group-lg .form-control,textarea.form-group-lg .form-contro
 @media (min-width:768px){.form-horizontal .control-label{padding-top:7px;margin-bottom:0;text-align:right}
 .form-horizontal .form-group-lg .control-label{padding-top:14.33px}
 .form-horizontal .form-group-sm .control-label{padding-top:6px}}
-.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-ms-user-select:none;user-select:none;border:1px solid transparent;border-radius:4px}
+.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;user-select:none;border:1px solid transparent;border-radius:4px}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus{outline:dotted thin;outline:-webkit-focus-ring-color auto 5px;outline-offset:-2px}
 .btn.focus,.btn:focus,.btn:hover{color:#333;text-decoration:none}
 .btn.active,.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
@@ -1274,6 +1275,7 @@ button.close{-webkit-appearance:none;padding:0;cursor:pointer;background:0 0;bor
 .modal-sm{width:300px}}
 @media (min-width:992px){.modal-lg{width:900px}}
 .tooltip{position:absolute;z-index:1070;display:block;font-size:12px;font-weight:400;line-height:1.4;visibility:visible;filter:alpha(opacity=0);opacity:0}
+.invisible,.leaflet-tile{visibility:hidden}
 .tooltip.in{filter:alpha(opacity=90);opacity:.9}
 .tooltip.top{padding:5px 0;margin-top:-3px}
 .tooltip.right{padding:0 5px;margin-left:3px}
@@ -1353,7 +1355,6 @@ button.close{-webkit-appearance:none;padding:0;cursor:pointer;background:0 0;bor
 .hide{display:none!important}
 .show{display:block!important}
 .hidden,.visible-lg,.visible-lg-block,.visible-lg-inline,.visible-lg-inline-block,.visible-md,.visible-md-block,.visible-md-inline,.visible-md-inline-block,.visible-sm,.visible-sm-block,.visible-sm-inline,.visible-sm-inline-block,.visible-xs,.visible-xs-block,.visible-xs-inline,.visible-xs-inline-block{display:none!important}
-.invisible{visibility:hidden}
 .text-hide{font:0/0 a;color:transparent;background-color:transparent;border:0}
 .hidden{visibility:hidden!important}
 .affix{position:fixed}
@@ -1495,7 +1496,7 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .datepicker-dropdown.datepicker-orient-bottom:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}
 .datepicker>div{display:none}
 .datepicker.days div.datepicker-days,.datepicker.months div.datepicker-months,.datepicker.years div.datepicker-years{display:block}
-.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;-ms-user-select:none;user-select:none}
+.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;user-select:none}
 .datepicker table tr td,.datepicker table tr th{text-align:center;width:30px;height:30px;border-radius:4px;border:none}
 .table-striped .datepicker table tr td,.table-striped .datepicker table tr th{background-color:transparent}
 .datepicker table tr td.day.focused,.datepicker table tr td.day:hover{background:#eee;cursor:pointer}
@@ -2114,7 +2115,7 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .leaflet-image-layer,.leaflet-layer,.leaflet-map-pane,.leaflet-marker-icon,.leaflet-marker-pane,.leaflet-marker-shadow,.leaflet-overlay-pane,.leaflet-overlay-pane svg,.leaflet-popup-pane,.leaflet-shadow-pane,.leaflet-tile,.leaflet-tile-container,.leaflet-tile-pane,.leaflet-zoom-box{position:absolute;left:0;top:0}
 .leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-drag:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}
 .leaflet-marker-icon,.leaflet-marker-shadow{display:block}
-.leaflet-tile{filter:inherit;visibility:hidden}
+.leaflet-tile{filter:inherit}
 .leaflet-tile-loaded{visibility:inherit}
 .leaflet-tile-pane{z-index:2}
 .leaflet-objects-pane{z-index:3}
@@ -2413,6 +2414,18 @@ a{color:#168fae}
 .leaflet-popup-content{padding:0}
 .loading{color:#1CB4DB}
 .marker-popup .marker-content .mc-weet-thumb{float:left;margin:20px;padding:0}
+.icon-button i,.icon-button span{-moz-transition:all .3s;-o-transition:all .3s;position:absolute;-webkit-transition:all .3s}
+.icon-button{background-color:#fff;border-radius:3.6rem;cursor:pointer;display:inline-block;font-size:2rem;height:3.6rem;line-height:3.6rem;margin:0 5px;position:relative;text-align:center;user-select:none;width:3.6rem}
+.icon-button span{border-radius:0;display:block;height:0;left:50%;margin:0;top:50%;transition:all .3s;width:0}
+.icon-button:hover span{width:3.6rem;height:3.6rem;border-radius:3.6rem;margin:-1.8rem}
+.twitter span{background-color:#4099ff}
+.facebook span{background-color:#3B5998}
+.google-plus span{background-color:#db5a3c}
+.icon-button i{background:0 0;color:#fff;height:3.6rem;left:0;line-height:3.6rem;top:0;transition:all .3s;width:3.6rem;z-index:10}
+.icon-button .icon-twitter{color:#4099ff}
+.icon-button .icon-facebook{color:#3B5998}
+.icon-button .icon-google-plus{color:#db5a3c}
+.icon-button:hover .icon-facebook,.icon-button:hover .icon-google-plus,.icon-button:hover .icon-twitter{color:#fff}
 @android-color: #F84F40;
 #android[source=~".*Android.*"]{marker-comp-op:lighten;marker-fill-opacity:.9;marker-fill:@android-color;marker-line-color:@android-color}
 @foursquare-color: #229A00;

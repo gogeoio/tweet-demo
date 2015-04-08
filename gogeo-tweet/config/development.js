@@ -7,8 +7,8 @@ var gogeo;
     // Configurações para DESENVOLVIMENTO LOCAL
     //
     gogeo.settings = {
-        "api.url": "local.test.io:9090/",
-        "tile.url": "local.test.io:9090/",
+        "api.url": "cluster.local.io:9090/",
+        "tile.url": "cluster.local.io:9090/",
         "subdomains": [],
         "collection": "tweets"
     };

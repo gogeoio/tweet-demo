@@ -29,18 +29,21 @@
                     <daterange data-start-date="header.startDate" data-end-date="header.endDate"></daterange>
                 </div>
 
-                <div class="form-group" style="margin-left: 5px;">
+                <div class="form-group" style="margin-left: 5px; margin-top: 5px;">
                     <div class="nav navbar-nav navbar-right social-media">
-                        <div class="tweet-button">
-                            <a class="twitter-share-button" data-count="none" href="https://twitter.com/share?text=Check out the live tweets on the map @gogeo_io&hashtags=gogeo,gogeo_io,twittermap">
-                                Tweet
+                        <div id="tweet-button" class="tweet-button">
+                            <a href="javascript:" class="icon-button twitter" ng-click="header.service.createShareLink('twitter')">
+                                <i class="fa fa-twitter icon-twitter"></i>
+                                <span></span>
                             </a>
-                            <script>
-                                window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
-                            </script>
                         </div>
+                    </div>
+                    <div class="nav navbar-nav navbar-right social-media">
                         <div id="facebook-button" class="facebook-button">
-                            <div class="fb-share-button" data-href="http://twittermap.gogeo.io/app/#/dashboard" data-layout="button"></div>
+                            <a href="javascript:" class="icon-button facebook" ng-click="header.service.createShareLink('facebook')">
+                                <i class="fa fa-facebook icon-facebook"></i>
+                                <span></span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -48,8 +51,8 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="pull-right">
-                    <button class="btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#addMoreTweets">
-                        Built with <a href="http://gogeo.io" target="_blank">goGeo.io</a>
+                    <button onclick="window.open('http://gogeo.io', '_blank')" class="btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#addMoreTweets">
+                        Built with <span style="color: #1CB4DB">goGeo.io</span>
                     </button>
                 </li>
             </ul>

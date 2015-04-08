@@ -7,6 +7,7 @@ module gogeo {
     class DashboardDetailsController {
         static $inject = [
             "$scope",
+            "$interval",
             DashboardService.$named
         ];
 
@@ -15,6 +16,7 @@ module gogeo {
         totalTweets: string = "";
 
         constructor(private $scope: ng.IScope,
+                    private $interval: ng.IIntervalService,
                     private service: DashboardService) {
         }
 
@@ -22,6 +24,13 @@ module gogeo {
             this.service.hashtagResultObservable
                 .subscribeAndApply(this.$scope, result => this.handleResult(result));
 
+            this.updateTotal();
+            this.$interval(() => {
+                this.updateTotal();
+            }, 10000);
+        }
+
+        updateTotal() {
             this.service.totalTweets().then((result: any) => {
                 this.totalTweets = result["data"];
             });

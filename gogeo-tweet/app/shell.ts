@@ -47,6 +47,10 @@ module gogeo {
         static getCollectionName(): string {
             return <string> settings["collection"];
         }
+
+        static getShortenUrl(): string {
+            return "http://api.gogeo.io/1.0/tools/short";
+        }
     }
 
     var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation"])
