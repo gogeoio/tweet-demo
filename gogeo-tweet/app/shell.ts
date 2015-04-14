@@ -33,15 +33,15 @@ module gogeo {
         }
 
         static getTotalTweetsUrl(): string {
-            return "http://api.gogeo.io/1.0/tools/total";
+            return "http://maps.demos.gogeo.io/1.0/tools/total";
         }
 
         static getDateRangeUrl(): string {
-            return "http://api.gogeo.io/1.0/tools/daterange";
+            return "http://maps.demos.gogeo.io/1.0/tools/daterange";
         }
 
         static getPlaceUrl(place: string): string {
-            return "http://api.gogeo.io/1.0/tools/where/" + place;
+            return "http://maps.demos.gogeo.io/1.0/tools/where/" + place;
         }
 
         static getCollectionName(): string {
@@ -49,7 +49,7 @@ module gogeo {
         }
 
         static getShortenUrl(): string {
-            return "http://api.gogeo.io/1.0/tools/short";
+            return "http://maps.demos.gogeo.io/1.0/tools/short";
         }
     }
 

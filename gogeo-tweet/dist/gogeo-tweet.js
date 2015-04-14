@@ -40,19 +40,19 @@ var gogeo;
             return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         };
         Configuration.getTotalTweetsUrl = function () {
-            return "http://api.gogeo.io/1.0/tools/total";
+            return "http://maps.demos.gogeo.io/1.0/tools/total";
         };
         Configuration.getDateRangeUrl = function () {
-            return "http://api.gogeo.io/1.0/tools/daterange";
+            return "http://maps.demos.gogeo.io/1.0/tools/daterange";
         };
         Configuration.getPlaceUrl = function (place) {
-            return "http://api.gogeo.io/1.0/tools/where/" + place;
+            return "http://maps.demos.gogeo.io/1.0/tools/where/" + place;
         };
         Configuration.getCollectionName = function () {
             return gogeo.settings["collection"];
         };
         Configuration.getShortenUrl = function () {
-            return "http://api.gogeo.io/1.0/tools/short";
+            return "http://maps.demos.gogeo.io/1.0/tools/short";
         };
         return Configuration;
     })();

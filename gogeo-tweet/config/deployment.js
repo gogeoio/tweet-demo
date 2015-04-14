@@ -7,9 +7,9 @@ var gogeo;
     // Configurações para PUBLICAÇÃO
     //
     gogeo.settings = {
-        "api.url": "api.gogeo.io/1.0/",
-        "tile.url": "{s}.gogeo.io/1.0/",
-        "subdomains": [ "m1", "m2", "m3", "m4", "m5", "m6", "m7" ],
+        "api.url": "maps.demos.gogeo.io/1.0/",
+        "tile.url": "{s}.demos.gogeo.io/1.0/",
+        "subdomains": [ "m01", "m02", "m03", "m04" ],
         "collection": "tweets_all"
     };
 })(gogeo || (gogeo = {}));
