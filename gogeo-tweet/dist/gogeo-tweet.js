@@ -40,7 +40,7 @@ var gogeo;
             return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
         };
         Configuration.getTotalTweetsUrl = function () {
-            return "http://maps.demos.gogeo.io/1.0/tools/total";
+            return "http://maps.demos.gogeo.io/1.0/tools/totalRead";
         };
         Configuration.getDateRangeUrl = function () {
             return "http://maps.demos.gogeo.io/1.0/tools/daterange";
@@ -1204,26 +1204,48 @@ var gogeo;
 var gogeo;
 (function (gogeo) {
     var DashboardDetailsController = (function () {
-        function DashboardDetailsController($scope, $interval, service) {
+        function DashboardDetailsController($scope, $interval, $filter, service) {
             this.$scope = $scope;
             this.$interval = $interval;
+            this.$filter = $filter;
             this.service = service;
             this.hashtagResult = null;
             this.selectedHashtag = null;
-            this.totalTweets = "";
+            this.currentMax = 0;
+            this.totalTweets = 0;
+            this.bucketSize = 0;
+            this.currentInterval = null;
+            this.updateInterval = 30000; // milliseconds
+            this.updateWindow = 100;
         }
         DashboardDetailsController.prototype.initialize = function () {
             var _this = this;
             this.service.hashtagResultObservable.subscribeAndApply(this.$scope, function (result) { return _this.handleResult(result); });
             this.updateTotal();
             this.$interval(function () {
+                if (_this.currentInterval) {
+                    _this.$interval.cancel(_this.currentInterval);
+                }
                 _this.updateTotal();
-            }, 10000);
+            }, this.updateInterval);
+        };
+        DashboardDetailsController.prototype.startTotalInterval = function () {
+            var _this = this;
+            this.currentInterval = this.$interval(function () {
+                if (_this.totalTweets < _this.currentMax) {
+                    var factor = _this.updateWindow * _this.bucketSize;
+                    var updateSize = Math.floor(factor / _this.updateInterval);
+                    _this.totalTweets = _this.totalTweets + updateSize;
+                }
+            }, this.updateWindow);
         };
         DashboardDetailsController.prototype.updateTotal = function () {
             var _this = this;
             this.service.totalTweets().then(function (result) {
-                _this.totalTweets = result["data"];
+                _this.totalTweets = parseInt(result["data"]["total"]);
+                _this.bucketSize = parseInt(result["data"]["read"]);
+                _this.currentMax = _this.totalTweets + _this.bucketSize;
+                _this.startTotalInterval();
             });
         };
         DashboardDetailsController.prototype.handleResult = function (result) {
@@ -1239,6 +1261,7 @@ var gogeo;
         DashboardDetailsController.$inject = [
             "$scope",
             "$interval",
+            "$filter",
             gogeo.DashboardService.$named
         ];
         return DashboardDetailsController;

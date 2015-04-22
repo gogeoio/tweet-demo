@@ -8,15 +8,22 @@ module gogeo {
         static $inject = [
             "$scope",
             "$interval",
+            "$filter",
             DashboardService.$named
         ];
 
         hashtagResult: IHashtagResult = null;
         selectedHashtag: IBucket = null;
-        totalTweets: string = "";
+        currentMax: number = 0;
+        totalTweets: number = 0;
+        bucketSize: number = 0;
+        currentInterval: any = null;
+        updateInterval: number = 30000; // milliseconds
+        updateWindow: number = 100;
 
         constructor(private $scope: ng.IScope,
                     private $interval: ng.IIntervalService,
+                    private $filter: ng.IFilterService,
                     private service: DashboardService) {
         }
 
@@ -25,14 +32,31 @@ module gogeo {
                 .subscribeAndApply(this.$scope, result => this.handleResult(result));
 
             this.updateTotal();
+
             this.$interval(() => {
+                if (this.currentInterval) {
+                    this.$interval.cancel(this.currentInterval);
+                }
                 this.updateTotal();
-            }, 10000);
+            }, this.updateInterval);
+        }
+
+        startTotalInterval() {
+            this.currentInterval = this.$interval(() => {
+                if (this.totalTweets < this.currentMax) {
+                    var factor = this.updateWindow * this.bucketSize;
+                    var updateSize = Math.floor(factor / this.updateInterval);
+                    this.totalTweets = this.totalTweets + updateSize;
+                }
+            }, this.updateWindow);
         }
 
         updateTotal() {
             this.service.totalTweets().then((result: any) => {
-                this.totalTweets = result["data"];
+                this.totalTweets = parseInt(result["data"]["total"]);
+                this.bucketSize = parseInt(result["data"]["read"]);
+                this.currentMax = this.totalTweets + this.bucketSize;
+                this.startTotalInterval();
             });
         }
 

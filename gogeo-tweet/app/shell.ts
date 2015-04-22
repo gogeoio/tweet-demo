@@ -33,7 +33,7 @@ module gogeo {
         }
 
         static getTotalTweetsUrl(): string {
-            return "http://maps.demos.gogeo.io/1.0/tools/total";
+            return "http://maps.demos.gogeo.io/1.0/tools/totalRead";
         }
 
         static getDateRangeUrl(): string {
