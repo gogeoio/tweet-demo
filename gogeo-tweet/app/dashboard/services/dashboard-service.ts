@@ -367,6 +367,8 @@ module gogeo {
         private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
             var url = Configuration.makeUrl("geosearch/db1/" + Configuration.getCollectionName() + "?mapkey=123");
             var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8)) * 8;
+            if (pixelDist > 32) pixelDist = 32;
+
             var query = this.composeQuery().requestData.q;
 
             if (thematicQuery) {

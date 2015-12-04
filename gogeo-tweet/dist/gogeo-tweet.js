@@ -1047,7 +1047,9 @@ var gogeo;
         DashboardService.prototype.getTweetData = function (latlng, zoom, thematicQuery) {
             var _this = this;
             var url = gogeo.Configuration.makeUrl("geosearch/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
-            var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
+            var pixelDist = 40075 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8)) * 8;
+            if (pixelDist > 32)
+                pixelDist = 32;
             var query = this.composeQuery().requestData.q;
             if (thematicQuery) {
                 query = thematicQuery.build();
