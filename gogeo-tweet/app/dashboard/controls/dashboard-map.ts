@@ -252,7 +252,7 @@ module gogeo {
     }
 
     private getDayMap() {
-      let url = "http://{s}.api.internal.tomtom.com/lbs/map/3/basic/1/{z}/{x}/{y}.png?key=8r734zursdrdrvcejfhedk8q&l=en&v=3";
+      let url = "https://{s}.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=x7es9779w29jcm3yhqgvwunf";
       let options = {
         attributionControl: false,
         doubleClickZoom: false
