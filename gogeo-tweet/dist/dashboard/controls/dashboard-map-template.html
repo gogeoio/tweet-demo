@@ -22,7 +22,7 @@
         </a>
       </div>
     </div>
-  </div>  
+  </div>
 </div>
 
 <div id="tweet-popup" ng-show="map.tweetResult">
@@ -33,13 +33,13 @@
         <span aria-hidden="true">&times;</span>
       </button>
 
-      <img class="mc-weet-thumb" err-src="https://s3.amazonaws.com/deploy.gogeo/cdn/twitter-bird-logo.png" ng-src="{{ map.formatPictureUrl(map.tweetResult['user.profile_image_url']) }}" alt="" width="94" height="94" />
+      <img class="mc-weet-thumb" err-src="https://s3.amazonaws.com/deploy.gogeo/cdn/twitter-bird-logo.png" ng-src="{{ map.formatPictureUrl(map.tweetResult['user']['profile_image_url']) }}" alt="" width="94" height="94" />
 
       <div class="mc-tweet-user">
         <div class="row">
           <div class="col-md-12">
-            <p>{{ map.tweetResult['user.name'] }}</p>
-            <a target="_blank" href="http://www.twitter.com/{{ map.tweetResult['user.screen_name'] }}">@{{ map.tweetResult["user.screen_name"] }}</a>
+            <p>{{ map.tweetResult['user']['name'] }}</p>
+            <a target="_blank" href="http://www.twitter.com/{{ map.tweetResult['user']['screen_name'] }}">@{{ map.tweetResult["user"]["screen_name"] }}</a>
           </div>
         </div>
         <div style="padding-top: 15px; padding-right: 5px; font-size: 12px;">
@@ -47,7 +47,7 @@
             <div class="col-md-12">
               <span>
                 <strong>
-                  {{ map.tweetResult["place.full_name"] }}
+                  {{ map.tweetResult["place"]["full_name"] }}
                 </strong>
               </span>
             </div>
