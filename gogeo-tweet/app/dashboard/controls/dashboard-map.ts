@@ -541,7 +541,7 @@ module gogeo {
     formatTweetUrl() {
       if (this.tweetResult) {
         var url = "https://twitter.com/";
-        url = url + this.tweetResult["user.screen_name"] + "/";
+        url = url + this.tweetResult["user"]["screen_name"] + "/";
         url = url + "status/";
         url = url + this.tweetResult["id"];
 
