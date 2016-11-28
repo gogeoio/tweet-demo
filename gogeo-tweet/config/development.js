@@ -7,10 +7,10 @@ var gogeo;
     // Configurações para DESENVOLVIMENTO LOCAL
     //
     gogeo.settings = {
-        "api.url": "cluster.local.io:9090/",
-        "tile.url": "cluster.local.io:9090/",
-        "subdomains": [],
-        "collection": "tweets"
+      "api.url": "maps.gogeo.io/1.0/",
+      "tile.url": "{s}.gogeo.io/1.0/",
+      "subdomains": [ "m1", "m2", "m3", "m4" ],
+      "collection": "tweets_all"
     };
 })(gogeo || (gogeo = {}));
 //# sourceMappingURL=development.js.map

@@ -9,10 +9,10 @@ module gogeo {
     //
 
     export var settings = <any>{
-        "api.url": "maps.demos.gogeo.io/1.0/",
-        "tile.url": "{s}.demos.gogeo.io/1.0/",
-        "subdomains": [ "m01", "m02", "m03", "m04" ],
-        "collection": "tweets_all"
+      "api.url": "maps.gogeo.io/1.0/",
+      "tile.url": "{s}.gogeo.io/1.0/",
+      "subdomains": [ "m1", "m2", "m3", "m4" ],
+      "collection": "tweets_all"
     };
 
 }
